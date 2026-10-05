@@ -482,10 +482,9 @@ public final class QuickActionMenu extends JPopupMenu {
         int experience = unit.getExperience();
         GoodsType goods = unit.getExperienceType();
         if (experience > 0 && goods != null) {
-            UnitType expertType = spec.getExpertForProducing(goods);
-            UnitTypeChange uc = unit.getUnitChange(UnitChangeType.EXPERIENCE,
-                                                   expertType);
+            UnitTypeChange uc = unit.getExperienceChange(goods);
             if (uc != null) {
+                UnitType expertType = uc.to;
                 int maxExperience = unit.getType().getMaximumExperience();
                 float probability = uc.probability * experience
                     / (float)maxExperience;

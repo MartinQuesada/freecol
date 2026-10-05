@@ -696,11 +696,9 @@ public class ServerColony extends Colony implements TurnTaker {
             if (productionInfo == null) continue;
             if (!wl.isEmpty()) {
                 for (AbstractGoods goods : productionInfo.getProduction()) {
-                    UnitType expert = spec.getExpertForProducing(goods.getType());
                     int experience = goods.getAmount() / wl.getUnitCount();
                     for (Unit unit : transform(wl.getUnits(),
-                            u -> u.getUnitChange(UnitChangeType.EXPERIENCE,
-                                                 expert) != null)) {
+                            u -> u.getExperienceChange(goods.getType()) != null)) {
                         unit.changeExperienceType(goods.getType());
                         unit.setExperience(unit.getExperience() + experience);
                         cs.addPartial(See.only(owner), unit,

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    *  Copyright (C) 2026  The FreeCol Team
+    *
+    *  This file is part of FreeCol.
+    *
+    *  FreeCol is free software: you can redistribute it and/or modify
+    *  it under the terms of the GNU General Public License as published by
+    *  the Free Software Foundation, either version 2 of the License, or
+    *  (at your option) any later version.
+    *
+    *  FreeCol is distributed in the hope that it will be useful,
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    *  GNU General Public License for more details.
+    *
+    *  You should have received a copy of the GNU General Public License
+    *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+    *
+  -->
+<!-- Tools and muskets also consume lumber (handles, stocks, charcoal). -->
+<freecol-specification id="lumberCraft" version="0.1">
+  <building-types>
+    <building-type id="model.building.blacksmithHouse">
+      <production>
+        <input goods-type="model.goods.ore" value="3"/>
+        <input goods-type="model.goods.lumber" value="1"/>
+        <output goods-type="model.goods.tools" value="3"/>
+      </production>
+    </building-type>
+    <building-type id="model.building.blacksmithShop"
+                   extends="model.building.blacksmithHouse"
+                   upgrades-from="model.building.blacksmithHouse"
+                   competence-factor="2"
+                   upkeep="5">
+      <production>
+        <input goods-type="model.goods.ore" value="6"/>
+        <input goods-type="model.goods.lumber" value="2"/>
+        <output goods-type="model.goods.tools" value="6"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="64"/>
+      <required-goods id="model.goods.tools" value="20"/>
+    </building-type>
+    <building-type id="model.building.ironWorks"
+                   extends="model.building.blacksmithShop"
+                   upgrades-from="model.building.blacksmithShop"
+                   experts-with-connections-production="4"
+                   competence-factor="3" rebel-factor="1.5"
+                   required-population="8" upkeep="15">
+      <production>
+        <input goods-type="model.goods.ore" value="6"/>
+        <input goods-type="model.goods.lumber" value="3"/>
+        <output goods-type="model.goods.tools" value="9"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="240"/>
+      <required-goods id="model.goods.tools" value="100"/>
+      <required-ability id="model.ability.buildFactory"/>
+      <ability id="model.ability.expertsUseConnections" value="true"/>
+    </building-type>
+
+    <building-type id="model.building.armory"
+                   priority="400" upkeep="5">
+      <production>
+        <input goods-type="model.goods.tools" value="3"/>
+        <input goods-type="model.goods.lumber" value="1"/>
+        <output goods-type="model.goods.muskets" value="3"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="52"/>
+      <ability id="model.ability.build" value="true">
+        <scope type="model.unit.artillery"/>
+      </ability>
+    </building-type>
+    <building-type id="model.building.magazine"
+                   extends="model.building.armory"
+                   upgrades-from="model.building.armory"
+                   competence-factor="2"
+                   required-population="8" upkeep="10">
+      <production>
+        <input goods-type="model.goods.tools" value="6"/>
+        <input goods-type="model.goods.lumber" value="2"/>
+        <output goods-type="model.goods.muskets" value="6"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="120"/>
+      <required-goods id="model.goods.tools" value="50"/>
+    </building-type>
+    <building-type id="model.building.arsenal"
+                   extends="model.building.magazine"
+                   upgrades-from="model.building.magazine"
+                   experts-with-connections-production="4"
+                   competence-factor="3" rebel-factor="1.5"
+                   upkeep="15">
+      <production>
+        <input goods-type="model.goods.tools" value="9"/>
+        <input goods-type="model.goods.lumber" value="3"/>
+        <output goods-type="model.goods.muskets" value="9"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="240"/>
+      <required-goods id="model.goods.tools" value="100"/>
+      <required-ability id="model.ability.buildFactory"/>
+      <ability id="model.ability.expertsUseConnections" value="true"/>
+    </building-type>
+  </building-types>
+</freecol-specification>

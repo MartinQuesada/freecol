@@ -1497,6 +1497,31 @@ public class Unit extends GoodsLocation
     }
 
     /**
+     * Get the experience change this unit can make towards a unit type
+     * that specializes in producing a given goods type.
+     *
+     * Several unit types may share an expert production, so the target
+     * is looked up among this unit's own experience changes rather than
+     * via {@link Specification#getExpertForProducing}.
+     *
+     * @param goodsType The {@code GoodsType} being produced.
+     * @return The {@code UnitTypeChange} found, or null if none applies.
+     */
+    public UnitTypeChange getExperienceChange(GoodsType goodsType) {
+        if (goodsType == null) return null;
+        final UnitChangeType uct = getSpecification()
+            .getUnitChangeType(UnitChangeType.EXPERIENCE);
+        if (uct == null) return null;
+        for (UnitTypeChange uc : uct.getUnitChanges(getType())) {
+            if (uc.to.getExpertProduction() != goodsType) continue;
+            UnitTypeChange ret = getUnitChange(UnitChangeType.EXPERIENCE,
+                                               uc.to);
+            if (ret != null) return ret;
+        }
+        return null;
+    }
+
+    /**
      * Get a unit change for this unit.
      *
      * @param change The identifier for the required change type.

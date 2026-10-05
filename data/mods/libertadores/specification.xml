@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    *  Copyright (C) 2026  The FreeCol Team
+    *
+    *  This file is part of FreeCol.
+    *
+    *  FreeCol is free software: you can redistribute it and/or modify
+    *  it under the terms of the GNU General Public License as published by
+    *  the Free Software Foundation, either version 2 of the License, or
+    *  (at your option) any later version.
+    *
+    *  FreeCol is distributed in the hope that it will be useful,
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    *  GNU General Public License for more details.
+    *
+    *  You should have received a copy of the GNU General Public License
+    *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+    *
+  -->
+<freecol-specification id="libertadores" version="0.3">
+  <founding-fathers>
+    <!-- Alexander Hamilton: Report on Manufactures (1791) — tools -->
+    <founding-father id="model.foundingFather.alexanderHamilton" type="trade"
+                     weight1="0" weight2="2" weight3="8">
+      <modifier id="model.goods.tools" index="40"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.person" match-negated="true"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Alexander von Humboldt: naturalist — more food -->
+    <founding-father id="model.foundingFather.alexanderVonHumboldt" type="exploration"
+                     weight1="0" weight2="2" weight3="8">
+      <modifier id="model.goods.grain" index="40"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.person" match-negated="false"/>
+      </modifier>
+      <modifier id="model.goods.fish" index="40"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.person" match-negated="false"/>
+      </modifier>
+    </founding-father>
+
+    <!-- José de San Martín: Andes campaigns — land combat + modest SoL -->
+    <founding-father id="model.foundingFather.joseDeSanMartin" type="military"
+                     weight1="0" weight2="3" weight3="8">
+      <modifier id="model.modifier.SoL"
+                type="additive" value="10"/>
+      <modifier id="model.modifier.offence" index="50"
+                type="percentage" value="25">
+        <scope type="model.role.soldier"/>
+      </modifier>
+      <modifier id="model.modifier.offence" index="50"
+                type="percentage" value="25">
+        <scope type="model.role.dragoon"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Francisco de Miranda: precursor of independence — liberty bells -->
+    <founding-father id="model.foundingFather.franciscoDeMiranda" type="political"
+                     weight1="0" weight2="3" weight3="8">
+      <modifier id="model.goods.bells" index="40"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.person" match-negated="true"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Sor Juana Inés de la Cruz: education and letters -->
+    <founding-father id="model.foundingFather.sorJuanaInesDeLaCruz" type="religious"
+                     weight1="2" weight2="8" weight3="3">
+      <modifier id="model.goods.crosses" index="40"
+                type="percentage" value="25">
+        <scope ability-id="model.ability.person" match-negated="true"/>
+      </modifier>
+      <modifier id="model.modifier.buildingPriceBonus"
+                type="percentage" value="-50">
+        <scope type="model.building.schoolhouse"/>
+      </modifier>
+      <modifier id="model.modifier.buildingPriceBonus"
+                type="percentage" value="-50">
+        <scope type="model.building.college"/>
+      </modifier>
+      <modifier id="model.modifier.buildingPriceBonus"
+                type="percentage" value="-50">
+        <scope type="model.building.university"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Francisco de Orellana: Amazon explorer — sight and land movement -->
+    <founding-father id="model.foundingFather.franciscoDeOrellana" type="exploration"
+                     weight1="8" weight2="3" weight3="1">
+      <modifier id="model.modifier.lineOfSightBonus"
+                type="additive" value="1">
+        <scope ability-id="model.ability.navalUnit" ability-value="false"/>
+      </modifier>
+      <modifier id="model.modifier.movementBonus"
+                type="additive" value="1">
+        <scope ability-id="model.ability.navalUnit" ability-value="false"/>
+      </modifier>
+      <event id="model.event.movementChange"/>
+    </founding-father>
+
+    <!-- Toussaint Louverture: Haitian Revolution — defence and SoL -->
+    <founding-father id="model.foundingFather.toussaintLouverture" type="military"
+                     weight1="0" weight2="2" weight3="8">
+      <modifier id="model.modifier.SoL"
+                type="additive" value="15"/>
+      <modifier id="model.modifier.defence" index="50"
+                type="percentage" value="25">
+        <scope type="model.role.soldier"/>
+      </modifier>
+      <modifier id="model.modifier.defence" index="50"
+                type="percentage" value="25">
+        <scope type="model.role.dragoon"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Vasco da Gama: India trade route — faster high-seas travel (lighter than Magellan) -->
+    <founding-father id="model.foundingFather.vascoDaGama" type="trade"
+                     weight1="8" weight2="3" weight3="1">
+      <modifier id="model.modifier.sailHighSeas"
+                type="additive" value="-1">
+        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
+      </modifier>
+      <modifier id="model.modifier.movementBonus"
+                type="additive" value="1">
+        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
+      </modifier>
+      <event id="model.event.movementChange"/>
+    </founding-father>
+
+    <!-- Eli Whitney: cotton gin + muskets — late industrial boost -->
+    <founding-father id="model.foundingFather.eliWhitney" type="trade"
+                     weight1="0" weight2="2" weight3="8">
+      <modifier id="model.goods.cotton" index="40"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.person" match-negated="false"/>
+      </modifier>
+      <modifier id="model.goods.muskets" index="40"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.person" match-negated="false"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Blas de Lezo: Cartagena defence — land units harder to kill -->
+    <founding-father id="model.foundingFather.blasDeLezo" type="military"
+                     weight1="0" weight2="3" weight3="8">
+      <modifier id="model.modifier.defence" index="50"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.navalUnit" ability-value="false"/>
+      </modifier>
+    </founding-father>
+    <!-- Thomas Cochrane: Chilean, Peruvian and Brazilian navies — naval attack -->
+    <founding-father id="model.foundingFather.thomasCochrane" type="military"
+                     weight1="0" weight2="1" weight3="8">
+      <modifier id="model.modifier.offence" index="50"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Miguel Hidalgo: Grito de Dolores — liberty and native support -->
+    <founding-father id="model.foundingFather.miguelHidalgo" type="political"
+                     weight1="0" weight2="1" weight3="8">
+      <modifier id="model.modifier.SoL"
+                type="additive" value="10"/>
+      <modifier id="model.modifier.nativeAlarmModifier"
+                type="percentage" value="-25"/>
+    </founding-father>
+
+    <!-- Antonio Vieira: Jesuit defender of the natives in Brazil — conversions -->
+    <founding-father id="model.foundingFather.antonioVieira" type="religious"
+                     weight1="1" weight2="8" weight3="2">
+      <modifier id="model.modifier.nativeConvertBonus"
+                type="percentage" value="20"/>
+    </founding-father>
+
+    <!-- Roque Gonzalez de Santa Cruz: Jesuit reductions — converts produce more -->
+    <founding-father id="model.foundingFather.roqueGonzalez" type="religious"
+                     weight1="2" weight2="8" weight3="2">
+      <modifier id="model.goods.grain" index="30"
+                type="additive" value="1">
+        <scope type="model.unit.indianConvert"/>
+        <scope ability-id="model.ability.nativeConvert" ability-value="true"/>
+      </modifier>
+      <modifier id="model.goods.sugar" index="30"
+                type="additive" value="1">
+        <scope type="model.unit.indianConvert"/>
+        <scope ability-id="model.ability.nativeConvert" ability-value="true"/>
+      </modifier>
+      <modifier id="model.goods.tobacco" index="30"
+                type="additive" value="1">
+        <scope type="model.unit.indianConvert"/>
+        <scope ability-id="model.ability.nativeConvert" ability-value="true"/>
+      </modifier>
+      <modifier id="model.goods.cotton" index="30"
+                type="additive" value="1">
+        <scope type="model.unit.indianConvert"/>
+        <scope ability-id="model.ability.nativeConvert" ability-value="true"/>
+      </modifier>
+      <modifier id="model.goods.furs" index="30"
+                type="additive" value="1">
+        <scope type="model.unit.indianConvert"/>
+        <scope ability-id="model.ability.nativeConvert" ability-value="true"/>
+      </modifier>
+      <modifier id="model.goods.fish" index="30"
+                type="additive" value="1">
+        <scope type="model.unit.indianConvert"/>
+        <scope ability-id="model.ability.nativeConvert" ability-value="true"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Felix de Azara: naturalist of the pampas — livestock breeding -->
+    <founding-father id="model.foundingFather.felixDeAzara" type="exploration"
+                     weight1="0" weight2="2" weight3="8">
+      <modifier id="model.modifier.breedingFactor"
+                type="percentage" value="50"/>
+    </founding-father>
+
+    <!-- Jorge Juan and Antonio de Ulloa: geodesic mission (1735) — maps -->
+    <founding-father id="model.foundingFather.jorgeJuanYUlloa" type="exploration"
+                     weight1="0" weight2="4" weight3="8">
+      <event id="model.event.exploreAroundColonies"/>
+      <modifier id="model.modifier.exposedTilesRadius"
+                type="additive" value="5"/>
+      <modifier id="model.modifier.lineOfSightBonus"
+                type="additive" value="1">
+        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
+      </modifier>
+    </founding-father>
+    <!-- Roger Williams: Rhode Island, religious freedom, fair dealing
+         with the Narragansett -->
+    <founding-father id="model.foundingFather.rogerWilliams" type="political"
+                     weight1="2" weight2="8" weight3="3">
+      <modifier id="model.goods.crosses" index="40"
+                type="percentage" value="25">
+        <scope ability-id="model.ability.person" match-negated="true"/>
+      </modifier>
+      <modifier id="model.modifier.nativeAlarmModifier"
+                type="percentage" value="-25"/>
+    </founding-father>
+
+    <!-- Jean-Baptiste Colbert: royal manufactures — finished goods -->
+    <founding-father id="model.foundingFather.jeanBaptisteColbert" type="trade"
+                     weight1="1" weight2="8" weight3="4">
+      <modifier id="model.goods.rum" index="40"
+                type="percentage" value="25">
+        <scope ability-id="model.ability.person" match-negated="true"/>
+      </modifier>
+      <modifier id="model.goods.cigars" index="40"
+                type="percentage" value="25">
+        <scope ability-id="model.ability.person" match-negated="true"/>
+      </modifier>
+      <modifier id="model.goods.cloth" index="40"
+                type="percentage" value="25">
+        <scope ability-id="model.ability.person" match-negated="true"/>
+      </modifier>
+      <modifier id="model.goods.coats" index="40"
+                type="percentage" value="25">
+        <scope ability-id="model.ability.person" match-negated="true"/>
+      </modifier>
+    </founding-father>
+
+    <!-- John Rolfe: tobacco in Virginia -->
+    <founding-father id="model.foundingFather.johnRolfe" type="trade"
+                     weight1="3" weight2="8" weight3="2">
+      <modifier id="model.goods.tobacco" index="40"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.person" match-negated="false"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Samuel de Champlain: Quebec and the Huron alliance -->
+    <founding-father id="model.foundingFather.samuelDeChamplain" type="exploration"
+                     weight1="4" weight2="8" weight3="1">
+      <unit id="model.unit.seasonedScout" role="model.role.scout"/>
+      <modifier id="model.modifier.nativeAlarmModifier"
+                type="percentage" value="-25"/>
+    </founding-father>
+
+    <!-- Michiel de Ruyter: Dutch admiral — naval defence -->
+    <founding-father id="model.foundingFather.michielDeRuyter" type="military"
+                     weight1="1" weight2="8" weight3="4">
+      <modifier id="model.modifier.defence" index="50"
+                type="percentage" value="50">
+        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Vauban: Louis XIV's fortifications — cheaper defences -->
+    <founding-father id="model.foundingFather.vauban" type="military"
+                     weight1="1" weight2="8" weight3="5">
+      <modifier id="model.modifier.buildingPriceBonus"
+                type="percentage" value="-50">
+        <scope type="model.building.stockade"/>
+      </modifier>
+      <modifier id="model.modifier.buildingPriceBonus"
+                type="percentage" value="-50">
+        <scope type="model.building.fort"/>
+      </modifier>
+      <modifier id="model.modifier.buildingPriceBonus"
+                type="percentage" value="-50">
+        <scope type="model.building.fortress"/>
+      </modifier>
+      <modifier id="model.modifier.buildingPriceBonus"
+                type="percentage" value="-50">
+        <scope type="model.building.citadel"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Marie de l'Incarnation: Ursuline school in Quebec -->
+    <founding-father id="model.foundingFather.marieDeLIncarnation" type="religious"
+                     weight1="2" weight2="8" weight3="2">
+      <event id="model.event.freeBuilding"
+             value="model.building.schoolhouse"/>
+      <modifier id="model.modifier.buildingPriceBonus"
+                type="percentage" value="-100">
+        <scope type="model.building.schoolhouse"/>
+      </modifier>
+    </founding-father>
+  </founding-fathers>
+</freecol-specification>

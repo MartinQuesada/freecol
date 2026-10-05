@@ -54,6 +54,8 @@
         <xs:element name="unit">
           <xs:complexType>
             <xs:attribute name="id" use="required" type="UnitTypeId"/>
+            <xs:attribute name="role" use="optional" type="RoleId"/>
+            <xs:attribute name="number" use="optional" type="xs:positiveInteger"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="upgrade">

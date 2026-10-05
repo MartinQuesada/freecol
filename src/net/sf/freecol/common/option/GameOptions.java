@@ -96,6 +96,13 @@ public class GameOptions {
     public static final String CONTINUE_FOUNDING_FATHER_RECRUITMENT
         = "model.option.continueFoundingFatherRecruitment";
 
+    /**
+     * Only offer founding fathers from the age where their weight is
+     * highest onwards.
+     */
+    public static final String HISTORICAL_FOUNDING_FATHERS
+        = "model.option.historicalFoundingFathers";
+
     /** Does the REF "teleport" to its first target. */
     public static final String TELEPORT_REF
         = "model.option.teleportREF";

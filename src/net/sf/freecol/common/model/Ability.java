@@ -352,6 +352,14 @@ public final class Ability extends Feature {
     public static final String PRODUCE_IN_WATER
         = "model.ability.produceInWater";
 
+    /**
+     * The ability of a building with unattended production to add the
+     * colony's positive rebel production bonus to its output, without
+     * consuming extra input.
+     */
+    public static final String REBEL_BONUS_UNATTENDED
+        = "model.ability.rebelBonusUnattended";
+
     /** Units with this ability can be added to the REF. */
     public static final String REF_UNIT
         = "model.ability.refUnit";

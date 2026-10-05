@@ -135,6 +135,20 @@ public class FoundingFather extends FreeColSpecObjectType {
     }
 
     /**
+     * Get the historical age of this FoundingFather, that is the first
+     * age in which his weight is highest.
+     *
+     * @return The historical age ([0, 2]).
+     */
+    public int getHistoricalAge() {
+        int best = 0;
+        for (int age = 1; age < weight.length; age++) {
+            if (weight[age] > weight[best]) best = age;
+        }
+        return best;
+    }
+
+    /**
      * Get the events this father triggers.
      *
      * @return A list of {@code Event}s.

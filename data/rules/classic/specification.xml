@@ -4683,6 +4683,10 @@
              independence -->
         <booleanOption id="model.option.continueFoundingFatherRecruitment"
                        defaultValue="false"/>
+        <!-- Founding fathers are only offered from the age in which
+             their weight is highest -->
+        <booleanOption id="model.option.historicalFoundingFathers"
+                       defaultValue="false"/>
         <!-- Does the REF "teleport" to its first target or does it
              sail in? -->
         <booleanOption id="model.option.teleportREF"

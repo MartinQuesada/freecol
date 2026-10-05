@@ -763,7 +763,7 @@ public final class Specification implements OptionContainer {
                 buildableUnitTypes.add(unitType);
             }
             if (unitType.getExpertProduction() != null) {
-                experts.put(unitType.getExpertProduction(), unitType);
+                experts.putIfAbsent(unitType.getExpertProduction(), unitType);
             }
             if (unitType.hasPrice()) {
                 if (unitType.getSkill() > 0) {
@@ -3081,6 +3081,10 @@ public final class Specification implements OptionContainer {
                 GameOptions.GAMEOPTIONS_MAP,
                 Boolean.TRUE, BooleanOption.class);        
         // end @compat 1.1.0
+
+        ret |= checkOp(GameOptions.HISTORICAL_FOUNDING_FATHERS,
+                GameOptions.GAMEOPTIONS_MAP,
+                Boolean.FALSE, BooleanOption.class);
         
         // SAVEGAME_VERSION == 14
         return ret;

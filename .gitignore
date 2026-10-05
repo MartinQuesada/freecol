@@ -204,3 +204,10 @@ idxmake.log
 www.freecol.org/.jekyll-cache
 www.freecol.org/.jekyll-metadata
 www.freecol.org/_site
+
+# Local FreeCol launcher config/saves
+.freecol-dev/
+
+# Test reports
+build/TEST-*.txt
+build/dependencies.txt

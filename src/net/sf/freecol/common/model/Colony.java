@@ -1134,7 +1134,12 @@ public class Colony extends Settlement implements TradeLocation {
      * @see net.sf.freecol.client.control.InGameController#payForBuilding
      */
     public int getPriceForBuilding(BuildableType type) {
-        return priceGoodsForBuilding(getRequiredGoods(type));
+        int price = priceGoodsForBuilding(getRequiredGoods(type));
+        if (type instanceof BuildingType && price > 0) {
+            price = (int)owner.apply((float)price, getGame().getTurn(),
+                Modifier.BUILDING_PRICE_BONUS, (BuildingType)type);
+        }
+        return Math.max(0, price);
     }
 
     /**

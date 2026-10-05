@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    *  Copyright (C) 2026  The FreeCol Team
+    *
+    *  This file is part of FreeCol.
+    *
+    *  FreeCol is free software: you can redistribute it and/or modify
+    *  it under the terms of the GNU General Public License as published by
+    *  the Free Software Foundation, either version 2 of the License, or
+    *  (at your option) any later version.
+    *
+    *  FreeCol is distributed in the hope that it will be useful,
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    *  GNU General Public License for more details.
+    *
+    *  You should have received a copy of the GNU General Public License
+    *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+    *
+  -->
+<!-- Tavern: spend rum locally for bells instead of exporting it. -->
+<freecol-specification id="tabernas" version="0.2">
+  <building-types>
+    <building-type id="model.building.tavern" workplaces="0">
+      <production unattended="true">
+        <input goods-type="model.goods.rum" value="2"/>
+        <output goods-type="model.goods.bells" value="1"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="40"/>
+      <ability id="model.ability.rebelBonusUnattended"/>
+    </building-type>
+  </building-types>
+</freecol-specification>

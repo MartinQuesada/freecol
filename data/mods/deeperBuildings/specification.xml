@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    *  Copyright (C) 2026  The FreeCol Team
+    *
+    *  This file is part of FreeCol.
+    *
+    *  FreeCol is free software: you can redistribute it and/or modify
+    *  it under the terms of the GNU General Public License as published by
+    *  the Free Software Foundation, either version 2 of the License, or
+    *  (at your option) any later version.
+    *
+    *  FreeCol is distributed in the hope that it will be useful,
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    *  GNU General Public License for more details.
+    *
+    *  You should have received a copy of the GNU General Public License
+    *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+    *
+  -->
+<!--
+    Extends incomplete building chains inspired by the FreeCol 2 idea
+    "More colony improvement levels" (Misiulo, 2014):
+      carpenter house → lumber mill → timber mill (new)
+      town hall → city hall (new)
+      church → cathedral → basilica (new, imperial)
+      stockade → fort → fortress → citadel (new, imperial)
+  -->
+<freecol-specification id="deeperBuildings" version="0.3">
+  <building-types>
+    <!-- Factory-tier upgrade for the carpenter chain (needs Adam Smith). -->
+    <building-type id="model.building.timberMill"
+                   extends="model.building.lumberMill"
+                   upgrades-from="model.building.lumberMill"
+                   experts-with-connections-production="4"
+                   competence-factor="3" rebel-factor="1.5"
+                   required-population="8" upkeep="15">
+      <production>
+        <input goods-type="model.goods.lumber" value="6"/>
+        <output goods-type="model.goods.hammers" value="9"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="160"/>
+      <required-goods id="model.goods.tools" value="50"/>
+      <required-ability id="model.ability.buildFactory"/>
+      <ability id="model.ability.expertsUseConnections" value="true"/>
+      <modifier id="model.modifier.tileTypeChangeProduction"
+                type="multiplicative" value="3">
+        <scope type="model.goods.lumber"/>
+      </modifier>
+    </building-type>
+
+    <!-- Civic upgrade for the town hall (more liberty bells). -->
+    <building-type id="model.building.cityHall"
+                   extends="model.building.townHall"
+                   upgrades-from="model.building.townHall"
+                   competence-factor="2" rebel-factor="2"
+                   required-population="8" upkeep="15">
+      <production unattended="true">
+        <output goods-type="model.goods.bells" value="3"/>
+      </production>
+      <production>
+        <output goods-type="model.goods.bells" value="6"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="176"/>
+      <required-goods id="model.goods.tools" value="100"/>
+    </building-type>
+
+    <!-- Imperial religious upgrade (after cathedral). -->
+    <building-type id="model.building.basilica"
+                   extends="model.building.cathedral"
+                   upgrades-from="model.building.cathedral"
+                   competence-factor="2" rebel-factor="2"
+                   required-population="12" upkeep="20">
+      <production unattended="true">
+        <output goods-type="model.goods.crosses" value="4"/>
+      </production>
+      <production>
+        <output goods-type="model.goods.crosses" value="9"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="280"/>
+      <required-goods id="model.goods.tools" value="150"/>
+    </building-type>
+
+    <!-- Imperial defence upgrade (after fortress). -->
+    <building-type id="model.building.citadel"
+                   extends="model.building.fortress"
+                   upgrades-from="model.building.fortress"
+                   required-population="12" upkeep="20">
+      <required-goods id="model.goods.hammers" value="480"/>
+      <required-goods id="model.goods.tools" value="280"/>
+      <modifier id="model.modifier.defence" delete="true" />
+      <modifier id="model.modifier.defence" index="50"
+                type="percentage" value="250"/>
+    </building-type>
+  </building-types>
+</freecol-specification>

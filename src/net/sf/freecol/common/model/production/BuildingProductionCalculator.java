@@ -130,7 +130,12 @@ public class BuildingProductionCalculator {
                     minimumRatio = maximumRatio = 0.0;
                 } else {
                     int divisor = (int) buildingType.apply(0f, turn, Modifier.BREEDING_DIVISOR);
-                    int factor = (int) buildingType.apply(0f, turn, Modifier.BREEDING_FACTOR);
+                    float rawFactor = buildingType.apply(0f, turn, Modifier.BREEDING_FACTOR);
+                    if (owner != null) {
+                        rawFactor = owner.apply(rawFactor, turn,
+                            Modifier.BREEDING_FACTOR, buildingType);
+                    }
+                    int factor = (int) rawFactor;
                     int production = (available < goodsType.getBreedingNumber()
                         || divisor <= 0) ? 0
                         // Deliberate use of integer division
@@ -212,6 +217,9 @@ public class BuildingProductionCalculator {
                 result.addMaximumConsumption(new AbstractGoods(type, maximumConsumption));
             }
         }
+        final int rebelBonus = (colonyProductionBonus > 0
+            && buildingType.hasAbility(Ability.REBEL_BONUS_UNATTENDED))
+            ? colonyProductionBonus : 0;
         for (AbstractGoods output : buildingOutputs) {
             GoodsType type = output.getType();
             // minimize production, but add a magic little something
@@ -220,6 +228,8 @@ public class BuildingProductionCalculator {
                 + EPSILON);
             int maximumProduction = (int)Math.floor(output.getAmount()
                 * maximumRatio);
+            if (production > 0) production += rebelBonus;
+            if (maximumProduction > 0) maximumProduction += rebelBonus;
             result.addProduction(new AbstractGoods(type, production));
             if (production < maximumProduction) {
                 result.addMaximumProduction(new AbstractGoods(type, maximumProduction));

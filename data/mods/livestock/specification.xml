@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    *  Copyright (C) 2026  The FreeCol Team
+    *
+    *  This file is part of FreeCol.
+    *
+    *  FreeCol is free software: you can redistribute it and/or modify
+    *  it under the terms of the GNU General Public License as published by
+    *  the Free Software Foundation, either version 2 of the License, or
+    *  (at your option) any later version.
+    *
+    *  FreeCol is distributed in the hope that it will be useful,
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    *  GNU General Public License for more details.
+    *
+    *  You should have received a copy of the GNU General Public License
+    *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+    *
+  -->
+<!--
+    Europe livestock bootstrap + colonial processing:
+      cows (breed) → dairy (cows→milk) → cheese house (milk→cheese)
+                   → brotherhood hall (cheese→crosses)
+      sheep (breed) → wool shed (sheep→wool) → weaver (wool→cloth)
+    Dairy and wool shed take 1 animal per 3 output, so the herd size and
+    the pen's breeding rate cap how much milk and wool a colony can make.
+  -->
+<freecol-specification id="livestock" version="0.3">
+  <goods-types>
+    <goods-type id="model.goods.cows" is-farmed="false"
+                breeding-number="2" made-from="model.goods.food">
+      <market initial-amount="2000" initial-price="2" price-difference="2"/>
+    </goods-type>
+    <goods-type id="model.goods.sheep" is-farmed="false"
+                breeding-number="2" made-from="model.goods.food">
+      <market initial-amount="2000" initial-price="2" price-difference="2"/>
+    </goods-type>
+    <goods-type id="model.goods.milk" is-farmed="false"
+                production-weight="2.5">
+      <market initial-amount="1200" initial-price="3" price-difference="2"/>
+    </goods-type>
+    <goods-type id="model.goods.wool" is-farmed="false"
+                production-weight="2.5">
+      <market initial-amount="1200" initial-price="3" price-difference="2"/>
+    </goods-type>
+    <goods-type id="model.goods.cheese" is-farmed="false"
+                made-from="model.goods.milk" new-world-goods="false"
+                production-weight="2.0">
+      <market initial-amount="800" initial-price="9" price-difference="2"/>
+    </goods-type>
+  </goods-types>
+
+  <building-types>
+    <!-- Breeding: buildable (not free like country pasture for horses) -->
+    <building-type id="model.building.cattlePen"
+                   workplaces="0" priority="700">
+      <production unattended="true">
+        <input goods-type="model.goods.food" value="1"/>
+        <output goods-type="model.goods.cows" value="1"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="32"/>
+      <ability id="model.ability.autoProduction"/>
+      <ability id="model.ability.avoidExcessProduction"/>
+      <modifier id="model.modifier.breedingDivisor" index="60"
+                type="additive" value="50"/>
+      <modifier id="model.modifier.breedingFactor" index="60"
+                type="additive" value="2"/>
+      <modifier id="model.goods.cows" index="60"
+                type="multiplicative" value="1.0"/>
+      <modifier id="model.modifier.consumeOnlySurplusProduction" index="60"
+                type="multiplicative" value="0.5"/>
+    </building-type>
+
+    <building-type id="model.building.sheepfold"
+                   workplaces="0" priority="700">
+      <production unattended="true">
+        <input goods-type="model.goods.food" value="1"/>
+        <output goods-type="model.goods.sheep" value="1"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="32"/>
+      <ability id="model.ability.autoProduction"/>
+      <ability id="model.ability.avoidExcessProduction"/>
+      <modifier id="model.modifier.breedingDivisor" index="60"
+                type="additive" value="50"/>
+      <modifier id="model.modifier.breedingFactor" index="60"
+                type="additive" value="2"/>
+      <modifier id="model.goods.sheep" index="60"
+                type="multiplicative" value="1.0"/>
+      <modifier id="model.modifier.consumeOnlySurplusProduction" index="60"
+                type="multiplicative" value="0.5"/>
+    </building-type>
+
+    <!-- Processing -->
+    <building-type id="model.building.dairy">
+      <production>
+        <input goods-type="model.goods.cows" value="1"/>
+        <output goods-type="model.goods.milk" value="3"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="32"/>
+    </building-type>
+
+    <building-type id="model.building.woolShed">
+      <production>
+        <input goods-type="model.goods.sheep" value="1"/>
+        <output goods-type="model.goods.wool" value="3"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="32"/>
+    </building-type>
+
+    <building-type id="model.building.cheeseHouse">
+      <production>
+        <input goods-type="model.goods.milk" value="3"/>
+        <output goods-type="model.goods.cheese" value="3"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="52"/>
+    </building-type>
+    <building-type id="model.building.cheeseShop"
+                   extends="model.building.cheeseHouse"
+                   upgrades-from="model.building.cheeseHouse"
+                   competence-factor="2"
+                   upkeep="5">
+      <production>
+        <input goods-type="model.goods.milk" value="6"/>
+        <output goods-type="model.goods.cheese" value="6"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="64"/>
+      <required-goods id="model.goods.tools" value="20"/>
+    </building-type>
+
+    <!-- Patron-saint feasts: spend cheese locally for crosses -->
+    <building-type id="model.building.brotherhoodHall" workplaces="0"
+                   required-population="3">
+      <production unattended="true">
+        <input goods-type="model.goods.cheese" value="2"/>
+        <output goods-type="model.goods.crosses" value="1"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="48"/>
+      <ability id="model.ability.rebelBonusUnattended"/>
+    </building-type>
+
+    <!-- Weaver: cotton→cloth OR wool→cloth -->
+    <building-type id="model.building.weaverHouse">
+      <production>
+        <input goods-type="model.goods.cotton" value="3"/>
+        <output goods-type="model.goods.cloth" value="3"/>
+      </production>
+      <production>
+        <input goods-type="model.goods.wool" value="3"/>
+        <output goods-type="model.goods.cloth" value="3"/>
+      </production>
+    </building-type>
+    <building-type id="model.building.weaverShop"
+                   extends="model.building.weaverHouse"
+                   upgrades-from="model.building.weaverHouse"
+                   competence-factor="2"
+                   upkeep="5">
+      <production>
+        <input goods-type="model.goods.cotton" value="6"/>
+        <output goods-type="model.goods.cloth" value="6"/>
+      </production>
+      <production>
+        <input goods-type="model.goods.wool" value="6"/>
+        <output goods-type="model.goods.cloth" value="6"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="64"/>
+      <required-goods id="model.goods.tools" value="20"/>
+    </building-type>
+    <building-type id="model.building.textileMill"
+                   extends="model.building.weaverShop"
+                   upgrades-from="model.building.weaverShop"
+                   experts-with-connections-production="4"
+                   competence-factor="3" rebel-factor="1.5"
+                   required-population="8" upkeep="15">
+      <production>
+        <input goods-type="model.goods.cotton" value="6"/>
+        <output goods-type="model.goods.cloth" value="9"/>
+      </production>
+      <production>
+        <input goods-type="model.goods.wool" value="6"/>
+        <output goods-type="model.goods.cloth" value="9"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="160"/>
+      <required-goods id="model.goods.tools" value="100"/>
+      <required-ability id="model.ability.buildFactory"/>
+      <ability id="model.ability.expertsUseConnections" value="true"/>
+    </building-type>
+  </building-types>
+</freecol-specification>

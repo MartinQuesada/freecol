@@ -996,9 +996,8 @@ public class ServerUnit extends Unit implements TurnTaker {
         UnitTypeChange uc;
         if (isInColony()
             && (produce = getWorkType()) != null
-            && (learn = spec.getExpertForProducing(produce)) != null
-            && learn != getType()
-            && (uc = getUnitChange(UnitChangeType.EXPERIENCE,learn)) != null
+            && (uc = getExperienceChange(produce)) != null
+            && (learn = uc.to) != getType()
             && uc.probability > 0) {
             int maximumExperience = getType().getMaximumExperience();
             int maxValue = (100 * maximumExperience) / uc.probability;

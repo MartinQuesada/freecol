@@ -3286,7 +3286,7 @@ public final class InGameController extends Controller {
                 + " is not building anything!");
         }
         List<AbstractGoods> required = colony.getRequiredGoods(build);
-        int price = colony.priceGoodsForBuilding(required);
+        int price = colony.getPriceForBuilding(build);
         if (!serverPlayer.checkGold(price)) {
             return serverPlayer.clientError("Insufficient funds to pay for build.");
         }

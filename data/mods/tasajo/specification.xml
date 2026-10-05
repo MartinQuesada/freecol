@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    *  Copyright (C) 2026  The FreeCol Team
+    *
+    *  This file is part of FreeCol.
+    *
+    *  FreeCol is free software: you can redistribute it and/or modify
+    *  it under the terms of the GNU General Public License as published by
+    *  the Free Software Foundation, either version 2 of the License, or
+    *  (at your option) any later version.
+    *
+    *  FreeCol is distributed in the hope that it will be useful,
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    *  GNU General Public License for more details.
+    *
+    *  You should have received a copy of the GNU General Public License
+    *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+    *
+  -->
+<!--
+    Salt meat / tasajo chain:
+      hunt meat (warehouse raw) + mine salt → salting house → saltMeat (export)
+      Meat is NOT food: colonists eat grain/fish; meat is for salting only.
+  -->
+<freecol-specification id="tasajo" version="0.5">
+  <goods-types>
+    <goods-type id="model.goods.meat" is-farmed="true"
+                new-world-goods="true" production-weight="2.5">
+      <market initial-amount="1200" initial-price="3" price-difference="2"/>
+    </goods-type>
+
+    <goods-type id="model.goods.salt" is-farmed="true"
+                production-weight="3.0"
+                low-production-threshold="4" zero-production-factor="0.5">
+      <market initial-amount="1500" initial-price="2" price-difference="2"/>
+    </goods-type>
+
+    <goods-type id="model.goods.saltMeat" is-farmed="false"
+                made-from="model.goods.meat" new-world-goods="true"
+                production-weight="2.0">
+      <market initial-amount="800" initial-price="8" price-difference="2"/>
+    </goods-type>
+  </goods-types>
+
+  <resource-types>
+    <resource-type id="model.resource.game" preserve="true">
+      <modifier id="model.goods.meat" index="10"
+                type="additive" value="2"/>
+      <modifier id="model.goods.meat" index="10"
+                type="additive" value="2">
+        <scope type="model.unit.expertHunter" matches-null="false"/>
+      </modifier>
+    </resource-type>
+
+    <!-- Salt deposit / salt flats bonus. -->
+    <resource-type id="model.resource.salt"
+                   minimum-value="100" maximum-value="2000">
+      <modifier id="model.goods.salt" index="10"
+                type="additive" value="2"/>
+      <modifier id="model.goods.salt" index="10"
+                type="additive" value="2">
+        <scope type="model.unit.expertSaltMiner" matches-null="false"/>
+      </modifier>
+    </resource-type>
+  </resource-types>
+
+  <tile-types>
+    <!-- Hunt meat on all forests. -->
+    <tile-type id="model.tile.mixedForest" preserve="true">
+      <production>
+        <output goods-type="model.goods.meat" value="3"/>
+      </production>
+    </tile-type>
+    <tile-type id="model.tile.coniferForest" preserve="true">
+      <production>
+        <output goods-type="model.goods.meat" value="3"/>
+      </production>
+    </tile-type>
+    <tile-type id="model.tile.broadleafForest" preserve="true">
+      <production>
+        <output goods-type="model.goods.meat" value="3"/>
+      </production>
+    </tile-type>
+    <tile-type id="model.tile.tropicalForest" preserve="true">
+      <production>
+        <output goods-type="model.goods.meat" value="3"/>
+      </production>
+    </tile-type>
+    <tile-type id="model.tile.wetlandForest" preserve="true">
+      <production>
+        <output goods-type="model.goods.meat" value="2"/>
+      </production>
+    </tile-type>
+    <tile-type id="model.tile.rainForest" preserve="true">
+      <production>
+        <output goods-type="model.goods.meat" value="2"/>
+      </production>
+    </tile-type>
+    <tile-type id="model.tile.scrubForest" preserve="true">
+      <production>
+        <output goods-type="model.goods.meat" value="2"/>
+      </production>
+    </tile-type>
+    <tile-type id="model.tile.borealForest" preserve="true">
+      <production>
+        <output goods-type="model.goods.meat" value="3"/>
+      </production>
+    </tile-type>
+
+    <!-- Mine / collect salt on hills and desert (salt flats). -->
+    <tile-type id="model.tile.hills" preserve="true">
+      <production>
+        <output goods-type="model.goods.salt" value="3"/>
+      </production>
+      <resource type="model.resource.salt" probability="40"/>
+    </tile-type>
+    <tile-type id="model.tile.desert" preserve="true">
+      <production>
+        <output goods-type="model.goods.salt" value="3"/>
+      </production>
+      <resource type="model.resource.salt" probability="50"/>
+    </tile-type>
+    <tile-type id="model.tile.mountains" preserve="true">
+      <production>
+        <output goods-type="model.goods.salt" value="2"/>
+      </production>
+      <resource type="model.resource.salt" probability="25"/>
+    </tile-type>
+  </tile-types>
+
+  <unit-types>
+    <unit-type id="model.unit.expertHunter" extends="colonist"
+               price="1000" skill="1" expert-production="model.goods.meat"
+               recruit-probability="1" score-value="4">
+      <modifier id="model.goods.meat" index="30"
+                type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.expertSaltMiner" extends="colonist"
+               price="900" skill="1" expert-production="model.goods.salt"
+               recruit-probability="1" score-value="4">
+      <modifier id="model.goods.salt" index="30"
+                type="multiplicative" value="2"/>
+    </unit-type>
+    <!-- Expert meat salter (building specialist). -->
+    <unit-type id="model.unit.masterSalter" extends="colonist"
+               price="1100" skill="2" expert-production="model.goods.saltMeat"
+               recruit-probability="1" score-value="5">
+      <modifier id="model.goods.saltMeat" index="30"
+                type="multiplicative" value="2"/>
+    </unit-type>
+    <!-- Native experts, only reachable with the conversos mod. -->
+    <unit-type id="model.unit.nativeExpertHunter" extends="model.unit.indianConvert"
+               expert-production="model.goods.meat" score-value="4"
+               maximum-experience="0">
+      <ability id="model.ability.nativeConvert" value="true"/>
+      <modifier id="model.goods.meat" index="30"
+                type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeExpertSaltMiner" extends="model.unit.indianConvert"
+               expert-production="model.goods.salt" score-value="4"
+               maximum-experience="0">
+      <ability id="model.ability.nativeConvert" value="true"/>
+      <modifier id="model.goods.salt" index="30"
+                type="multiplicative" value="2"/>
+    </unit-type>
+  </unit-types>
+
+  <unit-change-types>
+    <unit-change-type id="model.unitChange.clearSkill" preserve="true">
+      <unit-type-change id="model.unitChange.clearSkill.expertHunter"
+                        from="model.unit.expertHunter"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.expertSaltMiner"
+                        from="model.unit.expertSaltMiner"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.masterSalter"
+                        from="model.unit.masterSalter"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeExpertHunter"
+                        from="model.unit.nativeExpertHunter"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeExpertSaltMiner"
+                        from="model.unit.nativeExpertSaltMiner"
+                        to="model.unit.indianConvert" probability="100"/>
+    </unit-change-type>
+    <unit-change-type id="model.unitChange.education" preserve="true">
+      <unit-type-change id="model.unitChange.education.expertHunter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertHunter"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.expertSaltMiner"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertSaltMiner"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterSalter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.masterSalter"
+                        probability="100" turns="6"/>
+    </unit-change-type>
+    <unit-change-type id="model.unitChange.experience" preserve="true">
+      <unit-type-change id="model.unitChange.experience.expertHunter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertHunter" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.expertSaltMiner"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertSaltMiner" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.masterSalter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.masterSalter" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.nativeExpertHunter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertHunter" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeExpertSaltMiner"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertSaltMiner" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+    </unit-change-type>
+    <unit-change-type id="model.unitChange.natives" preserve="true">
+      <unit-type-change id="model.unitChange.natives.indenturedServant-expertHunter"
+                        from="model.unit.indenturedServant"
+                        to="model.unit.expertHunter" probability="100"/>
+      <unit-type-change id="model.unitChange.natives.freeColonist-expertHunter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertHunter" probability="100"/>
+      <unit-type-change id="model.unitChange.natives.indenturedServant-expertSaltMiner"
+                        from="model.unit.indenturedServant"
+                        to="model.unit.expertSaltMiner" probability="100"/>
+      <unit-type-change id="model.unitChange.natives.freeColonist-expertSaltMiner"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertSaltMiner" probability="100"/>
+    </unit-change-type>
+  </unit-change-types>
+
+  <building-types>
+    <!-- Same cost as basicBuildings *Houses: meat + salt → salt meat -->
+    <building-type id="model.building.saltingHouse">
+      <production>
+        <input goods-type="model.goods.meat" value="3"/>
+        <input goods-type="model.goods.salt" value="3"/>
+        <output goods-type="model.goods.saltMeat" value="3"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="32"/>
+    </building-type>
+    <building-type id="model.building.saltingWorks"
+                   extends="model.building.saltingHouse"
+                   upgrades-from="model.building.saltingHouse"
+                   competence-factor="2"
+                   upkeep="5">
+      <production>
+        <input goods-type="model.goods.meat" value="6"/>
+        <input goods-type="model.goods.salt" value="6"/>
+        <output goods-type="model.goods.saltMeat" value="6"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="64"/>
+      <required-goods id="model.goods.tools" value="20"/>
+    </building-type>
+    <building-type id="model.building.packingHouse"
+                   extends="model.building.saltingWorks"
+                   upgrades-from="model.building.saltingWorks"
+                   experts-with-connections-production="4"
+                   competence-factor="3" rebel-factor="1.5"
+                   required-population="8" upkeep="15">
+      <production>
+        <input goods-type="model.goods.meat" value="6"/>
+        <input goods-type="model.goods.salt" value="6"/>
+        <output goods-type="model.goods.saltMeat" value="9"/>
+      </production>
+      <required-goods id="model.goods.hammers" value="160"/>
+      <required-goods id="model.goods.tools" value="100"/>
+      <required-ability id="model.ability.buildFactory"/>
+      <ability id="model.ability.expertsUseConnections" value="true"/>
+    </building-type>
+  </building-types>
+
+  <indian-nation-types>
+    <indian-nation-type id="model.nationType.sioux" preserve="true">
+      <skill id="model.unit.expertHunter" probability="10"/>
+    </indian-nation-type>
+    <indian-nation-type id="model.nationType.iroquois" preserve="true">
+      <skill id="model.unit.expertHunter" probability="10"/>
+    </indian-nation-type>
+    <indian-nation-type id="model.nationType.tupi" preserve="true">
+      <skill id="model.unit.expertHunter" probability="10"/>
+    </indian-nation-type>
+    <indian-nation-type id="model.nationType.apache" preserve="true">
+      <skill id="model.unit.expertSaltMiner" probability="10"/>
+    </indian-nation-type>
+    <indian-nation-type id="model.nationType.aztec" preserve="true">
+      <skill id="model.unit.expertSaltMiner" probability="10"/>
+    </indian-nation-type>
+  </indian-nation-types>
+</freecol-specification>

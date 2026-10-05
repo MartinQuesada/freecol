@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    *  Copyright (C) 2026  The FreeCol Team
+    *
+    *  This file is part of FreeCol.
+    *
+    *  FreeCol is free software: you can redistribute it and/or modify
+    *  it under the terms of the GNU General Public License as published by
+    *  the Free Software Foundation, either version 2 of the License, or
+    *  (at your option) any later version.
+    *
+    *  FreeCol is distributed in the hope that it will be useful,
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    *  GNU General Public License for more details.
+    *
+    *  You should have received a copy of the GNU General Public License
+    *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+    *
+  -->
+<!--
+    Converts: with Bartolome de las Casas in the Congress, Indian converts
+    gain experience in outdoor work and may become native experts.  They
+    stay converts in every other respect: they cannot found colonies, are
+    poor at indoor work and cannot teach (skill 0).  The one-time
+    conversion of all converts into free colonists is removed.
+  -->
+<freecol-specification id="conversos" version="0.1">
+  <unit-change-types>
+    <!-- Empty redefinition: Las Casas no longer turns converts into
+         free colonists. -->
+    <unit-change-type id="model.unitChange.foundingFather"/>
+    <unit-change-type id="model.unitChange.experience" preserve="true">
+      <unit-type-change id="model.unitChange.experience.nativeExpertFarmer"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertFarmer" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeExpertFisherman"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertFisherman" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeExpertFurTrapper"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertFurTrapper" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeExpertSilverMiner"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertSilverMiner" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeExpertLumberJack"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertLumberJack" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeExpertOreMiner"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertOreMiner" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeMasterSugarPlanter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeMasterSugarPlanter" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeMasterCottonPlanter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeMasterCottonPlanter" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeMasterTobaccoPlanter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeMasterTobaccoPlanter" probability="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+    </unit-change-type>
+    <unit-change-type id="model.unitChange.clearSkill" preserve="true">
+      <unit-type-change id="model.unitChange.clearSkill.nativeExpertFarmer"
+                        from="model.unit.nativeExpertFarmer"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeExpertFisherman"
+                        from="model.unit.nativeExpertFisherman"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeExpertFurTrapper"
+                        from="model.unit.nativeExpertFurTrapper"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeExpertSilverMiner"
+                        from="model.unit.nativeExpertSilverMiner"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeExpertLumberJack"
+                        from="model.unit.nativeExpertLumberJack"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeExpertOreMiner"
+                        from="model.unit.nativeExpertOreMiner"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeMasterSugarPlanter"
+                        from="model.unit.nativeMasterSugarPlanter"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeMasterCottonPlanter"
+                        from="model.unit.nativeMasterCottonPlanter"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeMasterTobaccoPlanter"
+                        from="model.unit.nativeMasterTobaccoPlanter"
+                        to="model.unit.indianConvert" probability="100"/>
+    </unit-change-type>
+  </unit-change-types>
+
+  <unit-types>
+    <!-- Full redefinition, maximum-experience is an attribute. -->
+    <unit-type id="model.unit.indianConvert"
+               skill="0" offence="0" defence="1" movement="3" line-of-sight="1"
+               maximum-attrition="8" score-value="3" hit-points="5"
+               maximum-experience="200">
+      <consumes id="model.goods.food" value="2"/>
+      <consumes id="model.goods.bells" value="1"/>
+      <ability id="model.ability.person"
+               value="true"/>
+      <ability id="model.ability.foundColony"
+               value="false"/>
+      <ability id="model.ability.nativeConvert"
+               value="true"/>
+      <modifier id="model.goods.grain"   index="30" type="additive" value="1"/>
+      <modifier id="model.goods.sugar"   index="30" type="additive" value="1"/>
+      <modifier id="model.goods.tobacco" index="30" type="additive" value="1"/>
+      <modifier id="model.goods.cotton"  index="30" type="additive" value="1"/>
+      <modifier id="model.goods.furs"    index="30" type="additive" value="1"/>
+      <modifier id="model.goods.fish"    index="30" type="additive" value="1"/>
+      <modifier id="model.goods.rum"     index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.cigars"  index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.cloth"   index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.coats"   index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.muskets" index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.bells"   index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.crosses" index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.hammers" index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.tools"   index="30" type="additive" value="-2"/>
+    </unit-type>
+
+    <!-- Native experts keep the convert's bonuses and penalties and add
+         the matching European expert's bonus on top. -->
+    <unit-type id="model.unit.nativeExpertFarmer" extends="model.unit.indianConvert"
+               expert-production="model.goods.grain" score-value="4"
+               maximum-experience="0">
+      <modifier id="model.goods.grain" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeExpertFisherman" extends="model.unit.indianConvert"
+               expert-production="model.goods.fish" score-value="4"
+               maximum-experience="0">
+      <modifier id="model.goods.fish" index="30" type="additive" value="3"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeExpertFurTrapper" extends="model.unit.indianConvert"
+               expert-production="model.goods.furs" score-value="4"
+               maximum-experience="0">
+      <modifier id="model.goods.furs" index="30" type="multiplicative" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeExpertSilverMiner" extends="model.unit.indianConvert"
+               expert-production="model.goods.silver" score-value="4"
+               maximum-experience="0">
+      <modifier id="model.goods.silver" index="30" type="multiplicative" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeExpertLumberJack" extends="model.unit.indianConvert"
+               expert-production="model.goods.lumber" score-value="4"
+               maximum-experience="0">
+      <modifier id="model.goods.lumber" index="30" type="multiplicative" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeExpertOreMiner" extends="model.unit.indianConvert"
+               expert-production="model.goods.ore" score-value="4"
+               maximum-experience="0">
+      <modifier id="model.goods.ore" index="30" type="multiplicative" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeMasterSugarPlanter" extends="model.unit.indianConvert"
+               expert-production="model.goods.sugar" score-value="4"
+               maximum-experience="0">
+      <modifier id="model.goods.sugar" index="30" type="multiplicative" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeMasterCottonPlanter" extends="model.unit.indianConvert"
+               expert-production="model.goods.cotton" score-value="4"
+               maximum-experience="0">
+      <modifier id="model.goods.cotton" index="30" type="multiplicative" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeMasterTobaccoPlanter" extends="model.unit.indianConvert"
+               expert-production="model.goods.tobacco" score-value="4"
+               maximum-experience="0">
+      <modifier id="model.goods.tobacco" index="30" type="multiplicative" value="2"/>
+    </unit-type>
+  </unit-types>
+</freecol-specification>

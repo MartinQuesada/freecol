@@ -800,10 +800,13 @@ public class ServerPlayer extends Player implements TurnTaker {
         final Game game = getGame();
         final Specification spec = game.getSpecification();
         final int age = game.getAge();
+        final boolean historical
+            = spec.getBoolean(GameOptions.HISTORICAL_FOUNDING_FATHERS);
         EnumMap<FoundingFatherType, List<RandomChoice<FoundingFather>>> choices
             = new EnumMap<>(FoundingFatherType.class);
         for (FoundingFather father : transform(spec.getFoundingFathers(),
-                ff -> !hasFather(ff) && ff.isAvailableTo(this))) {
+                ff -> !hasFather(ff) && ff.isAvailableTo(this)
+                    && (!historical || ff.getHistoricalAge() <= age))) {
             FoundingFatherType type = father.getType();
             List<RandomChoice<FoundingFather>> rc = choices.get(type);
             if (rc == null) rc = new ArrayList<>();
@@ -2057,6 +2060,20 @@ outer:  for (Effect effect : effects) {
                         cs.add(See.only(this), is);
                     }
                     csChangeStance(Stance.PEACE, p, true, cs);
+                }
+                break;
+
+            case "model.event.exploreAroundColonies":
+                for (Colony colony : getColonyList()) {
+                    final int radius = (int)father
+                        .apply((float)colony.getLineOfSight(),
+                            turn, Modifier.EXPOSED_TILES_RADIUS);
+                    Set<Tile> tiles = exploreTiles(colony.getTile()
+                        .getSurroundingTiles(1, radius));
+                    if (!tiles.isEmpty()) {
+                        visibilityChange = true;//-vis(this)
+                        cs.add(See.only(this), tiles);
+                    }
                 }
                 break;
 
