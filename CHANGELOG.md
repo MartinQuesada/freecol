@@ -1,3 +1,27 @@
+## Libertadores mod pack 0.3.0 (5th of October, 2026) ##
+
+Changes in this fork, on top of FreeCol 1.2.1. See README.md for the list of mods. Mod games need a new game; savegames without mods are unaffected.
+
+### Mods ###
+* Libertadores 0.3: six new founding fathers from Latin American history (Hidalgo, Vieira, Roque González, Azara, Jorge Juan and Ulloa, Cochrane) and seven from the 17th century (Roger Williams, Colbert, John Rolfe, Champlain, De Ruyter, Vauban, Marie de l'Incarnation). Jacob Fugger and Henry Hudson are back. Hamilton now gives +50% tools. 48 candidates in total.
+* Conversos 0.1 (new): with Las Casas, converts gain experience in outdoor jobs and become native experts. They stay converts: no colonies, poor in buildings, no teaching. Las Casas no longer turns converts into free colonists.
+* Cacao 0.3, Vanilla 0.2, Tasajo 0.5: native cacao and vanilla planters, hunters and salt miners for use with Conversos.
+* Cacao 0.3, Livestock 0.3, Taverns 0.2: creole salon (chocolate → bells), brotherhood hall (cheese → crosses) and tavern (rum → bells) work with no colonists and give a bonus with at least 50% rebels. Cows now give milk and cheese.
+* Deeper Buildings 0.3: the citadel has its own settlement image (a bastioned star fort) instead of reusing the fortress.
+* Lumber Craft 0.1: unchanged.
+
+### Rule Changes ###
+* New game option "Historical order of Founding Fathers" (off by default): each father is only offered from the age in which he lived (before 1600, 1600-1700, after 1700).
+
+### Mod development ###
+* Experience now targets the expert a unit can actually become, so several unit types can share an expert production.
+* New ability "model.ability.rebelBonusUnattended": buildings with no workers get the colony's rebel production bonus.
+* Owner "model.modifier.breedingFactor" modifiers apply to breeding buildings.
+* New founding father event "model.event.exploreAroundColonies".
+* Bugfix: "model.modifier.buildingPriceBonus" now works at any percentage, not only -100%.
+* The founding father `unit` element accepts `role` and `number` in the schema.
+* Launcher script bin/run-mods.sh runs the game from the repository with the mods enabled.
+
 ## FreeCol 1.2.1 (In development) ##
 
 All savegames (without mods) from 0.12.0 and up should continue working with 1.2.1.
