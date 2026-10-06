@@ -187,6 +187,28 @@ public class GameOptions {
         = "model.option.payForBuilding";
 
     /**
+     * Do boycotts prevent paying for the boycotted goods missing from
+     * a buildable?
+     */
+    public static final String BOYCOTT_BLOCKS_PAY_FOR_BUILDING
+        = "model.option.boycottBlocksPayForBuilding";
+
+    /** The minimum number of colonies needed to declare independence. */
+    public static final String MINIMUM_COLONIES_FOR_INDEPENDENCE
+        = "model.option.minimumColoniesForIndependence";
+
+    /**
+     * Do colonies with too few rebels stay loyal to the Crown when
+     * independence is declared?
+     */
+    public static final String LOYALIST_COLONIES
+        = "model.option.loyalistColonies";
+
+    /** The percentage of rebels a colony needs to join independence. */
+    public static final String LOYALIST_COLONIES_THRESHOLD
+        = "model.option.loyalistColoniesThreshold";
+
+    /**
      * Does a hammer surplus after a build completes accumulate to
      * the next build?
      */

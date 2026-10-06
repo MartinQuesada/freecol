@@ -3085,6 +3085,18 @@ public final class Specification implements OptionContainer {
         ret |= checkOp(GameOptions.HISTORICAL_FOUNDING_FATHERS,
                 GameOptions.GAMEOPTIONS_MAP,
                 Boolean.FALSE, BooleanOption.class);
+        ret |= checkOp(GameOptions.BOYCOTT_BLOCKS_PAY_FOR_BUILDING,
+                GameOptions.GAMEOPTIONS_MAP,
+                Boolean.FALSE, BooleanOption.class);
+        ret |= checkOp(GameOptions.MINIMUM_COLONIES_FOR_INDEPENDENCE,
+                GameOptions.GAMEOPTIONS_MAP,
+                0, IntegerOption.class);
+        ret |= checkOp(GameOptions.LOYALIST_COLONIES,
+                GameOptions.GAMEOPTIONS_MAP,
+                Boolean.FALSE, BooleanOption.class);
+        ret |= checkOp(GameOptions.LOYALIST_COLONIES_THRESHOLD,
+                GameOptions.GAMEOPTIONS_MAP,
+                50, IntegerOption.class);
         
         // SAVEGAME_VERSION == 14
         return ret;

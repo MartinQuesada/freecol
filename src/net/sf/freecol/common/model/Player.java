@@ -1575,10 +1575,36 @@ public class Player extends FreeColGameObject implements Nameable {
         final Event event = getSpecification()
             .getEvent("model.event.declareIndependence");
         Limit limit = find(event.getLimitValues(), l -> !l.evaluate(this));
-        return (limit == null) ? null
-            : StringTemplate.template(limit.getDescriptionKey())
+        if (limit != null) {
+            return StringTemplate.template(limit.getDescriptionKey())
                 .addAmount("%limit%", limit.getRightHandSide()
                     .getValue(getGame()));
+        }
+        final int colonies = getColonyList().size();
+        if (colonies > 0 && getLoyalistColonies().size() == colonies) {
+            return StringTemplate.template("model.player.noRebelColonies")
+                .addAmount("%limit%", getSpecification()
+                    .getInteger(GameOptions.LOYALIST_COLONIES_THRESHOLD));
+        }
+        return null;
+    }
+
+    /**
+     * Gets the colonies that would stay loyal to the Crown if this
+     * player declared independence now.
+     *
+     * @return A list of {@code Colony}s with too few rebels, empty if
+     *     loyalist colonies are disabled.
+     */
+    public List<Colony> getLoyalistColonies() {
+        final Specification spec = getSpecification();
+        if (!spec.getBoolean(GameOptions.LOYALIST_COLONIES)) {
+            return new ArrayList<>();
+        }
+        final int threshold
+            = spec.getInteger(GameOptions.LOYALIST_COLONIES_THRESHOLD);
+        return transform(getColonyList(),
+                         c -> c.getSonsOfLiberty() < threshold);
     }
 
     /**

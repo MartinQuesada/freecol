@@ -1227,7 +1227,28 @@ public class Colony extends Settlement implements TradeLocation {
      */
     public boolean canPayToFinishBuilding(BuildableType buildableType) {
         return buildableType != null
+                && getBoycottedRequiredGoods(buildableType).isEmpty()
                 && getOwner().checkGold(getPriceForBuilding(buildableType));
+    }
+
+    /**
+     * Gets the boycotted goods types that are still missing to build a
+     * given buildable, when boycotts prevent paying for them.
+     *
+     * @param buildableType The {@code BuildableType} to check.
+     * @return A list of boycotted {@code GoodsType}s, empty if the
+     *     buildable can be paid for.
+     */
+    public List<GoodsType> getBoycottedRequiredGoods(BuildableType buildableType) {
+        if (buildableType == null || !getSpecification()
+            .getBoolean(GameOptions.BOYCOTT_BLOCKS_PAY_FOR_BUILDING)) {
+            return new ArrayList<>();
+        }
+        final Player owner = getOwner();
+        return transform(getRequiredGoods(buildableType),
+                ag -> ag.getType().isStorable()
+                    && !owner.canTrade(ag.getType()),
+                AbstractGoods::getType);
     }
 
 

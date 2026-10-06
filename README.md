@@ -7,7 +7,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/FreeCol/freecol/all.svg)](https://github.com/FreeCol/freecol/releases) [![Latest Release Downloads](https://img.shields.io/github/downloads/FreeCol/freecol/total.svg)](https://github.com/FreeCol/freecol/releases)
 
-## This fork: Libertadores mod pack (v0.3.0)
+## This fork: Libertadores mod pack (v0.3.1)
 
 This fork of FreeCol 1.2.1 adds a set of mods inspired by the
 [FreeCol 2 ideas forum](https://sourceforge.net/p/freecol/discussion/719665/):
@@ -28,6 +28,17 @@ learn trades. A few small engine changes support them.
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla, a raw luxury export like silver |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | With Las Casas, converts gain experience in outdoor jobs and become native experts |
+
+### What's new in v0.3.1
+
+New game options, all off by default:
+
+- **Boycotts block paying for buildings:** you can not pay to finish a
+  building while goods it is missing, such as tools, are boycotted.
+- **Minimum colonies for independence.**
+- **Loyalist colonies:** when independence is declared, colonies with less
+  than 50% rebels (configurable) stay loyal to the Crown and join the
+  REF with every unit in them. You have to take them back to win.
 
 ### What's new in v0.3.0
 
@@ -67,6 +78,15 @@ FreeCol build those mods still load, but the affected effects do nothing.
 - Founding father `<unit>` accepts `role` and `number` in the schema
   (Champlain's scout).
 - Game option `model.option.historicalFoundingFathers` (off by default).
+- Game option `model.option.boycottBlocksPayForBuilding` (off by default):
+  you can not pay to finish a building while goods it is missing, such as
+  tools, are boycotted.
+- Game option `model.option.minimumColoniesForIndependence` (0 by default):
+  the number of colonies needed to declare independence.
+- Game options `model.option.loyalistColonies` (off by default) and
+  `model.option.loyalistColoniesThreshold` (50%): when independence is
+  declared, colonies below the threshold stay loyal to the Crown and join
+  the REF, and have to be taken back to win.
 
 ### Playing with the mods
 

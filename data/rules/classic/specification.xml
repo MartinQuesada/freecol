@@ -70,6 +70,12 @@
         <left-hand-side scope-level="player" method-name="getSoL" />
         <right-hand-side value="50" />
       </limit>
+      <limit id="model.limit.independence.minimumColonies" operator="ge">
+        <left-hand-side operand-type="settlements" scope-level="player"
+                        method-name="isUndead" method-value="false" />
+        <right-hand-side operand-type="option" scope-level="game"
+                         type="model.option.minimumColoniesForIndependence"/>
+      </limit>
       <limit id="model.limit.independence.coastalColonies" operator="ge">
         <left-hand-side operand-type="settlements" scope-level="player"
                         method-name="isConnectedPort" method-value="true" />
@@ -4749,10 +4755,25 @@
         <!-- Can colonies be founded during the war of independence? -->
         <booleanOption id="model.option.foundColonyDuringRebellion"
                        defaultValue="false"/>
+        <!-- The minimum number of colonies needed to declare
+             independence (0 = no minimum). -->
+        <integerOption id="model.option.minimumColoniesForIndependence"
+                       value="0" minimumValue="0" maximumValue="50"/>
+        <!-- Do colonies with too few rebels stay loyal to the Crown
+             when independence is declared? -->
+        <booleanOption id="model.option.loyalistColonies"
+                       defaultValue="false"/>
+        <!-- The percentage of rebels a colony needs to join the
+             declaration of independence. -->
+        <integerOption id="model.option.loyalistColoniesThreshold"
+                       value="50" minimumValue="1" maximumValue="100"/>
         <!-- Can colony buildings be completed quickly by paying for the
              missing goods? -->
         <booleanOption id="model.option.payForBuilding"
                        defaultValue="true"/>
+        <!-- Do boycotts prevent paying for missing boycotted goods? -->
+        <booleanOption id="model.option.boycottBlocksPayForBuilding"
+                       defaultValue="false"/>
         <!-- Overflow hammer and cross production is preserved? -->
         <booleanOption id="model.option.saveProductionOverflow"
                        defaultValue="true"/>

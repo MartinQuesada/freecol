@@ -1442,6 +1442,31 @@ public final class InGameController extends Controller {
                     spec.getInteger(GameOptions.INTERVENTION_BELLS)));
         serverPlayer.csChangeStance(Stance.WAR, refPlayer, true, cs);
 
+        // Colonies with too few rebels stay loyal to the Crown, with
+        // every unit on their tiles.
+        List<Colony> loyal = serverPlayer.getLoyalistColonies();
+        if (!loyal.isEmpty()) {
+            StringTemplate names = StringTemplate.label(", ");
+            for (Colony colony : loyal) {
+                names.addName(colony.getName());
+                Tile tile = colony.getTile();
+                for (Unit u : tile.getUnitList()) {
+                    serverPlayer.csChangeOwner(u, refPlayer, null, null, cs);
+                }
+                serverPlayer.csLoseLocation(colony, cs);
+                ((ServerColony)colony).csChangeOwner(refPlayer, false,
+                                                     null, cs);
+                cs.add(See.perhaps().always(serverPlayer), tile);
+            }
+            cs.addMessage(serverPlayer,
+                new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                 "declareIndependence.loyalistColonies",
+                                 serverPlayer)
+                    .addStringTemplate("%colonies%", names));
+            serverPlayer.invalidateCanSeeTiles();
+            refPlayer.invalidateCanSeeTiles();
+        }
+
         // Generalized continental army muster.
         // Do not use UnitType.getTargetType.
         java.util.Map<UnitType, List<Unit>> unitMap = new HashMap<>();
@@ -3284,6 +3309,10 @@ public final class InGameController extends Controller {
         if (build == null) {
             return serverPlayer.clientError("Colony " + colony.getId()
                 + " is not building anything!");
+        }
+        if (!colony.getBoycottedRequiredGoods(build).isEmpty()) {
+            return serverPlayer.clientError("Can not pay for boycotted goods for "
+                + build);
         }
         List<AbstractGoods> required = colony.getRequiredGoods(build);
         int price = colony.getPriceForBuilding(build);

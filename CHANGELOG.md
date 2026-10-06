@@ -1,3 +1,10 @@
+## Libertadores mod pack 0.3.1 (6th of October, 2026) ##
+
+### Rule Changes ###
+* New game option "Boycotts block paying for buildings" (off by default): a buildable can not be paid for while goods it is missing, such as tools, are boycotted in Europe.
+* New game option "Minimum colonies for independence" (0 by default, no minimum).
+* New game option "Loyalist colonies" (off by default): when independence is declared, colonies with less than 50% rebels (configurable) stay loyal to the Crown and join the Royal Expeditionary Force with every unit on their tiles. Since the REF does not surrender while it holds a colony, they have to be taken back to win. The declaration warns which colonies would stay loyal, and is refused if none would join.
+
 ## Libertadores mod pack 0.3.0 (5th of October, 2026) ##
 
 Changes in this fork, on top of FreeCol 1.2.1. See README.md for the list of mods. Mod games need a new game; savegames without mods are unaffected.

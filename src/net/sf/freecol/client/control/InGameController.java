@@ -3253,6 +3253,18 @@ public final class InGameController extends FreeColClientHolder {
             return false;
         }
 
+        List<Colony> loyal = player.getLoyalistColonies();
+        if (!loyal.isEmpty()) {
+            StringTemplate names = StringTemplate.label(", ");
+            for (Colony c : loyal) names.addName(c.getName());
+            StringTemplate t = StringTemplate
+                .template("declareIndependence.confirmLoyalists")
+                .addStringTemplate("%colonies%", names)
+                .addAmount("%limit%", getSpecification()
+                    .getInteger(GameOptions.LOYALIST_COLONIES_THRESHOLD));
+            if (!getGUI().modalConfirmDialog(t, "yes", "no")) return false;
+        }
+
         // Confirm intention, and collect nation+country names.
         List<String> names = getGUI().showConfirmDeclarationDialog();
         if (names == null
@@ -4565,6 +4577,17 @@ public final class InGameController extends FreeColClientHolder {
 
         if (!getSpecification().getBoolean(GameOptions.PAY_FOR_BUILDING)) {
             showInformationPanel(null, "payForBuilding.disabled");
+            return false;
+        }
+
+        List<GoodsType> boycotted = colony
+            .getBoycottedRequiredGoods(colony.getCurrentlyBuilding());
+        if (!boycotted.isEmpty()) {
+            StringTemplate goods = StringTemplate.label(", ");
+            for (GoodsType gt : boycotted) goods.addNamed(gt);
+            showInformationPanel(null, StringTemplate
+                .template("payForBuilding.boycotted")
+                .addStringTemplate("%goods%", goods));
             return false;
         }
 
