@@ -7,7 +7,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/FreeCol/freecol/all.svg)](https://github.com/FreeCol/freecol/releases) [![Latest Release Downloads](https://img.shields.io/github/downloads/FreeCol/freecol/total.svg)](https://github.com/FreeCol/freecol/releases)
 
-## This fork: Libertadores mod pack (v0.3.1)
+## This fork: Libertadores mod pack (v0.3.2)
 
 This fork of FreeCol 1.2.1 adds a set of mods inspired by the
 [FreeCol 2 ideas forum](https://sourceforge.net/p/freecol/discussion/719665/):
@@ -19,7 +19,7 @@ learn trades. A few small engine changes support them.
 
 | Mod | Version | What it adds |
 |-----|---------|--------------|
-| [Libertadores](data/mods/libertadores/README.md) | 0.3 | 23 founding fathers (San Martín, Miranda, Sor Juana, Humboldt, Hamilton, Colbert, Champlain, Vauban…); 48 candidates in total |
+| [Libertadores](data/mods/libertadores/README.md) | 0.4 | 23 founding fathers (San Martín, Miranda, Sor Juana, Humboldt, Hamilton, Colbert, Champlain, Vauban…); 48 candidates in total |
 | [Deeper Buildings](data/mods/deeperBuildings/README.md) | 0.3 | Timber mill, City hall, Basilica and Citadel, with their own art (the citadel is a bastioned star fort on the map) |
 | [Tasajo](data/mods/tasajo/README.md) | 0.5 | Hunting meat, salt mines and the salting house chain to export salt meat |
 | [Lumber Craft](data/mods/lumberCraft/README.md) | 0.1 | Tools and muskets also consume lumber |
@@ -28,6 +28,15 @@ learn trades. A few small engine changes support them.
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla, a raw luxury export like silver |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | With Las Casas, converts gain experience in outdoor jobs and become native experts |
+
+### What's new in v0.3.2
+
+- **Libertadores 0.4:** founding fathers are weighted by the phase of the
+  game in which their effect is most useful, as the base game does, instead
+  of by when they lived. Hernando de Soto moves to the early game.
+- The "Historical order" option is renamed **Founding fathers by game
+  phase**.
+- Libertadores portraits use the same gilded frame as the base game's.
 
 ### What's new in v0.3.1
 
@@ -47,8 +56,8 @@ New game options, all off by default:
   from the 17th century (Roger Williams, Colbert, John Rolfe, Champlain,
   De Ruyter, Vauban, Marie de l'Incarnation). Jacob Fugger and Henry Hudson
   are back; Hamilton now gives +50% tools.
-- **Historical order of founding fathers:** new game option. Each father is
-  only offered from the age in which he lived (before 1600, 1600–1700,
+- **Founding fathers by game phase:** new game option. Each father is only
+  offered from the era in which he is most useful (before 1600, 1600–1700,
   after 1700).
 - **Conversos** (new mod): Las Casas no longer turns converts into free
   colonists. Converts learn outdoor trades instead and become native
@@ -77,7 +86,8 @@ FreeCol build those mods still load, but the affected effects do nothing.
   Vauban).
 - Founding father `<unit>` accepts `role` and `number` in the schema
   (Champlain's scout).
-- Game option `model.option.historicalFoundingFathers` (off by default).
+- Game option `model.option.historicalFoundingFathers`, shown as "Founding
+  Fathers by game phase" (off by default).
 - Game option `model.option.boycottBlocksPayForBuilding` (off by default):
   you can not pay to finish a building while goods it is missing, such as
   tools, are boycotted.

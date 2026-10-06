@@ -1,3 +1,12 @@
+## Libertadores mod pack 0.3.2 (6th of October, 2026) ##
+
+### Mods ###
+* Libertadores 0.4: founding fathers are weighted by the phase of the game in which their effect is most useful, as the base game does, instead of by when they lived. Humboldt, Azara, Jorge Juan and Ulloa, Vieira, John Rolfe and Champlain move to the early game; Hamilton and Cochrane to the middle. Hernando de Soto moves to the early game, while there are still lost city rumours.
+* Libertadores 0.4: portraits use the same gilded frame as the base game's.
+
+### Rule Changes ###
+* The "Historical order of Founding Fathers" option is renamed "Founding Fathers by game phase", which is what it does: a father is offered from the era in which his weight is highest.
+
 ## Libertadores mod pack 0.3.1 (6th of October, 2026) ##
 
 ### Rule Changes ###

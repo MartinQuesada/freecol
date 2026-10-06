@@ -18,11 +18,23 @@
     *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
     *
   -->
-<freecol-specification id="libertadores" version="0.3">
+<freecol-specification id="libertadores" version="0.4">
   <founding-fathers>
+    <!-- Hernando de Soto (base game): weighted towards the early game,
+         while lost city rumours remain. -->
+    <founding-father id="model.foundingFather.hernandoDeSoto"
+                     type="exploration"
+                     weight1="10" weight2="5" weight3="1">
+      <modifier id="model.modifier.lineOfSightBonus"
+                type="additive" value="1">
+        <scope ability-id="model.ability.navalUnit" ability-value="false"/>
+      </modifier>
+      <ability id="model.ability.rumoursAlwaysPositive"
+               value="true"/>
+    </founding-father>
     <!-- Alexander Hamilton: Report on Manufactures (1791) — tools -->
     <founding-father id="model.foundingFather.alexanderHamilton" type="trade"
-                     weight1="0" weight2="2" weight3="8">
+                     weight1="2" weight2="8" weight3="5">
       <modifier id="model.goods.tools" index="40"
                 type="percentage" value="50">
         <scope ability-id="model.ability.person" match-negated="true"/>
@@ -31,7 +43,7 @@
 
     <!-- Alexander von Humboldt: naturalist — more food -->
     <founding-father id="model.foundingFather.alexanderVonHumboldt" type="exploration"
-                     weight1="0" weight2="2" weight3="8">
+                     weight1="8" weight2="4" weight3="2">
       <modifier id="model.goods.grain" index="40"
                 type="percentage" value="50">
         <scope ability-id="model.ability.person" match-negated="false"/>
@@ -153,7 +165,7 @@
     </founding-father>
     <!-- Thomas Cochrane: Chilean, Peruvian and Brazilian navies — naval attack -->
     <founding-father id="model.foundingFather.thomasCochrane" type="military"
-                     weight1="0" weight2="1" weight3="8">
+                     weight1="1" weight2="8" weight3="5">
       <modifier id="model.modifier.offence" index="50"
                 type="percentage" value="50">
         <scope ability-id="model.ability.navalUnit" ability-value="true"/>
@@ -171,7 +183,7 @@
 
     <!-- Antonio Vieira: Jesuit defender of the natives in Brazil — conversions -->
     <founding-father id="model.foundingFather.antonioVieira" type="religious"
-                     weight1="1" weight2="8" weight3="2">
+                     weight1="8" weight2="5" weight3="1">
       <modifier id="model.modifier.nativeConvertBonus"
                 type="percentage" value="20"/>
     </founding-father>
@@ -213,14 +225,14 @@
 
     <!-- Felix de Azara: naturalist of the pampas — livestock breeding -->
     <founding-father id="model.foundingFather.felixDeAzara" type="exploration"
-                     weight1="0" weight2="2" weight3="8">
+                     weight1="8" weight2="4" weight3="2">
       <modifier id="model.modifier.breedingFactor"
                 type="percentage" value="50"/>
     </founding-father>
 
     <!-- Jorge Juan and Antonio de Ulloa: geodesic mission (1735) — maps -->
     <founding-father id="model.foundingFather.jorgeJuanYUlloa" type="exploration"
-                     weight1="0" weight2="4" weight3="8">
+                     weight1="8" weight2="5" weight3="2">
       <event id="model.event.exploreAroundColonies"/>
       <modifier id="model.modifier.exposedTilesRadius"
                 type="additive" value="5"/>
@@ -264,7 +276,7 @@
 
     <!-- John Rolfe: tobacco in Virginia -->
     <founding-father id="model.foundingFather.johnRolfe" type="trade"
-                     weight1="3" weight2="8" weight3="2">
+                     weight1="8" weight2="5" weight3="2">
       <modifier id="model.goods.tobacco" index="40"
                 type="percentage" value="50">
         <scope ability-id="model.ability.person" match-negated="false"/>
@@ -273,7 +285,7 @@
 
     <!-- Samuel de Champlain: Quebec and the Huron alliance -->
     <founding-father id="model.foundingFather.samuelDeChamplain" type="exploration"
-                     weight1="4" weight2="8" weight3="1">
+                     weight1="8" weight2="5" weight3="1">
       <unit id="model.unit.seasonedScout" role="model.role.scout"/>
       <modifier id="model.modifier.nativeAlarmModifier"
                 type="percentage" value="-25"/>
