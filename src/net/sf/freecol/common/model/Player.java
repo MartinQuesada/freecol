@@ -1545,7 +1545,24 @@ public class Player extends FreeColGameObject implements Nameable {
         final Specification spec = getSpecification();
         int base = spec.getInteger(GameOptions.FOUNDING_FATHER_FACTOR);
         int count = getFatherCount();
-        return (count == 0) ? base : 2 * (count + 1) * base + 1;
+        int cost = (count == 0) ? base : 2 * (count + 1) * base + 1;
+        return cost * getFoundingFatherCostScale() / 2;
+    }
+
+    /**
+     * Gets the turns-per-year scale of the founding father cost, in
+     * halves: 2 for the standard two seasons a year, 24 for months.
+     *
+     * @return The scale, as a multiple of 1/2.
+     */
+    private int getFoundingFatherCostScale() {
+        final Specification spec = getSpecification();
+        final Game game = getGame();
+        if (!spec.getBoolean(GameOptions.SCALE_FOUNDING_FATHER_COST)
+            || game == null || game.getTurn() == null
+            || game.getTurn().getYear()
+                < spec.getInteger(GameOptions.SEASON_YEAR)) return 2;
+        return Math.max(2, spec.getInteger(GameOptions.SEASONS));
     }
 
     /**

@@ -7,7 +7,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/FreeCol/freecol/all.svg)](https://github.com/FreeCol/freecol/releases) [![Latest Release Downloads](https://img.shields.io/github/downloads/FreeCol/freecol/total.svg)](https://github.com/FreeCol/freecol/releases)
 
-## This fork: Libertadores mod pack (v0.3.2)
+## This fork: Libertadores mod pack (v0.3.3)
 
 This fork of FreeCol 1.2.1 adds a set of mods inspired by the
 [FreeCol 2 ideas forum](https://sourceforge.net/p/freecol/discussion/719665/):
@@ -28,6 +28,21 @@ learn trades. A few small engine changes support them.
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla, a raw luxury export like silver |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | With Las Casas, converts gain experience in outdoor jobs and become native experts |
+| [HD Graphics](data/mods/hdGraphics/README.md) | 0.1 | High-resolution units, ships and settlements, painted founding father portraits and smoother terrain transitions |
+
+### What's new in v0.3.3
+
+- **HD Graphics** (new mod): all 64 base unit images, ships included,
+  redrawn in high resolution in the game's style; sharper native
+  settlements; oil-painting portraits for all 48 founding fathers; wider,
+  irregular transitions between terrain types. Graphics only.
+- **Founding father cost by turns per year:** new game option, on by
+  default. With more than two turns a year fathers cost proportionally
+  more (six times as much with monthly turns).
+- Bugfix: founding father recruitment no longer stalls with monthly turns
+  before 1600.
+- The soldier, scout and other role images used by the Cacao, Vanilla,
+  Tasajo and Conversos experts are no longer blurry when zoomed in.
 
 ### What's new in v0.3.2
 
@@ -88,6 +103,9 @@ FreeCol build those mods still load, but the affected effects do nothing.
   (Champlain's scout).
 - Game option `model.option.historicalFoundingFathers`, shown as "Founding
   Fathers by game phase" (off by default).
+- Game option `model.option.scaleFoundingFatherCost` (on by default):
+  founding fathers cost more with more turns per year, six times as much
+  with monthly turns. No change with the standard two seasons.
 - Game option `model.option.boycottBlocksPayForBuilding` (off by default):
   you can not pay to finish a building while goods it is missing, such as
   tools, are boycotted.
@@ -120,6 +138,8 @@ start a new game.
 Founding father portraits are public-domain works from Wikimedia Commons
 (see [credits](data/mods/libertadores/CREDITS.md)). Building, goods and
 unit art is recolored from GPL FreeCol art or generated for these mods.
+The HD Graphics art is AI-generated, using the GPL FreeCol sprites as
+reference.
 
 FreeCol is a turn-based strategy game based on the old game
 Colonization, and similar to Civilization. The objective of the game is

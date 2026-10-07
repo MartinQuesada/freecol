@@ -103,6 +103,13 @@ public class GameOptions {
     public static final String HISTORICAL_FOUNDING_FATHERS
         = "model.option.historicalFoundingFathers";
 
+    /**
+     * Does the founding father cost scale with the number of turns per
+     * year (relative to two seasons)?
+     */
+    public static final String SCALE_FOUNDING_FATHER_COST
+        = "model.option.scaleFoundingFatherCost";
+
     /** Does the REF "teleport" to its first target. */
     public static final String TELEPORT_REF
         = "model.option.teleportREF";

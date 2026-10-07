@@ -802,17 +802,33 @@ public class ServerPlayer extends Player implements TurnTaker {
         final int age = game.getAge();
         final boolean historical
             = spec.getBoolean(GameOptions.HISTORICAL_FOUNDING_FATHERS);
-        EnumMap<FoundingFatherType, List<RandomChoice<FoundingFather>>> choices
+        EnumMap<FoundingFatherType, List<FoundingFather>> candidates
             = new EnumMap<>(FoundingFatherType.class);
         for (FoundingFather father : transform(spec.getFoundingFathers(),
                 ff -> !hasFather(ff) && ff.isAvailableTo(this)
                     && (!historical || ff.getHistoricalAge() <= age))) {
-            FoundingFatherType type = father.getType();
-            List<RandomChoice<FoundingFather>> rc = choices.get(type);
-            if (rc == null) rc = new ArrayList<>();
-            int weight = father.getWeight(age);
-            rc.add(new RandomChoice<>(father, weight));
-            choices.put(father.getType(), rc);
+            candidates.computeIfAbsent(father.getType(),
+                                       k -> new ArrayList<>()).add(father);
+        }
+        // If no candidate of a type has any weight in this age, use the
+        // weights of the next age that has some, so that recruitment
+        // does not stall until the age changes.
+        EnumMap<FoundingFatherType, List<RandomChoice<FoundingFather>>> choices
+            = new EnumMap<>(FoundingFatherType.class);
+        for (Entry<FoundingFatherType, List<FoundingFather>> e
+                 : candidates.entrySet()) {
+            List<FoundingFather> ffs = e.getValue();
+            int a = age;
+            while (a < Specification.NUMBER_OF_AGES - 1) {
+                final int a0 = a;
+                if (any(ffs, ff -> ff.getWeight(a0) > 0)) break;
+                a++;
+            }
+            List<RandomChoice<FoundingFather>> rc = new ArrayList<>();
+            for (FoundingFather ff : ffs) {
+                rc.add(new RandomChoice<>(ff, ff.getWeight(a)));
+            }
+            choices.put(e.getKey(), rc);
         }
 
         // Select one from each father type

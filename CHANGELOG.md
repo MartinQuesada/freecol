@@ -1,3 +1,13 @@
+## Libertadores mod pack 0.3.3 (7th of October, 2026) ##
+
+### Mods ###
+* New mod HD Graphics: high-resolution redraws of all 64 base unit images (colonists, experts, soldiers, dragoons, scouts, pioneers, missionaries, native and royal units, ships, artillery and wagons), sharper native settlements, oil-painting portraits for all 48 Founding Fathers and smoother transitions between terrain types. Graphics only.
+* Cacao, Vanilla, Tasajo and Conversos: the copies of the soldier, dragoon, scout, missionary and pioneer images used by their experts now include the high-resolution versions, so they are no longer blurry when zoomed in. Sharper Tasajo expert hunter and expert salt miner.
+
+### Rule Changes ###
+* New game option "Founding Father cost by turns per year" (on by default): with more than two turns a year, Founding Fathers cost proportionally more liberty bells from the season year on (six times as much with monthly turns). No change with the standard two seasons.
+* Bugfix: founding father recruitment no longer stalls when every remaining father of a type has no weight in the current era (common with monthly turns before 1600). The weights of the next era that has some are used instead. With "Founding Fathers by game phase" on, later-phase fathers are still not offered.
+
 ## Libertadores mod pack 0.3.2 (6th of October, 2026) ##
 
 ### Mods ###

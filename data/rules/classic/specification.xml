@@ -4693,6 +4693,10 @@
              their weight is highest -->
         <booleanOption id="model.option.historicalFoundingFathers"
                        defaultValue="false"/>
+        <!-- Founding fathers cost more with more turns per year
+             (relative to two seasons), from the season year on. -->
+        <booleanOption id="model.option.scaleFoundingFatherCost"
+                       defaultValue="true"/>
         <!-- Does the REF "teleport" to its first target or does it
              sail in? -->
         <booleanOption id="model.option.teleportREF"

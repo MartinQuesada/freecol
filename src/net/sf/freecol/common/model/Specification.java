@@ -3085,6 +3085,9 @@ public final class Specification implements OptionContainer {
         ret |= checkOp(GameOptions.HISTORICAL_FOUNDING_FATHERS,
                 GameOptions.GAMEOPTIONS_MAP,
                 Boolean.FALSE, BooleanOption.class);
+        ret |= checkOp(GameOptions.SCALE_FOUNDING_FATHER_COST,
+                GameOptions.GAMEOPTIONS_MAP,
+                Boolean.TRUE, BooleanOption.class);
         ret |= checkOp(GameOptions.BOYCOTT_BLOCKS_PAY_FOR_BUILDING,
                 GameOptions.GAMEOPTIONS_MAP,
                 Boolean.FALSE, BooleanOption.class);

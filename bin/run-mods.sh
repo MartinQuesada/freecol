@@ -7,7 +7,7 @@
 #   MODS=libertadores ./bin/run-mods.sh
 #   ./bin/run-mods.sh --no-splash  # any FreeCol CLI args are forwarded
 #
-# Default mods: libertadores, deeperBuildings, tasajo, lumberCraft, livestock, cacao, vanilla, tabernas, conversos
+# Default mods: libertadores, deeperBuildings, tasajo, lumberCraft, livestock, cacao, vanilla, tabernas, conversos, hdGraphics
 # Config/saves for this launcher live in .freecol-dev/ (not your main FreeCol prefs).
 
 set -euo pipefail
@@ -20,7 +20,7 @@ CONFIG_DIR="$DEV_DIR/config"
 DATA_DIR="$DEV_DIR/data"
 OPTIONS_FILE="$CONFIG_DIR/freecol/options.xml"
 JAR="$ROOT/FreeCol.jar"
-DEFAULT_MODS="${MODS:-libertadores,deeperBuildings,tasajo,lumberCraft,livestock,cacao,vanilla,tabernas,conversos}"
+DEFAULT_MODS="${MODS:-libertadores,deeperBuildings,tasajo,lumberCraft,livestock,cacao,vanilla,tabernas,conversos,hdGraphics}"
 
 log() { printf '==> %s\n' "$*"; }
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }
@@ -83,7 +83,7 @@ jar_stale() {
     "$ROOT/data/mods/libertadores" "$ROOT/data/mods/deeperBuildings" "$ROOT/data/mods/tasajo" \
     "$ROOT/data/mods/lumberCraft" "$ROOT/data/mods/livestock" "$ROOT/data/mods/cacao" \
     "$ROOT/data/mods/vanilla" "$ROOT/data/mods/tabernas" "$ROOT/data/mods/conversos" \
-    "$ROOT/data/mods/basicBuildings" \
+    "$ROOT/data/mods/basicBuildings" "$ROOT/data/mods/hdGraphics" \
     -type f \( -name '*.java' -o -name '*.xml' -o -name '*.properties' -o -name '*.jpg' -o -name '*.png' \) \
     -newer "$JAR" 2>/dev/null | head -1 || true)"
   [[ -n "$newest" ]]
