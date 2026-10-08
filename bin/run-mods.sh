@@ -6,6 +6,7 @@
 #   ./bin/run-mods.sh --debug      # also enable debug menus
 #   MODS=libertadores ./bin/run-mods.sh
 #   ./bin/run-mods.sh --no-splash  # any FreeCol CLI args are forwarded
+#   JAVA_XMX=1G ./bin/run-mods.sh  # less memory (default 2G; HD images need 2G)
 #
 # Default mods: libertadores, deeperBuildings, tasajo, lumberCraft, livestock, cacao, vanilla, tabernas, conversos, hdGraphics
 # Config/saves for this launcher live in .freecol-dev/ (not your main FreeCol prefs).
@@ -185,7 +186,7 @@ run_game() {
   log "  data:   $ROOT/data"
   log "  config: $CONFIG_DIR"
   log "  mods:   $DEFAULT_MODS"
-  exec java -Xmx2G -jar "$JAR" \
+  exec java "-Xmx${JAVA_XMX:-2G}" -jar "$JAR" \
     --freecol-data "$ROOT/data" \
     --user-config-directory "$CONFIG_DIR" \
     --user-data-directory "$DATA_DIR" \
