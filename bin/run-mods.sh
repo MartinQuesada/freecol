@@ -26,15 +26,18 @@ log() { printf '==> %s\n' "$*"; }
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }
 
 # FreeCol still uses java.applet (Cortado video) → needs JDK 11..16.
-# Prefer Homebrew openjdk@11, then java_home 11/17 if applet present.
+# Prefer Homebrew openjdk@11 or a Linux JDK 11 in /usr/lib/jvm, then java_home 11..16.
 pick_java() {
   local candidates=()
+  local h
+  for h in /usr/lib/jvm/temurin-11-jdk* /usr/lib/jvm/java-11-openjdk*; do
+    [[ -d "$h" ]] && candidates+=("$h")
+  done
   [[ -d /opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home ]] \
     && candidates+=("/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home")
   [[ -d /usr/local/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home ]] \
     && candidates+=("/usr/local/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home")
   if command -v /usr/libexec/java_home >/dev/null; then
-    local h
     for v in 11 12 13 14 15 16; do
       h="$(/usr/libexec/java_home -v "$v" 2>/dev/null || true)"
       [[ -n "$h" ]] && candidates+=("$h")
@@ -54,6 +57,9 @@ pick_java() {
       return 0
     fi
   done
+  if [[ "$(uname)" == "Linux" ]]; then
+    die "Necesitás JDK 11 (FreeCol usa java.applet). En Debian/Ubuntu: ./bin/setup-debian.sh"
+  fi
   die "Necesitás JDK 11 (FreeCol usa java.applet). Probá: brew install openjdk@11"
 }
 
@@ -70,6 +76,8 @@ ensure_ant() {
   if command -v brew >/dev/null; then
     log "Ant no está instalado. Instalando con Homebrew..."
     brew install ant
+  elif command -v apt-get >/dev/null; then
+    die "Ant no encontrado. Instalalo con: sudo apt install ant (o corré ./bin/setup-debian.sh)"
   else
     die "Ant no encontrado y no hay Homebrew. Instalá Ant o usá: brew install ant"
   fi

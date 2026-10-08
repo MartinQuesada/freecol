@@ -126,6 +126,9 @@ needs JDK 11 and Ant):
 MODS=libertadores,conversos ./bin/run-mods.sh   # only some mods
 ```
 
+On Debian or Ubuntu, `./bin/setup-debian.sh` installs JDK 11 (Temurin on
+Debian 12 and later, which no longer ship it) and Ant first.
+
 The launcher keeps its settings and saves in `.freecol-dev/`.
 
 To use the mods in a regular FreeCol install, copy the mod folders from
