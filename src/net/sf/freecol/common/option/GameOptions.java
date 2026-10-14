@@ -130,6 +130,14 @@ public class GameOptions {
     public static final String REPAIR_DAMAGED_ARTILLERY_TOOLS
         = "model.option.repairDamagedArtilleryTools";
 
+    /** Does repairing ships in a colony cost lumber? */
+    public static final String SHIP_REPAIR_COSTS_LUMBER
+        = "model.option.shipRepairCostsLumber";
+
+    /** The lumber each turn of ship repair takes from the colony. */
+    public static final String SHIP_REPAIR_LUMBER
+        = "model.option.shipRepairLumber";
+
     /** Does the REF "teleport" to its first target. */
     public static final String TELEPORT_REF
         = "model.option.teleportREF";

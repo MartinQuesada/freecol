@@ -60,6 +60,8 @@ public class ServerUnitTest extends FreeColTestCase {
         = spec().getBuildingType("model.building.armory");
     private static final BuildingType carpenterHouseType
         = spec().getBuildingType("model.building.carpenterHouse");
+    private static final BuildingType drydockType
+        = spec().getBuildingType("model.building.drydock");
     private static final BuildingType townHallType
         = spec().getBuildingType("model.building.townHall");
     private static final BuildingType warehouseType
@@ -99,6 +101,8 @@ public class ServerUnitTest extends FreeColTestCase {
         = spec().getUnitType("model.unit.artillery");
     private static final UnitType damagedArtilleryType
         = spec().getUnitType("model.unit.damagedArtillery");
+    private static final UnitType caravelType
+        = spec().getUnitType("model.unit.caravel");
     private static final UnitType colonistType
         = spec().getUnitType("model.unit.freeColonist");
     private static final UnitType expertFarmerType
@@ -718,6 +722,70 @@ public class ServerUnitTest extends FreeColTestCase {
             assertEquals(40, colony.getGoodsCount(toolsType));
         } finally {
             repair.setValue(oldRepair);
+        }
+    }
+
+    /**
+     * Set up a colony with a drydock and a damaged caravel on its tile.
+     *
+     * @return The damaged caravel.
+     */
+    private Unit setUpDamagedShip() {
+        Game game = ServerTestHelper.startServerGame(getTestMap(savannah));
+        Colony colony = createStandardColony(1);
+        colony.addBuilding(new ServerBuilding(game, colony, drydockType));
+        assertEquals("No lumber made in the test colony", 0,
+                     colony.getNetProductionOf(lumberType));
+        Unit ship = new ServerUnit(game, colony.getTile(), colony.getOwner(),
+                                   caravelType);
+        ship.setHitPoints(ship.getMaximumHitPoints() - 3);
+        return ship;
+    }
+
+    public void testShipRepairCostsLumber() {
+        BooleanOption cost = spec().getOption(GameOptions.SHIP_REPAIR_COSTS_LUMBER,
+                                              BooleanOption.class);
+        final boolean oldCost = cost.getValue();
+        cost.setValue(true);
+        try {
+            Unit ship = setUpDamagedShip();
+            Colony colony = ship.getTile().getColony();
+            final int hp = ship.getHitPoints();
+
+            colony.addGoods(lumberType, 30);
+            nextTurn(ship.getGame());
+            assertEquals(hp + 1, ship.getHitPoints());
+            assertEquals(10, colony.getGoodsCount(lumberType));
+
+            nextTurn(ship.getGame());
+            assertEquals("Not enough lumber, no repair", hp + 1,
+                         ship.getHitPoints());
+            assertEquals(10, colony.getGoodsCount(lumberType));
+
+            colony.addGoods(lumberType, 10);
+            nextTurn(ship.getGame());
+            assertEquals(hp + 2, ship.getHitPoints());
+            assertEquals(0, colony.getGoodsCount(lumberType));
+        } finally {
+            cost.setValue(oldCost);
+        }
+    }
+
+    public void testShipRepairFree() {
+        BooleanOption cost = spec().getOption(GameOptions.SHIP_REPAIR_COSTS_LUMBER,
+                                              BooleanOption.class);
+        final boolean oldCost = cost.getValue();
+        cost.setValue(false);
+        try {
+            Unit ship = setUpDamagedShip();
+            Colony colony = ship.getTile().getColony();
+            final int hp = ship.getHitPoints();
+            colony.addGoods(lumberType, 30);
+            nextTurn(ship.getGame());
+            assertEquals(hp + 1, ship.getHitPoints());
+            assertEquals(30, colony.getGoodsCount(lumberType));
+        } finally {
+            cost.setValue(oldCost);
         }
     }
 

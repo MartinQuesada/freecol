@@ -33,11 +33,13 @@ import net.sf.freecol.common.model.GoodsType;
 import net.sf.freecol.common.model.ModelMessage;
 import net.sf.freecol.common.model.Player;
 import net.sf.freecol.common.model.ProductionInfo;
+import net.sf.freecol.common.model.Specification;
 import net.sf.freecol.common.model.StringTemplate;
 import net.sf.freecol.common.model.Unit;
 import net.sf.freecol.common.model.UnitType;
 import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.networking.ChangeSet.See;
+import net.sf.freecol.common.option.GameOptions;
 import static net.sf.freecol.common.util.CollectionUtils.*;
 import net.sf.freecol.common.util.LogBuilder;
 
@@ -197,14 +199,37 @@ public class ServerBuilding extends Building implements TurnTaker {
     }
 
     /**
-     * Repair the units in this building.
+     * Repair the units in this building.  With the ship repair cost
+     * option each repair takes lumber from the colony, so it has to be
+     * called after the colony production is applied, and units the
+     * colony can not pay for are not repaired this turn.
      *
      * @param cs A {@code ChangeSet} to update.
      */
-    private void csRepairUnits(ChangeSet cs) {
+    public void csRepairUnits(ChangeSet cs) {
+        final Specification spec = getSpecification();
+        final Colony colony = getColony();
+        final Player owner = colony.getOwner();
+        final GoodsType lumberType = spec.getGoodsType("model.goods.lumber");
+        final int lumber = (spec.getBoolean(GameOptions.SHIP_REPAIR_COSTS_LUMBER))
+            ? spec.getInteger(GameOptions.SHIP_REPAIR_LUMBER)
+            : 0;
         for (Unit unit : transform(getTile().getUnits(), u ->
                 (u.isDamaged()
                     && getType().hasAbility(Ability.REPAIR_UNITS, u.getType())))) {
+            if (lumber > 0) {
+                if (colony.getGoodsCount(lumberType) < lumber) {
+                    cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.MISSING_GOODS,
+                                         "model.unit.repairNeedsLumber",
+                                         colony, unit)
+                            .addStringTemplate("%unit%", unit.getLabel())
+                            .addName("%colony%", colony.getName())
+                            .addAmount("%amount%", lumber));
+                    continue;
+                }
+                colony.removeGoods(lumberType, lumber);
+            }
             ((ServerUnit) unit).csRepairUnit(cs);
         }
     }
@@ -261,12 +286,6 @@ public class ServerBuilding extends Building implements TurnTaker {
      */
     @Override
     public void csNewTurn(Random random, LogBuilder lb, ChangeSet cs) {
-        BuildingType type = getType();
-
         if (canTeach()) csTeach(cs);
-
-        if (type.hasAbility(Ability.REPAIR_UNITS)) {
-            csRepairUnits(cs);
-        }
     }
 }

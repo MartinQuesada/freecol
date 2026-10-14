@@ -115,6 +115,10 @@ FreeCol build those mods still load, but the affected effects do nothing.
   tile of a colony with the new ability `model.ability.repairDemotedUnits`
   (armory and up) takes the hammers from the colony's construction, then
   the tools, and becomes artillery again.
+- Game options `model.option.shipRepairCostsLumber` (off by default) and
+  `model.option.shipRepairLumber` (20): each turn of ship repair in a colony
+  takes that much lumber, after the colony production. Units repaired in
+  colonies are now repaired after the production in every case.
 - Game option `model.option.boycottBlocksPayForBuilding` (off by default):
   you can not pay to finish a building while goods it is missing, such as
   tools, are boycotted.

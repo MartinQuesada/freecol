@@ -3,6 +3,7 @@
 ### Rule Changes ###
 * New game option "Forests grow back" (off by default): cleared forest that nobody works grows back into the forest it was after a number of years (option "Years for forests to grow back", 20 by default), losing any plowing. A colonist working the land, a colony on it or a pioneer improving it restarts the count.
 * New game option "Repair damaged artillery" (off by default): damaged artillery in a colony with an armory, magazine or arsenal is repaired. The repair takes 40 hammers from the colony's construction, pausing it (all at once if they are in stock, otherwise as the carpenter makes them), and then 40 tools; the artillery can not move the turn it is repaired. Both amounts are game options. While under repair it can still defend and move, and keeps the progress; in the colony panel it shows "R" and the hammers put in, like ships under repair.
+* New game option "Ship repair costs lumber" (off by default): each turn of repairing a ship in a colony with a drydock takes lumber (option "Lumber per turn of ship repair", 20 by default) left over after the colony's production; without it the repair does not advance that turn. Repair in Europe stays free.
 
 ### User Interface ###
 * Bugfix: the unit menu no longer offers "Assign to teacher" to units outside the colony, such as fortified soldiers; the server always refused it.

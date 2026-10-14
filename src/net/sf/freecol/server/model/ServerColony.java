@@ -910,6 +910,11 @@ public class ServerColony extends Colony implements TurnTaker {
             }
         }
         
+        for (Building building : transform(getBuildings(), b ->
+                b.getType().hasAbility(Ability.REPAIR_UNITS))) {
+            ((ServerBuilding)building).csRepairUnits(cs);
+        }
+
         // Repair land units (only used if they have hitpoints).
         for (Unit unit : transform(getTile().getUnits(), u -> !u.isNaval() && u.isDamaged())) {
             ((ServerUnit) unit).csRepairUnit(cs);
