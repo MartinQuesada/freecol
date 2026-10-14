@@ -109,6 +109,12 @@ FreeCol build those mods still load, but the affected effects do nothing.
 - Game options `model.option.forestRegrowth` (off by default) and
   `model.option.forestRegrowthYears` (20): cleared forest that nobody works
   grows back after that many years and loses its plowing.
+- Game options `model.option.repairDamagedArtillery` (off by default),
+  `model.option.repairDamagedArtilleryHammers` (40) and
+  `model.option.repairDamagedArtilleryTools` (40): damaged artillery on the
+  tile of a colony with the new ability `model.ability.repairDemotedUnits`
+  (armory and up) takes the hammers from the colony's construction, then
+  the tools, and becomes artillery again.
 - Game option `model.option.boycottBlocksPayForBuilding` (off by default):
   you can not pay to finish a building while goods it is missing, such as
   tools, are boycotted.

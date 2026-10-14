@@ -25,6 +25,7 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import net.sf.freecol.common.io.FreeColXMLWriter;
+import net.sf.freecol.common.model.Ability;
 import net.sf.freecol.common.model.BuildingType;
 import net.sf.freecol.common.model.Colony;
 import net.sf.freecol.common.model.ColonyTile;
@@ -55,6 +56,8 @@ import net.sf.freecol.util.test.MockPseudoRandom;
 
 public class ServerUnitTest extends FreeColTestCase {
 
+    private static final BuildingType armoryType
+        = spec().getBuildingType("model.building.armory");
     private static final BuildingType carpenterHouseType
         = spec().getBuildingType("model.building.carpenterHouse");
     private static final BuildingType townHallType
@@ -66,8 +69,12 @@ public class ServerUnitTest extends FreeColTestCase {
         = spec().getPrimaryFoodType();
     private static final GoodsType grainType
         = spec().getGoodsType("model.goods.grain");
+    private static final GoodsType hammersType
+        = spec().getGoodsType("model.goods.hammers");
     private static final GoodsType lumberType
         = spec().getGoodsType("model.goods.lumber");
+    private static final GoodsType toolsType
+        = spec().getGoodsType("model.goods.tools");
 
     private static final TileImprovementType road
         = spec().getTileImprovementType("model.improvement.road");
@@ -88,6 +95,10 @@ public class ServerUnitTest extends FreeColTestCase {
     private static final Role scoutRole
         = spec().getRole("model.role.scout");
 
+    private static final UnitType artilleryType
+        = spec().getUnitType("model.unit.artillery");
+    private static final UnitType damagedArtilleryType
+        = spec().getUnitType("model.unit.damagedArtillery");
     private static final UnitType colonistType
         = spec().getUnitType("model.unit.freeColonist");
     private static final UnitType expertFarmerType
@@ -569,6 +580,144 @@ public class ServerUnitTest extends FreeColTestCase {
         } finally {
             regrowth.setValue(oldRegrowth);
             years.setValue(oldYears);
+        }
+    }
+
+    /**
+     * Set up a colony with a damaged artillery on its tile.
+     *
+     * @param armory If true, give the colony an armory.
+     * @return The damaged artillery.
+     */
+    private Unit setUpDamagedArtillery(boolean armory) {
+        Game game = ServerTestHelper.startServerGame(getTestMap(savannah));
+        Colony colony = createStandardColony(1);
+        if (armory) {
+            colony.addBuilding(new ServerBuilding(game, colony, armoryType));
+        }
+        assertEquals("No hammers made in the test colony", 0,
+                     colony.getNetProductionOf(hammersType));
+        return new ServerUnit(game, colony.getTile(), colony.getOwner(),
+                              damagedArtilleryType);
+    }
+
+    public void testRepairDamagedArtillery() throws XMLStreamException {
+        BooleanOption repair = spec().getOption(GameOptions.REPAIR_DAMAGED_ARTILLERY,
+                                                BooleanOption.class);
+        final boolean oldRepair = repair.getValue();
+        repair.setValue(true);
+        try {
+            Unit unit = setUpDamagedArtillery(true);
+            Game game = unit.getGame();
+            Colony colony = unit.getTile().getColony();
+            assertEquals(artilleryType, unit.getRepairedType());
+            assertTrue(colony.getBuilding(armoryType).getType()
+                .hasAbility(Ability.REPAIR_DEMOTED_UNITS, damagedArtilleryType));
+            assertFalse("Only damaged artillery is repaired",
+                colony.getBuilding(armoryType).getType()
+                    .hasAbility(Ability.REPAIR_DEMOTED_UNITS, artilleryType));
+
+            colony.addGoods(hammersType, 40);
+            colony.addGoods(toolsType, 50);
+            nextTurn(game);
+            assertEquals("Repaired at once with 40 hammers in stock",
+                         artilleryType, unit.getType());
+            assertEquals(0, colony.getGoodsCount(hammersType));
+            assertEquals(10, colony.getGoodsCount(toolsType));
+            assertEquals(0, unit.getRepairHammers());
+            assertEquals("Does not move the turn it is repaired", 0,
+                         unit.getMovesLeft());
+
+            nextTurn(game);
+            assertEquals("Moves again the next turn",
+                         unit.getInitialMovesLeft(), unit.getMovesLeft());
+        } finally {
+            repair.setValue(oldRepair);
+        }
+    }
+
+    public void testRepairDamagedArtilleryOverTurns() throws XMLStreamException {
+        BooleanOption repair = spec().getOption(GameOptions.REPAIR_DAMAGED_ARTILLERY,
+                                                BooleanOption.class);
+        final boolean oldRepair = repair.getValue();
+        repair.setValue(true);
+        try {
+            Unit unit = setUpDamagedArtillery(true);
+            Game game = unit.getGame();
+            Colony colony = unit.getTile().getColony();
+
+            colony.addGoods(hammersType, 25);
+            nextTurn(game);
+            assertEquals(damagedArtilleryType, unit.getType());
+            assertEquals("Hammers taken from the construction", 0,
+                         colony.getGoodsCount(hammersType));
+            assertEquals(25, unit.getRepairHammers());
+            assertEquals(colony, unit.getDemotedRepairColony());
+            assertEquals("model.unit.underDemotedRepair",
+                         unit.getRepairLabel().getId());
+            assertEquals("model.unit.occupation.underRepair",
+                unit.getOccupationLabel(unit.getOwner(), false).getId());
+            assertTrue("Saved games keep the repair",
+                unit.serialize(FreeColXMLWriter.WriteScope.toSave())
+                    .contains("repairHammers=\"25\""));
+
+            colony.addGoods(hammersType, 30);
+            nextTurn(game);
+            assertEquals("Without tools it waits", damagedArtilleryType,
+                         unit.getType());
+            assertEquals(40, unit.getRepairHammers());
+            assertEquals("Only the missing hammers are taken", 15,
+                         colony.getGoodsCount(hammersType));
+
+            colony.addGoods(toolsType, 40);
+            nextTurn(game);
+            assertEquals(artilleryType, unit.getType());
+            assertEquals(0, colony.getGoodsCount(toolsType));
+            assertEquals(15, colony.getGoodsCount(hammersType));
+            assertEquals(0, unit.getRepairHammers());
+            assertNull("No longer under repair",
+                       unit.getDemotedRepairColony());
+        } finally {
+            repair.setValue(oldRepair);
+        }
+    }
+
+    public void testNoRepairDamagedArtillery() {
+        BooleanOption repair = spec().getOption(GameOptions.REPAIR_DAMAGED_ARTILLERY,
+                                                BooleanOption.class);
+        final boolean oldRepair = repair.getValue();
+        try {
+            repair.setValue(false);
+            Unit unit = setUpDamagedArtillery(true);
+            Colony colony = unit.getTile().getColony();
+            colony.addGoods(hammersType, 40);
+            colony.addGoods(toolsType, 40);
+            nextTurn(unit.getGame());
+            assertEquals("Option off", damagedArtilleryType, unit.getType());
+            assertEquals(40, colony.getGoodsCount(hammersType));
+            assertEquals(40, colony.getGoodsCount(toolsType));
+        } finally {
+            repair.setValue(oldRepair);
+        }
+    }
+
+    public void testNoRepairDamagedArtilleryWithoutArmory() {
+        BooleanOption repair = spec().getOption(GameOptions.REPAIR_DAMAGED_ARTILLERY,
+                                                BooleanOption.class);
+        final boolean oldRepair = repair.getValue();
+        try {
+            repair.setValue(true);
+            Unit unit = setUpDamagedArtillery(false);
+            Colony colony = unit.getTile().getColony();
+            colony.addGoods(hammersType, 40);
+            colony.addGoods(toolsType, 40);
+            nextTurn(unit.getGame());
+            assertEquals("No armory", damagedArtilleryType, unit.getType());
+            assertNull(unit.getDemotedRepairColony());
+            assertEquals(40, colony.getGoodsCount(hammersType));
+            assertEquals(40, colony.getGoodsCount(toolsType));
+        } finally {
+            repair.setValue(oldRepair);
         }
     }
 

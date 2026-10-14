@@ -118,6 +118,18 @@ public class GameOptions {
     public static final String FOREST_REGROWTH_YEARS
         = "model.option.forestRegrowthYears";
 
+    /** Can damaged artillery be repaired in a colony with an armory? */
+    public static final String REPAIR_DAMAGED_ARTILLERY
+        = "model.option.repairDamagedArtillery";
+
+    /** The hammers it takes to repair damaged artillery. */
+    public static final String REPAIR_DAMAGED_ARTILLERY_HAMMERS
+        = "model.option.repairDamagedArtilleryHammers";
+
+    /** The tools it takes to repair damaged artillery. */
+    public static final String REPAIR_DAMAGED_ARTILLERY_TOOLS
+        = "model.option.repairDamagedArtilleryTools";
+
     /** Does the REF "teleport" to its first target. */
     public static final String TELEPORT_REF
         = "model.option.teleportREF";

@@ -2531,6 +2531,10 @@
                value="true">
         <scope type="model.unit.artillery"/>
       </ability>
+      <ability id="model.ability.repairDemotedUnits"
+               value="true">
+        <scope type="model.unit.damagedArtillery"/>
+      </ability>
     </building-type>
     <building-type id="model.building.magazine"
                    extends="model.building.armory"
@@ -4703,6 +4707,15 @@
                        defaultValue="false"/>
         <integerOption id="model.option.forestRegrowthYears"
                        defaultValue="20" minimumValue="1" maximumValue="200"/>
+        <!-- Damaged artillery on the tile of a colony with an armory
+             is repaired, taking hammers from the colony's construction
+             and then tools. -->
+        <booleanOption id="model.option.repairDamagedArtillery"
+                       defaultValue="false"/>
+        <integerOption id="model.option.repairDamagedArtilleryHammers"
+                       defaultValue="40" minimumValue="0" maximumValue="500"/>
+        <integerOption id="model.option.repairDamagedArtilleryTools"
+                       defaultValue="40" minimumValue="0" maximumValue="500"/>
         <!-- Does the REF "teleport" to its first target or does it
              sail in? -->
         <booleanOption id="model.option.teleportREF"

@@ -387,7 +387,8 @@ public final class UnitLabel extends FreeColLabel implements ActionListener, Car
             String text = Messages.message(this.unit.getOccupationLabel(player, false));
             g.drawImage(lib.getOccupationIndicatorChip((Graphics2D)g, this.unit, text), 0, 0, null);
 
-            if (this.unit.isDamaged()) {
+            if (this.unit.isDamaged()
+                || this.unit.getDemotedRepairColony() != null) {
                 String underRepair = Messages.message(this.unit.getRepairLabel());
                 int idx = underRepair.indexOf('(');
                 String underRepair1 = underRepair.substring(0, idx).trim();

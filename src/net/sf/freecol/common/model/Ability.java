@@ -368,6 +368,13 @@ public final class Ability extends Feature {
     public static final String REPAIR_UNITS
         = "model.ability.repairUnits";
 
+    /**
+     * The ability to repair demoted units back to the type they were
+     * demoted from (damaged artillery).
+     */
+    public static final String REPAIR_DEMOTED_UNITS
+        = "model.ability.repairDemotedUnits";
+
     /** A national ability required to generate a REF. */
     public static final String ROYAL_EXPEDITIONARY_FORCE
         = "model.ability.royalExpeditionaryForce";

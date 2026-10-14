@@ -69,6 +69,9 @@
       <ability id="model.ability.build" value="true">
         <scope type="model.unit.artillery"/>
       </ability>
+      <ability id="model.ability.repairDemotedUnits" value="true">
+        <scope type="model.unit.damagedArtillery"/>
+      </ability>
     </building-type>
     <building-type id="model.building.magazine"
                    extends="model.building.armory"

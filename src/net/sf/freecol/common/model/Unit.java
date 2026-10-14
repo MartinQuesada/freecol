@@ -277,6 +277,9 @@ public class Unit extends GoodsLocation
     /** Number of turns of training needed by this unit. */
     protected int turnsOfTraining = 0;
 
+    /** Hammers put so far into repairing this demoted unit. */
+    protected int repairHammers = 0;
+
     /** The original nationality. */
     protected String nationality = null;
 
@@ -556,6 +559,12 @@ public class Unit extends GoodsLocation
      * @return A repair label.
      */
     public StringTemplate getRepairLabel() {
+        if (!isDamaged() && getDemotedRepairColony() != null) {
+            return StringTemplate.template("model.unit.underDemotedRepair")
+                .addAmount("%hammers%", getRepairHammers())
+                .addAmount("%total%", getSpecification()
+                    .getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_HAMMERS));
+        }
         return StringTemplate.template("model.unit.underRepair")
             .addAmount("%turns%", getTurnsForRepair());
     }
@@ -1448,6 +1457,55 @@ public class Unit extends GoodsLocation
      */
     public void setTurnsOfTraining(int turnsOfTraining) {
         this.turnsOfTraining = turnsOfTraining;
+    }
+
+    /**
+     * Gets the hammers put so far into repairing this demoted unit
+     * (such as damaged artillery).
+     *
+     * @return The number of hammers.
+     */
+    public int getRepairHammers() {
+        return repairHammers;
+    }
+
+    /**
+     * Sets the hammers put so far into repairing this demoted unit.
+     *
+     * @param repairHammers The new number of hammers.
+     */
+    public void setRepairHammers(int repairHammers) {
+        this.repairHammers = repairHammers;
+    }
+
+    /**
+     * Gets the unit type this unit was demoted from, which it can be
+     * repaired back to (e.g. artillery for damaged artillery).
+     *
+     * @return The {@code UnitType} to repair to, or null if none.
+     */
+    public UnitType getRepairedType() {
+        final Specification spec = getSpecification();
+        return find(spec.getUnitTypeList(), ut ->
+            spec.getUnitChange(UnitChangeType.DEMOTION, ut, getType()) != null);
+    }
+
+    /**
+     * Gets the colony repairing this demoted unit (damaged artillery).
+     * The game option has to allow it, and the unit has to be on the
+     * tile of one of its owner's colonies with a building able to
+     * repair it (an armory).
+     *
+     * @return The repairing {@code Colony}, or null if none.
+     */
+    public Colony getDemotedRepairColony() {
+        if (!getSpecification().getBoolean(GameOptions.REPAIR_DAMAGED_ARTILLERY)
+            || !(getLocation() instanceof Tile)) return null;
+        final Colony colony = getTile().getColony();
+        return (colony != null && colony.getOwner() == getOwner()
+            && any(colony.getBuildings(), b -> b.getType()
+                .hasAbility(Ability.REPAIR_DEMOTED_UNITS, getType()))
+            && getRepairedType() != null) ? colony : null;
     }
 
     /**
@@ -3710,6 +3768,15 @@ public class Unit extends GoodsLocation
                 } else {
                     ret = StringTemplate.key("model.unit.occupation.underRepair");
                 }
+            } else if (getDemotedRepairColony() != null) {
+                if (full) {
+                    ret = StringTemplate.label(":")
+                        .add("model.unit.occupation.underRepair")
+                        .addName(getRepairHammers() + "/" + getSpecification()
+                            .getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_HAMMERS));
+                } else {
+                    ret = StringTemplate.key("model.unit.occupation.underRepair");
+                }
             } else if (tradeRoute != null) {
                 if (full) {
                     ret = StringTemplate.label(":")
@@ -4680,6 +4747,7 @@ public class Unit extends GoodsLocation
         this.student = game.updateRef(o.getStudent());
         this.teacher = game.updateRef(o.getTeacher());
         this.turnsOfTraining = o.getTurnsOfTraining();
+        this.repairHammers = o.getRepairHammers();
         this.nationality = o.getNationality();
         this.ethnicity = o.getEthnicity();
         this.indianSettlement = game.updateRef(o.getIndianSettlement());
@@ -4720,6 +4788,7 @@ public class Unit extends GoodsLocation
     private static final String NAME_TAG = "name";
     private static final String NATIONALITY_TAG = "nationality";
     private static final String OWNER_TAG = "owner";
+    private static final String REPAIR_HAMMERS_TAG = "repairHammers";
     private static final String ROLE_TAG = "role";
     private static final String ROLE_COUNT_TAG = "roleCount";
     private static final String STATE_TAG = "state";
@@ -4789,6 +4858,10 @@ public class Unit extends GoodsLocation
             }
 
             xw.writeAttribute(TURNS_OF_TRAINING_TAG, turnsOfTraining);
+
+            if (repairHammers > 0) {
+                xw.writeAttribute(REPAIR_HAMMERS_TAG, repairHammers);
+            }
 
             if (workType != null) xw.writeAttribute(WORK_TYPE_TAG, workType);
 
@@ -4882,6 +4955,8 @@ public class Unit extends GoodsLocation
         ethnicity = xr.getAttribute(ETHNICITY_TAG, (String)null);
 
         turnsOfTraining = xr.getAttribute(TURNS_OF_TRAINING_TAG, 0);
+
+        repairHammers = xr.getAttribute(REPAIR_HAMMERS_TAG, 0);
 
         hitPoints = xr.getAttribute(HIT_POINTS_TAG, -1);
 

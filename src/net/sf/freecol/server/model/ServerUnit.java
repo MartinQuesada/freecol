@@ -953,6 +953,69 @@ public class ServerUnit extends Unit implements TurnTaker {
     }
 
 
+    /**
+     * Repairs a demoted unit (damaged artillery) standing on the tile
+     * of one of its owner's colonies with a building that can repair
+     * it (an armory).  The repair takes hammers from the colony's
+     * construction until it has enough, then takes the tools and
+     * restores the unit, which can not move that turn.
+     *
+     * @param lb A {@code LogBuilder} to log to.
+     * @param cs A {@code ChangeSet} to update.
+     * @return True if the unit changed.
+     */
+    private boolean csRepairDemoted(LogBuilder lb, ChangeSet cs) {
+        final Colony colony = getDemotedRepairColony();
+        if (colony == null) return false;
+        final Specification spec = getSpecification();
+        final Player owner = getOwner();
+        final UnitType repaired = getRepairedType();
+        final GoodsType hammers = spec.getGoodsType("model.goods.hammers");
+        final GoodsType tools = spec.getGoodsType("model.goods.tools");
+        final int needHammers
+            = spec.getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_HAMMERS);
+        final int needTools
+            = spec.getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_TOOLS);
+
+        int done = getRepairHammers();
+        int take = Math.min(colony.getGoodsCount(hammers),
+                            needHammers - done);
+        if (take > 0) {
+            colony.removeGoods(hammers, take);
+            done += take;
+            setRepairHammers(done);
+            cs.add(See.only(owner), colony.getGoodsContainer());
+        }
+        if (done < needHammers) return take > 0;
+
+        if (colony.getGoodsCount(tools) < needTools) {
+            cs.addMessage(owner,
+                new ModelMessage(ModelMessage.MessageType.MISSING_GOODS,
+                                 "model.unit.repairNeedsTools", colony, this)
+                    .addStringTemplate("%unit%", getLabel())
+                    .addName("%colony%", colony.getName())
+                    .addAmount("%amount%", needTools));
+            return take > 0;
+        }
+        colony.removeGoods(tools, needTools);
+        cs.add(See.only(owner), colony.getGoodsContainer());
+
+        final StringTemplate oldName = getLabel();
+        changeType(repaired);//-vis(owner)
+        owner.invalidateCanSeeTiles();//+vis(owner)
+        setRepairHammers(0);
+        setMovesLeft(0);
+        cs.addMessage(owner,
+            new ModelMessage(ModelMessage.MessageType.UNIT_REPAIRED,
+                             "model.unit.demotedUnitRepaired", colony, this)
+                .addStringTemplate("%oldName%", oldName)
+                .addStringTemplate("%unit%", getLabel())
+                .addName("%colony%", colony.getName()));
+        lb.add(" repaired to ", repaired);
+        return true;
+    }
+
+
     // Implement TurnTaker
 
     /**
@@ -1031,6 +1094,8 @@ public class ServerUnit extends Unit implements TurnTaker {
         } else {
             setMovesLeft(getInitialMovesLeft());
         }
+
+        if (csRepairDemoted(lb, cs)) unitDirty = true;
 
         if (getWorkLeft() > 0) {
             unitDirty = true;
