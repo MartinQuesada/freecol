@@ -434,7 +434,8 @@ public final class QuickActionMenu extends JPopupMenu {
         final ImageLibrary lib = gui.getFixedImageLibrary();
         boolean separatorNeeded = false;
 
-        if (spec.getBoolean(GameOptions.ALLOW_STUDENT_SELECTION)) {
+        if (spec.getBoolean(GameOptions.ALLOW_STUDENT_SELECTION)
+            && unit.isInColony()) {
             for (Unit teacher : transform(unit.getColony().getTeachers(), u ->
                     unit.canBeStudent(u) && u.isInColony())) {
                 JMenuItem menuItem = null;
