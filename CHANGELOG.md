@@ -1,3 +1,8 @@
+## Libertadores mod pack 0.3.4 (In development) ##
+
+### Rule Changes ###
+* New game option "Forests grow back" (off by default): cleared forest that nobody works grows back into the forest it was after a number of years (option "Years for forests to grow back", 20 by default), losing any plowing. A colonist working the land, a colony on it or a pioneer improving it restarts the count.
+
 ## Libertadores mod pack 0.3.3 (7th of October, 2026) ##
 
 ### Mods ###

@@ -106,6 +106,9 @@ FreeCol build those mods still load, but the affected effects do nothing.
 - Game option `model.option.scaleFoundingFatherCost` (on by default):
   founding fathers cost more with more turns per year, six times as much
   with monthly turns. No change with the standard two seasons.
+- Game options `model.option.forestRegrowth` (off by default) and
+  `model.option.forestRegrowthYears` (20): cleared forest that nobody works
+  grows back after that many years and loses its plowing.
 - Game option `model.option.boycottBlocksPayForBuilding` (off by default):
   you can not pay to finish a building while goods it is missing, such as
   tools, are boycotted.

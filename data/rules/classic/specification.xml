@@ -4697,6 +4697,12 @@
              (relative to two seasons), from the season year on. -->
         <booleanOption id="model.option.scaleFoundingFatherCost"
                        defaultValue="true"/>
+        <!-- Cleared forest that nobody works grows back after a number
+             of years, losing any plowing. -->
+        <booleanOption id="model.option.forestRegrowth"
+                       defaultValue="false"/>
+        <integerOption id="model.option.forestRegrowthYears"
+                       defaultValue="20" minimumValue="1" maximumValue="200"/>
         <!-- Does the REF "teleport" to its first target or does it
              sail in? -->
         <booleanOption id="model.option.teleportREF"

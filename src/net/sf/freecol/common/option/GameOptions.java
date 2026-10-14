@@ -110,6 +110,14 @@ public class GameOptions {
     public static final String SCALE_FOUNDING_FATHER_COST
         = "model.option.scaleFoundingFatherCost";
 
+    /** Do cleared forests grow back when nobody works the land? */
+    public static final String FOREST_REGROWTH
+        = "model.option.forestRegrowth";
+
+    /** The number of years unworked cleared land takes to grow back. */
+    public static final String FOREST_REGROWTH_YEARS
+        = "model.option.forestRegrowthYears";
+
     /** Does the REF "teleport" to its first target. */
     public static final String TELEPORT_REF
         = "model.option.teleportREF";

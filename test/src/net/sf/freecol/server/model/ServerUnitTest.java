@@ -22,6 +22,9 @@ package net.sf.freecol.server.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
+import net.sf.freecol.common.io.FreeColXMLWriter;
 import net.sf.freecol.common.model.BuildingType;
 import net.sf.freecol.common.model.Colony;
 import net.sf.freecol.common.model.ColonyTile;
@@ -40,7 +43,9 @@ import net.sf.freecol.common.model.Unit;
 import net.sf.freecol.common.model.UnitChangeType;
 import net.sf.freecol.common.model.UnitType;
 import net.sf.freecol.common.model.WorkLocation;
+import net.sf.freecol.common.option.BooleanOption;
 import net.sf.freecol.common.option.GameOptions;
+import net.sf.freecol.common.option.IntegerOption;
 import static net.sf.freecol.common.util.CollectionUtils.*;
 import net.sf.freecol.server.ServerTestHelper;
 import net.sf.freecol.server.control.InGameController;
@@ -466,6 +471,105 @@ public class ServerUnitTest extends FreeColTestCase {
         // Verify clearing succeeded and has revealed a resource
         assertEquals(savannah, tile.getType());
         assertTrue(tile.hasResource());
+        assertNull("Regrowth off, nothing recorded", tile.getClearedForest());
+    }
+
+    /**
+     * Advance the game turn, then run the new turn.
+     *
+     * @param game The {@code Game} to advance.
+     */
+    private static void nextTurn(Game game) {
+        game.setTurn(game.getTurn().next());
+        ServerTestHelper.newTurn();
+    }
+
+    public void testForestRegrowth() throws XMLStreamException {
+        BooleanOption regrowth = spec().getOption(GameOptions.FOREST_REGROWTH,
+                                                  BooleanOption.class);
+        IntegerOption years = spec().getOption(GameOptions.FOREST_REGROWTH_YEARS,
+                                               IntegerOption.class);
+        final boolean oldRegrowth = regrowth.getValue();
+        final int oldYears = years.getValue();
+        regrowth.setValue(true);
+        years.setValue(3);
+        try {
+            Game game = ServerTestHelper.startServerGame(getTestMap(savannahForest));
+            InGameController igc = ServerTestHelper.getInGameController();
+            ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
+            Tile tile = game.getMap().getTile(5, 8);
+            tile.setOwner(dutch);
+            tile.setExplored(dutch, true);
+
+            ServerUnit hardyPioneer = new ServerUnit(game, tile, dutch,
+                                                     pioneerType, pioneerRole);
+            igc.changeWorkImprovementType(dutch, hardyPioneer, clear);
+            for (int i = 0; i < 4; i++) nextTurn(game);
+            assertEquals(savannah, tile.getType());
+            assertEquals(savannahForest, tile.getClearedForest());
+            assertTrue("Saved games keep the cleared forest",
+                tile.serialize(FreeColXMLWriter.WriteScope.toSave())
+                    .contains("clearedForest=\"" + savannahForest.getId()));
+            assertFalse("Clients are not told",
+                tile.serialize(dutch).contains("clearedForest"));
+
+            TileImprovement plowed = new TileImprovement(game, tile, plow, null);
+            plowed.setTurnsToComplete(0);
+            tile.add(plowed);
+            assertTrue(tile.getTileItemContainer().hasImprovement(plow));
+            hardyPioneer.setLocation(tile.getNeighbourOrNull(Direction.N));
+
+            nextTurn(game);
+            nextTurn(game);
+            assertEquals("Not grown back after 2 years", savannah,
+                         tile.getType());
+            nextTurn(game);
+            assertEquals("Grown back after 3 years", savannahForest,
+                         tile.getType());
+            assertFalse("Plowing lost",
+                        tile.getTileItemContainer().hasImprovement(plow));
+            assertNull(tile.getClearedForest());
+        } finally {
+            regrowth.setValue(oldRegrowth);
+            years.setValue(oldYears);
+        }
+    }
+
+    public void testForestRegrowthWorkedLand() {
+        BooleanOption regrowth = spec().getOption(GameOptions.FOREST_REGROWTH,
+                                                  BooleanOption.class);
+        IntegerOption years = spec().getOption(GameOptions.FOREST_REGROWTH_YEARS,
+                                               IntegerOption.class);
+        final boolean oldRegrowth = regrowth.getValue();
+        final int oldYears = years.getValue();
+        regrowth.setValue(true);
+        years.setValue(3);
+        try {
+            Game game = ServerTestHelper.startServerGame(getTestMap(savannah));
+            Colony colony = createStandardColony(1);
+            Tile tile = colony.getTile().getNeighbourOrNull(Direction.N);
+            assertEquals(colony, tile.getOwningSettlement());
+            tile.setClearedForest(savannahForest, game.getTurn().getNumber());
+
+            Unit worker = colony.getUnitList().get(0);
+            worker.setLocation(colony.getColonyTile(tile));
+            assertTrue(tile.isInUse());
+            for (int i = 0; i < 5; i++) nextTurn(game);
+            assertEquals("Worked land does not grow back", savannah,
+                         tile.getType());
+
+            worker.setLocation(colony.getBuilding(carpenterHouseType));
+            assertFalse(tile.isInUse());
+            nextTurn(game);
+            nextTurn(game);
+            assertEquals(savannah, tile.getType());
+            nextTurn(game);
+            assertEquals("Grown back 3 years after the worker left",
+                         savannahForest, tile.getType());
+        } finally {
+            regrowth.setValue(oldRegrowth);
+            years.setValue(oldYears);
+        }
     }
 
     public void testUnitLumberDelivery() {

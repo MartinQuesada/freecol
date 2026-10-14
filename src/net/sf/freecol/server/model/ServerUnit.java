@@ -242,6 +242,11 @@ public class ServerUnit extends Unit implements TurnTaker {
         TileImprovement ti = getWorkImprovement();
         TileType changeType = ti.getChange(tile.getType());
         if (changeType != null) {
+            if (tile.isForested() && !changeType.isForested()
+                && getSpecification().getBoolean(GameOptions.FOREST_REGROWTH)) {
+                tile.setClearedForest(tile.getType(),
+                                      getGame().getTurn().getNumber());
+            }
             // Changes like clearing a forest need to be completed,
             // whereas for changes like road building the improvement
             // is already added and now complete.

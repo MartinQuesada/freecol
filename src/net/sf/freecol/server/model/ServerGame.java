@@ -19,6 +19,7 @@
 
 package net.sf.freecol.server.model;
 
+import static net.sf.freecol.common.util.CollectionUtils.any;
 import static net.sf.freecol.common.util.CollectionUtils.find;
 import static net.sf.freecol.common.util.CollectionUtils.flatten;
 import static net.sf.freecol.common.util.CollectionUtils.forEach;
@@ -52,6 +53,7 @@ import net.sf.freecol.common.model.HighSeas;
 import net.sf.freecol.common.model.HistoryEvent;
 import net.sf.freecol.common.model.Limit;
 import net.sf.freecol.common.model.Location;
+import net.sf.freecol.common.model.Map;
 import net.sf.freecol.common.model.ModelMessage;
 import net.sf.freecol.common.model.ModelMessage.MessageType;
 import net.sf.freecol.common.model.NationOptions;
@@ -62,7 +64,9 @@ import net.sf.freecol.common.model.Specification;
 import net.sf.freecol.common.model.Stance;
 import net.sf.freecol.common.model.StringTemplate;
 import net.sf.freecol.common.model.Tile;
+import net.sf.freecol.common.model.TileType;
 import net.sf.freecol.common.model.TradeItem;
+import net.sf.freecol.common.model.Turn;
 import net.sf.freecol.common.model.Unit;
 import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.networking.ChangeSet.See;
@@ -706,6 +710,55 @@ public class ServerGame extends Game implements TurnTaker {
             // TODO: send update to loser.  It will not see anything
             // because it is no longer a live player.
             // if (loser != null) sendElement(loser, cs);
+        }
+
+        if (spec.getBoolean(GameOptions.FOREST_REGROWTH)) {
+            csForestRegrowth(lb, cs);
+        }
+    }
+
+    /**
+     * Lets cleared forest grow back once nobody has worked the land
+     * for the number of years set in the forestRegrowthYears option.
+     * Working the land (a colonist on the tile, a colony on it or a
+     * pioneer improving it) restarts the count.
+     *
+     * +til: Resolves the change of appearance.
+     *
+     * @param lb A {@code LogBuilder} to log to.
+     * @param cs A {@code ChangeSet} to update.
+     */
+    private void csForestRegrowth(LogBuilder lb, ChangeSet cs) {
+        final Map map = getMap();
+        if (map == null) return;
+        final int years = getSpecification()
+            .getInteger(GameOptions.FOREST_REGROWTH_YEARS);
+        final int turn = getTurn().getNumber();
+        final int year = getTurn().getYear();
+        for (Tile tile : map.getTileList(t -> t.getClearedForest() != null)) {
+            final TileType forest = tile.getClearedForest();
+            if (tile.isForested()) {
+                tile.setClearedForest(null, turn);
+            } else if (tile.hasSettlement() || tile.isInUse()
+                || any(tile.getUnits(),
+                       u -> u.getState() == Unit.UnitState.IMPROVING)) {
+                tile.setFallowTurn(turn);
+            } else if (year - Turn.getTurnYear(tile.getFallowTurn())
+                       >= years) {
+                tile.cacheUnseen();//+til
+                tile.changeType(forest);//-til
+                tile.setClearedForest(null, turn);
+                cs.add(See.perhaps(), tile);
+                lb.add(" forest regrowth at ", tile, ", ");
+                Settlement owning = tile.getOwningSettlement();
+                if (owning instanceof Colony) {
+                    cs.addMessage(owning.getOwner(),
+                        new ModelMessage(MessageType.DEFAULT,
+                                         "model.tile.forestRegrowth", owning)
+                            .addName("%colony%", owning.getName())
+                            .addNamed("%forest%", forest));
+                }
+            }
         }
     }
 

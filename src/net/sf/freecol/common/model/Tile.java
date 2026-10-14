@@ -220,6 +220,16 @@ public final class Tile extends UnitLocation implements Named, Ownable {
      */
     private int contiguity = -1;
 
+    /**
+     * The forest type this tile was cleared from, while it can grow
+     * back (forestRegrowth game option).  Only kept in the server and
+     * saved games.
+     */
+    private TileType clearedForest = null;
+
+    /** The turn since which the cleared land has not been worked. */
+    private int fallowTurn = -1;
+
     /** A map of cached tiles for each European player, null in clients. */
     private final java.util.Map<Player, Tile> cachedTiles;
 
@@ -1547,6 +1557,46 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     }
 
     /**
+     * Gets the forest type this tile was cleared from, if it can
+     * grow back.
+     *
+     * @return The forest {@code TileType}, or null if none.
+     */
+    public TileType getClearedForest() {
+        return this.clearedForest;
+    }
+
+    /**
+     * Gets the turn since which the cleared land has not been worked.
+     *
+     * @return The turn number, or -1 if the tile was not cleared.
+     */
+    public int getFallowTurn() {
+        return this.fallowTurn;
+    }
+
+    /**
+     * Records the forest this tile was cleared from, so that it can
+     * grow back.
+     *
+     * @param forest The forest {@code TileType}, or null to forget it.
+     * @param turn The current turn number.
+     */
+    public void setClearedForest(TileType forest, int turn) {
+        this.clearedForest = forest;
+        this.fallowTurn = (forest == null) ? -1 : turn;
+    }
+
+    /**
+     * Sets the turn since which the cleared land has not been worked.
+     *
+     * @param turn The turn number.
+     */
+    public void setFallowTurn(int turn) {
+        this.fallowTurn = turn;
+    }
+
+    /**
      * Is this tile under active use?
      *
      * @return True if a {@code Colony} is using this {@code Tile}.
@@ -2511,9 +2561,11 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     // Serialization
 
     private static final String CACHED_TILE_TAG = "cachedTile";
+    private static final String CLEARED_FOREST_TAG = "clearedForest";
     private static final String CONNECTED_TAG = "connected";
     private static final String CONTIGUITY_TAG = "contiguity";
     private static final String COPIED_TAG = "copied";
+    private static final String FALLOW_TURN_TAG = "fallowTurn";
     private static final String MOVE_TO_EUROPE_TAG = "moveToEurope";
     private static final String OWNER_TAG = "owner";
     private static final String OWNING_SETTLEMENT_TAG = "owningSettlement";
@@ -2635,6 +2687,11 @@ public final class Tile extends UnitLocation implements Named, Ownable {
         if (contiguity >= 0) {
             xw.writeAttribute(CONTIGUITY_TAG, contiguity);
         }
+
+        if (clearedForest != null && xw.validForSave()) {
+            xw.writeAttribute(CLEARED_FOREST_TAG, clearedForest);
+            xw.writeAttribute(FALLOW_TURN_TAG, fallowTurn);
+        }
     }
 
     /**
@@ -2716,6 +2773,8 @@ public final class Tile extends UnitLocation implements Named, Ownable {
             moveToEurope = null;
             contiguity = -1;
             owningSettlement = null;
+            clearedForest = null;
+            fallowTurn = -1;
             return;
         }
 
@@ -2743,6 +2802,11 @@ public final class Tile extends UnitLocation implements Named, Ownable {
             : null;
 
         contiguity = xr.getAttribute(CONTIGUITY_TAG, -1);
+
+        clearedForest = xr.getType(spec, CLEARED_FOREST_TAG,
+                                   TileType.class, (TileType)null);
+        fallowTurn = (clearedForest == null) ? -1
+            : xr.getAttribute(FALLOW_TURN_TAG, -1);
 
         // Tiles are added to the settlement owned tiles list in Map.
         // Doing it here can cause cache weirdness.
