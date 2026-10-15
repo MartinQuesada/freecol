@@ -442,7 +442,7 @@ public class ConfirmDeclarationDialog extends DeprecatedFreeColDialog<List<Strin
         if (!options.get(0).equals(value)) return null;
         List<String> result = new ArrayList<>();
         // Sanitize user input, used in save file name
-        result.add(this.nationField.getText().replaceAll("[^\\s\\w]", ""));
+        result.add(this.nationField.getText().replaceAll("(?U)[^\\s\\w]", ""));
         result.add(this.countryField.getText());
         return result;
     }

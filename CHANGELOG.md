@@ -10,6 +10,7 @@
 
 ### User Interface ###
 * Bugfix: the unit menu no longer offers "Assign to teacher" to units outside the colony, such as fortified soldiers; the server always refused it.
+* Bugfix: the name of the independent nation keeps accented letters and ñ ("España Libres" was saved as "Espaa Libres").
 ## Libertadores mod pack 0.3.3 (7th of October, 2026) ##
 
 ### Mods ###
