@@ -32,6 +32,7 @@ import javax.xml.stream.XMLStreamException;
 import net.sf.freecol.common.io.FreeColXMLReader;
 import net.sf.freecol.common.io.FreeColXMLWriter;
 import net.sf.freecol.common.model.Colony.NoBuildReason;
+import net.sf.freecol.common.option.GameOptions;
 import static net.sf.freecol.common.model.Constants.*;
 import static net.sf.freecol.common.util.CollectionUtils.*;
 
@@ -434,12 +435,21 @@ public final class UnitType extends BuildableType implements Consumer {
     }
 
     /**
-     * Get the skill taught by this unit type.
+     * Get the skill taught by this unit type.  With the game option
+     * for colonial regulars, a type that teaches another type (the
+     * colonial regular teaches veteran soldiers) teaches its own type
+     * instead, if some unit can be educated into it.
      *
      * @return The skill taught by this unit type.
      */
     public UnitType getSkillTaught() {
-        return skillTaught;
+        if (skillTaught == null || skillTaught == this) return skillTaught;
+        final Specification spec = getSpecification();
+        return (spec.getBoolean(GameOptions.REGULARS_TEACH_REGULARS)
+            && any(spec.getUnitTypeList(), ut ->
+                spec.getUnitChange(UnitChangeType.EDUCATION, ut, this) != null))
+            ? this
+            : skillTaught;
     }
 
     /**
@@ -725,7 +735,7 @@ public final class UnitType extends BuildableType implements Consumer {
         this.maximumExperience = o.getMaximumExperience();
         this.maximumAttrition = o.getMaximumAttrition();
         this.priority = o.getPriority();
-        this.skillTaught = o.getSkillTaught();
+        this.skillTaught = o.skillTaught;
         this.defaultRole = o.getDefaultRole();
         this.consumption = o.getConsumption();
         return true;

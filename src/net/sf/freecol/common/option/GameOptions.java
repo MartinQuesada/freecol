@@ -130,6 +130,10 @@ public class GameOptions {
     public static final String REPAIR_DAMAGED_ARTILLERY_TOOLS
         = "model.option.repairDamagedArtilleryTools";
 
+    /** Do colonial regulars teach colonial regulars? */
+    public static final String REGULARS_TEACH_REGULARS
+        = "model.option.regularsTeachRegulars";
+
     /** Do buildings cost more in colonies on hills? */
     public static final String HILLS_BUILDING_COST
         = "model.option.hillsBuildingCost";

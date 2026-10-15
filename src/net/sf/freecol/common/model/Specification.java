@@ -3109,6 +3109,9 @@ public final class Specification implements OptionContainer {
         ret |= checkOp(GameOptions.SHIP_REPAIR_LUMBER,
                 GameOptions.GAMEOPTIONS_MAP,
                 20, IntegerOption.class);
+        ret |= checkOp(GameOptions.REGULARS_TEACH_REGULARS,
+                GameOptions.GAMEOPTIONS_MAP,
+                Boolean.FALSE, BooleanOption.class);
         ret |= checkOp(GameOptions.HILLS_BUILDING_COST,
                 GameOptions.GAMEOPTIONS_MAP,
                 Boolean.FALSE, BooleanOption.class);

@@ -1567,6 +1567,12 @@
                         from="model.unit.freeColonist"
                         to="model.unit.jesuitMissionary"
                         probability="100" turns="8"/>
+      <!-- Only taught with model.option.regularsTeachRegulars, see
+           UnitType.getSkillTaught. -->
+      <unit-type-change id="model.unitChange.education.colonialRegular"
+                        from="model.unit.freeColonist"
+                        to="model.unit.colonialRegular"
+                        probability="100" turns="8"/>
     </unit-change-type>
     <unit-change-type id="model.unitChange.experience">
       <unit-type-change id="model.unitChange.experience.expertFarmer"
@@ -4722,6 +4728,10 @@
                        defaultValue="false"/>
         <integerOption id="model.option.shipRepairLumber"
                        defaultValue="20" minimumValue="0" maximumValue="200"/>
+        <!-- Colonial regulars teach colonial regulars at a university,
+             instead of veteran soldiers. -->
+        <booleanOption id="model.option.regularsTeachRegulars"
+                       defaultValue="false"/>
         <!-- Buildings, fortifications included, cost a percentage more
              hammers and tools in colonies on hills (elevated tiles). -->
         <booleanOption id="model.option.hillsBuildingCost"

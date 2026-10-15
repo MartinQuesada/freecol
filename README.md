@@ -119,6 +119,10 @@ FreeCol build those mods still load, but the affected effects do nothing.
   `model.option.shipRepairLumber` (20): each turn of ship repair in a colony
   takes that much lumber, after the colony production. Units repaired in
   colonies are now repaired after the production in every case.
+- Game option `model.option.regularsTeachRegulars` (off by default): a
+  unit type whose `skill-taught` is another type (the colonial regular)
+  teaches its own type instead, if some unit can be educated into it
+  (new education change free colonist to colonial regular, 8 turns).
 - Game options `model.option.hillsBuildingCost` (off by default) and
   `model.option.hillsBuildingCostPercent` (25): buildings cost that much
   more in colonies on elevated tiles. `Colony.getBuildCost()` gives the

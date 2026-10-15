@@ -33,7 +33,10 @@ import net.sf.freecol.common.model.Colony;
 import net.sf.freecol.common.model.Game;
 import net.sf.freecol.common.model.GoodsType;
 import net.sf.freecol.common.model.Unit;
+import net.sf.freecol.common.model.UnitLocation.NoAddReason;
 import net.sf.freecol.common.model.UnitType;
+import net.sf.freecol.common.option.BooleanOption;
+import net.sf.freecol.common.option.GameOptions;
 import net.sf.freecol.server.ServerTestHelper;
 import net.sf.freecol.util.test.FreeColTestCase;
 import net.sf.freecol.util.test.FreeColTestUtils;
@@ -1151,6 +1154,50 @@ public class ServerBuildingTest extends FreeColTestCase {
         assertEquals(veteranSoldierType, colonist.getType());
 
         FreeColTestUtils.setStudentSelection(selection);
+    }
+
+    public void testColonialRegularTeachesRegulars() {
+        BooleanOption option = spec().getOption(GameOptions.REGULARS_TEACH_REGULARS,
+                                                BooleanOption.class);
+        final boolean oldValue = option.getValue();
+        boolean selection = FreeColTestUtils.setStudentSelection(false);
+        try {
+            option.setValue(false);
+            assertEquals(veteranSoldierType,
+                         colonialRegularType.getSkillTaught());
+            option.setValue(true);
+            assertEquals(colonialRegularType,
+                         colonialRegularType.getSkillTaught());
+            assertEquals("Veterans still teach veterans", veteranSoldierType,
+                         veteranSoldierType.getSkillTaught());
+            assertEquals(8, spec().getNeededTurnsOfTraining(colonialRegularType,
+                                                            freeColonistType));
+
+            ServerTestHelper.startServerGame(getTestMap(true));
+            Colony colony = getSchoolColony(4, SchoolLevel.UNIVERSITY);
+            Building university = colony.getBuilding(universityType);
+            colony.getOwner().addAbility(new Ability(Ability.INDEPENDENCE_DECLARED));
+            Iterator<Unit> units = colony.getUnitList().iterator();
+
+            Unit regular = units.next();
+            regular.setType(colonialRegularType);
+            assertTrue("A university can train regulars",
+                       colony.canTrain(regular));
+            assertFalse("A college can not",
+                collegeType.getNoAddReason(colonialRegularType) == NoAddReason.NONE);
+
+            Unit colonist = units.next();
+            colonist.setType(freeColonistType);
+            colonist.setLocation(colony.getBuilding(townHallType));
+
+            regular.setLocation(university);
+            assertEquals(colonist, regular.getStudent());
+            trainForTurns(colony, 8);
+            assertEquals(colonialRegularType, colonist.getType());
+        } finally {
+            option.setValue(oldValue);
+            FreeColTestUtils.setStudentSelection(selection);
+        }
     }
 
     public void testConcurrentUpgrade() {
