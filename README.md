@@ -119,6 +119,11 @@ FreeCol build those mods still load, but the affected effects do nothing.
   `model.option.shipRepairLumber` (20): each turn of ship repair in a colony
   takes that much lumber, after the colony production. Units repaired in
   colonies are now repaired after the production in every case.
+- Game options `model.option.hillsBuildingCost` (off by default) and
+  `model.option.hillsBuildingCostPercent` (25): buildings cost that much
+  more in colonies on elevated tiles. `Colony.getBuildCost()` gives the
+  goods to build something in a given colony, and the build queue,
+  panels, prices and AI use it instead of the bare buildable cost.
 - Game option `model.option.boycottBlocksPayForBuilding` (off by default):
   you can not pay to finish a building while goods it is missing, such as
   tools, are boycotted.

@@ -32,6 +32,8 @@ import net.sf.freecol.common.model.Tile;
 import net.sf.freecol.common.model.TileType;
 import net.sf.freecol.common.model.Unit;
 import net.sf.freecol.common.model.UnitType;
+import net.sf.freecol.common.option.BooleanOption;
+import net.sf.freecol.common.option.GameOptions;
 import net.sf.freecol.server.ServerTestHelper;
 import net.sf.freecol.util.test.FreeColTestCase;
 import net.sf.freecol.util.test.FreeColTestUtils;
@@ -55,11 +57,57 @@ public class ServerColonyTest extends FreeColTestCase {
     private static final GoodsType foodGoodsType = spec().getPrimaryFoodType();
 
     private static final TileType coniferForest = spec().getTileType("model.tile.coniferForest");
+    private static final TileType hills = spec().getTileType("model.tile.hills");
     private static final TileType marsh = spec().getTileType("model.tile.marsh");
     private static final TileType plains = spec().getTileType("model.tile.plains");
     
     private static final UnitType colonistType = spec().getUnitType("model.unit.freeColonist");
+    private static final UnitType wagonTrainType = spec().getUnitType("model.unit.wagonTrain");
 
+
+    public void testHillsBuildingCost() {
+        BooleanOption option = spec().getOption(GameOptions.HILLS_BUILDING_COST,
+                                                BooleanOption.class);
+        final boolean oldValue = option.getValue();
+        try {
+            ServerTestHelper.startServerGame(getTestMap(hills));
+            Colony colony = createStandardColony(3);
+            assertEquals("No hammers made in the test colony", 0,
+                         colony.getNetProductionOf(hammerGoodsType));
+            final int base = lumberMillType.getRequiredAmountOf(hammerGoodsType);
+
+            option.setValue(false);
+            assertEquals(base, AbstractGoods.getCount(hammerGoodsType,
+                    colony.getBuildCost(lumberMillType)));
+
+            option.setValue(true);
+            final int cost = (base * 125 + 99) / 100;
+            assertEquals(cost, AbstractGoods.getCount(hammerGoodsType,
+                    colony.getBuildCost(lumberMillType)));
+            assertEquals("Units cost the same",
+                wagonTrainType.getRequiredAmountOf(hammerGoodsType),
+                AbstractGoods.getCount(hammerGoodsType,
+                    colony.getBuildCost(wagonTrainType)));
+
+            colony.setCurrentlyBuilding(lumberMillType);
+            colony.addGoods(hammerGoodsType, base);
+            ServerTestHelper.newTurn();
+            assertEquals("Not built with the base hammers", carpenterHouseType,
+                         colony.getBuilding(carpenterHouseType).getType());
+            assertEquals(base, colony.getGoodsCount(hammerGoodsType));
+
+            colony.addGoods(hammerGoodsType, cost - base);
+            ServerTestHelper.newTurn();
+            assertEquals("Built with the extra hammers", lumberMillType,
+                         colony.getBuilding(carpenterHouseType).getType());
+
+            colony.getTile().setType(plains);
+            assertEquals("No extra cost off the hills", 0,
+                         colony.getBuildingCostBonus());
+        } finally {
+            option.setValue(oldValue);
+        }
+    }
 
     public void testFoodConsumption() {
         Game game = ServerTestHelper.startServerGame(getTestMap(plains));

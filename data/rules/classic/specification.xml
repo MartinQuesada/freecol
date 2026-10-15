@@ -4722,6 +4722,12 @@
                        defaultValue="false"/>
         <integerOption id="model.option.shipRepairLumber"
                        defaultValue="20" minimumValue="0" maximumValue="200"/>
+        <!-- Buildings, fortifications included, cost a percentage more
+             hammers and tools in colonies on hills (elevated tiles). -->
+        <booleanOption id="model.option.hillsBuildingCost"
+                       defaultValue="false"/>
+        <integerOption id="model.option.hillsBuildingCostPercent"
+                       defaultValue="25" minimumValue="0" maximumValue="200"/>
         <!-- Does the REF "teleport" to its first target or does it
              sail in? -->
         <booleanOption id="model.option.teleportREF"

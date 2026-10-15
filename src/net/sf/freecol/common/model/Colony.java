@@ -989,7 +989,7 @@ public class Colony extends Settlement implements TradeLocation {
      */
     public int getTurnsToComplete(BuildableType buildable,
                                   AbstractGoods needed) {
-        final List<AbstractGoods> required = buildable.getRequiredGoodsList();
+        final List<AbstractGoods> required = getBuildCost(buildable);
         int turns = 0, satisfied = 0, failing = 0, underway = 0;
 
         ProductionInfo info = productionCache.getProductionInfo(buildQueue);
@@ -1159,6 +1159,38 @@ public class Colony extends Settlement implements TradeLocation {
     }
 
     /**
+     * Gets the percentage extra that buildings cost in this colony,
+     * from the game option for colonies on hills.
+     *
+     * @return The extra percentage, zero if none.
+     */
+    public int getBuildingCostBonus() {
+        final Specification spec = getSpecification();
+        final Tile tile = getTile();
+        return (spec.getBoolean(GameOptions.HILLS_BUILDING_COST)
+            && tile != null && tile.getType() != null
+            && tile.getType().isElevation())
+            ? spec.getInteger(GameOptions.HILLS_BUILDING_COST_PERCENT)
+            : 0;
+    }
+
+    /**
+     * Gets the goods it takes to build a buildable in this colony,
+     * including the extra cost of buildings on hills.
+     *
+     * @param type The {@code BuildableType} to build.
+     * @return A list of the required {@code AbstractGoods}.
+     */
+    public List<AbstractGoods> getBuildCost(BuildableType type) {
+        final int bonus = (type instanceof BuildingType)
+            ? getBuildingCostBonus() : 0;
+        if (bonus == 0) return type.getRequiredGoodsList();
+        return transform(type.getRequiredGoods(), alwaysTrue(),
+            ag -> new AbstractGoods(ag.getType(),
+                (ag.getAmount() * (100 + bonus) + 99) / 100));
+    }
+
+    /**
      * Gets a map of the types of goods and amount thereof required to
      * finish a buildable in this colony.
      *
@@ -1166,7 +1198,7 @@ public class Colony extends Settlement implements TradeLocation {
      * @return The map to completion.
      */
     public List<AbstractGoods> getRequiredGoods(BuildableType type) {
-        return transform(type.getRequiredGoods(),
+        return transform(getBuildCost(type),
                 ag -> ag.getAmount() > getGoodsCount(ag.getType()),
                 ag -> new AbstractGoods(ag.getType(),
                         ag.getAmount() - getGoodsCount(ag.getType())));
@@ -1189,7 +1221,7 @@ public class Colony extends Settlement implements TradeLocation {
         if (buildable == null) return Collections.<AbstractGoods>emptyList();
 
         List<AbstractGoods> required = new ArrayList<>();
-        for (AbstractGoods ag : buildable.getRequiredGoodsList()) {
+        for (AbstractGoods ag : getBuildCost(buildable)) {
             int amount = ag.getAmount();
             GoodsType type = ag.getType();
             while (type != null) {
@@ -2441,7 +2473,7 @@ public class Colony extends Settlement implements TradeLocation {
                             .addNamed("%buildable%", currentlyBuilding)
                             .addAmount("%amount%", ag.getAmount() - amount)
                             .addNamed("%goodsType%", goodsType);
-            result.addAll(transform(currentlyBuilding.getRequiredGoods(),
+            result.addAll(transform(getBuildCost(currentlyBuilding),
                     ag -> ag.getType() == goodsType
                             && amount < ag.getAmount(),
                     bMapper));
@@ -2911,7 +2943,7 @@ public class Colony extends Settlement implements TradeLocation {
 
             if (buildable != null) {
                 available -= AbstractGoods.getCount(goods.getType(),
-                        buildable.getRequiredGoodsList());
+                        getBuildCost(buildable));
             }
 
             if (available < goods.getAmount()) return false;

@@ -193,7 +193,7 @@ public class ConstructionPanel extends MigPanel
             label0.setForeground(getForeground());
             infoPanel.add(label0);
 
-            for (AbstractGoods ag : buildable.getRequiredGoodsList()) {
+            for (AbstractGoods ag : colony.getBuildCost(buildable)) {
                 int amountNeeded = ag.getAmount();
                 int amountAvailable = colony.getGoodsCount(ag.getType());
                 int amountProduced = colony.getAdjustedNetProductionOf(ag.getType());

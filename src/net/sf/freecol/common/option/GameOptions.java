@@ -130,6 +130,14 @@ public class GameOptions {
     public static final String REPAIR_DAMAGED_ARTILLERY_TOOLS
         = "model.option.repairDamagedArtilleryTools";
 
+    /** Do buildings cost more in colonies on hills? */
+    public static final String HILLS_BUILDING_COST
+        = "model.option.hillsBuildingCost";
+
+    /** The percentage extra buildings cost in colonies on hills. */
+    public static final String HILLS_BUILDING_COST_PERCENT
+        = "model.option.hillsBuildingCostPercent";
+
     /** Does repairing ships in a colony cost lumber? */
     public static final String SHIP_REPAIR_COSTS_LUMBER
         = "model.option.shipRepairCostsLumber";

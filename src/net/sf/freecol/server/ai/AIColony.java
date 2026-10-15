@@ -1116,7 +1116,7 @@ public final class AIColony extends AIObject implements PropertyChangeListener {
         // Add building materials.
         BuildableType build = colony.getCurrentlyBuilding();
         if (build != null) {
-            for (AbstractGoods ag : build.getRequiredGoodsList()) {
+            for (AbstractGoods ag : colony.getBuildCost(build)) {
                 if (colony.getAdjustedNetProductionOf(ag.getType()) <= 0) {
                     required.incrementCount(ag.getType(), ag.getAmount());
                 }
