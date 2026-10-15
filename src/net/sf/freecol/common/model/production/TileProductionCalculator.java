@@ -202,7 +202,9 @@ public class TileProductionCalculator {
      */
     public int getUnitProduction(Turn turn, Tile tile, WorkerAssignment workerAssignment, GoodsType goodsType, List<TileImprovementType> additionalTileImprovements) {
         if (workerAssignment == null
-                || workerAssignment.getProductionType().getOutputs().noneMatch(g -> goodsType.equals(g.getType()))
+                || workerAssignment.getProductionType() == null
+                || workerAssignment.getProductionType().getOutputs()
+                    .noneMatch(g -> goodsType.equals(g.getType()))
                 || workerAssignment.getUnitType() == null) {
             return 0;
         }

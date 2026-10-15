@@ -53,6 +53,7 @@ public class AllTests {
         suite.addTestSuite(NationTypeTest.class);
         suite.addTestSuite(PlayerTest.class);
         suite.addTestSuite(ProductionTypeTest.class);
+        suite.addTestSuite(net.sf.freecol.common.model.production.BuildingProductionCalculatorTest.class);
         suite.addTestSuite(RandomRangeTest.class);
         suite.addTestSuite(RoleTest.class);
         suite.addTestSuite(SchoolTest.class);

@@ -356,7 +356,10 @@ public class BuildingProductionCalculator {
      * @return The maximum return from this unit.
      */
     private int getUnitProduction(Turn turn, BuildingType buildingType, WorkerAssignment workerAssignment, GoodsType goodsType) {
-        if (workerAssignment == null || workerAssignment.getProductionType().getOutputs().noneMatch(g -> goodsType.equals(g.getType()))) {
+        if (workerAssignment == null
+                || workerAssignment.getProductionType() == null
+                || workerAssignment.getProductionType().getOutputs()
+                    .noneMatch(g -> goodsType.equals(g.getType()))) {
             return 0;
         }
         
