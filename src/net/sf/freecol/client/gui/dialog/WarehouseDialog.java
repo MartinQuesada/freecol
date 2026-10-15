@@ -50,6 +50,7 @@ import net.sf.freecol.common.model.Colony;
 import net.sf.freecol.common.model.ExportData;
 import net.sf.freecol.common.model.Goods;
 import net.sf.freecol.common.model.GoodsType;
+import net.sf.freecol.common.model.StringTemplate;
 import net.sf.freecol.common.option.GameOptions;
 
 
@@ -205,7 +206,13 @@ public final class WarehouseDialog extends FreeColPanel {
                                    exportData.getExported());
             Utility.localizeToolTip(export,
                 "warehouseDialog.export.shortDescription");
-            if (!colony.hasAbility(Ability.EXPORT)) {
+            if (goodsType.isPerishable()) {
+                export.setSelected(false);
+                export.setEnabled(false);
+                Utility.localizeToolTip(export,
+                    StringTemplate.template("perishable.noTrade")
+                        .addNamed("%goods%", goodsType));
+            } else if (!colony.hasAbility(Ability.EXPORT)) {
                 export.setEnabled(false);
             }
             add(export);
