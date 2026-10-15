@@ -135,6 +135,14 @@ imaginary likeness (no portrait of him is known). See
   father of a type has no weight in the current era (common with monthly
   turns before 1600).
 - **Warehouse:** perishable goods cannot be marked for export.
+- **Warehouse display:** the goods bar always follows the client option
+  "Hide goods in warehouse when fewer than" (0 = show every type,
+  including empty). Debug mode no longer forces hiding empty goods.
+- **Trade routes:** the editor states that listed goods are loaded at a
+  stop, that other goods on the carrier are unloaded, and that a stop
+  with nothing listed unloads everything ("Unload all" on empty stops).
+- **End of turn:** no longer hangs when a natural disaster damages a
+  building and ejects its workers (null production type).
 
 ---
 
@@ -174,7 +182,7 @@ in each mod README.
 | 0.3.1 | 6 Oct 2026 | Boycott / independence / loyalist colony options |
 | 0.3.2 | 6 Oct 2026 | Father weights by usefulness; framed portraits; option renamed |
 | 0.3.3 | 7 Oct 2026 | HD Graphics; father cost scaled by turns per year; recruitment stall fix |
-| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers |
+| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix |
 
 Detailed per-release notes live in [CHANGELOG.md](CHANGELOG.md) under
 "Libertadores mod pack". Upstream FreeCol notes follow below those sections.

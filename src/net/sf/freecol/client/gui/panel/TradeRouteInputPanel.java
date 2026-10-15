@@ -134,6 +134,7 @@ public final class TradeRouteInputPanel extends FreeColPanel
             this.labels = labels;
             setOpaque(false);
             setBorder(Utility.localizedBorder("goods"));
+            Utility.localizeToolTip(this, "tradeRouteInputPanel.help");
             reset();
         }
 
@@ -182,6 +183,9 @@ public final class TradeRouteInputPanel extends FreeColPanel
 
         public StopGoodsTypesPanel() {
             super(new MigLayout("wrap 10"), false);
+            setBorder(Utility.localizedBorder("tradeRouteInputPanel.loadAtStop"));
+            Utility.localizeToolTip(this,
+                "tradeRouteInputPanel.unloadAll.shortDescription");
         }
 
         // Interface DropTarget
@@ -409,9 +413,16 @@ public final class TradeRouteInputPanel extends FreeColPanel
             final int height = (int) (60 * getImageLibrary().getScaleFactor());
             panel.add(new JLabel(ii), "spany, width " + width + ", height " + height);
             panel.add(name, "span, wrap");
-            for (GoodsType cargo : value.getCargo()) {
-                ii = new ImageIcon(lib.getSmallerGoodsTypeImage(cargo));
-                panel.add(new JLabel(ii));
+            if (value.getCargo().isEmpty()) {
+                JLabel unload = Utility.localizedLabel("tradeRouteInputPanel.unloadAll");
+                Utility.localizeToolTip(unload,
+                    "tradeRouteInputPanel.unloadAll.shortDescription");
+                panel.add(unload, "span");
+            } else {
+                for (GoodsType cargo : value.getCargo()) {
+                    ii = new ImageIcon(lib.getSmallerGoodsTypeImage(cargo));
+                    panel.add(new JLabel(ii));
+                }
             }
             return panel;
         }
@@ -550,6 +561,8 @@ public final class TradeRouteInputPanel extends FreeColPanel
         this.stopGoodsTypesPanel = new StopGoodsTypesPanel();
         this.stopGoodsTypesPanel.setTransferHandler(this.transferHandler);
 
+        JLabel helpLabel = Utility.localizedLabel("tradeRouteInputPanel.help");
+
         JButton cancelButton = Utility.localizedButton("cancel");
         cancelButton.setActionCommand(CANCEL);
         cancelButton.addActionListener(this);
@@ -571,6 +584,7 @@ public final class TradeRouteInputPanel extends FreeColPanel
         add(this.messagesBox);
         add(this.addStopButton);
         add(this.removeStopButton, "span");
+        add(helpLabel, "span, growx");
         add(this.allGoodsTypesPanel, "span");
         
         final int iconHeight = (int) (80 * getImageLibrary().getScaleFactor());
@@ -602,9 +616,21 @@ public final class TradeRouteInputPanel extends FreeColPanel
      * @param stop The {@code TradeRouteStop} to select.
      */
     private void updateCargoPanel(TradeRouteStop stop) {
-        this.stopGoodsTypesPanel.setLabels((stop == null) ? null
-            : transform(stop.getCargo(), GoodsType::isStorable,
-                        gt -> buildCargoLabel(gt)));
+        if (stop == null) {
+            this.stopGoodsTypesPanel.setLabels(null);
+            return;
+        }
+        List<GoodsTypeLabel> labels = transform(stop.getCargo(),
+            GoodsType::isStorable, gt -> buildCargoLabel(gt));
+        this.stopGoodsTypesPanel.setLabels(labels);
+        if (labels.isEmpty()) {
+            JLabel unload = Utility.localizedLabel("tradeRouteInputPanel.unloadAll");
+            Utility.localizeToolTip(unload,
+                "tradeRouteInputPanel.unloadAll.shortDescription");
+            this.stopGoodsTypesPanel.add(unload);
+            this.stopGoodsTypesPanel.revalidate();
+            this.stopGoodsTypesPanel.repaint();
+        }
     }
 
     /**
@@ -647,10 +673,12 @@ public final class TradeRouteInputPanel extends FreeColPanel
                 stop.setCargo(cargo);
             }
         }
+        final int[] idx = this.stopList.getSelectedIndices();
+        if (idx.length > 0) {
+            updateCargoPanel(this.stopListModel.get(idx[0]));
+        }
         this.stopList.revalidate();
         this.stopList.repaint();
-        this.stopGoodsTypesPanel.revalidate();
-        this.stopGoodsTypesPanel.repaint();
     }
 
     /**

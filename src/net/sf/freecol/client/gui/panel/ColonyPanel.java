@@ -1958,9 +1958,10 @@ public final class ColonyPanel extends PortPanel
             removeAll();
 
             ClientOptions options = getClientOptions();
-            final int threshold = (FreeColDebugger.isInDebugMode(FreeColDebugger.DebugMode.MENUS))
-                ? 1
-                : options.getInteger(ClientOptions.MIN_NUMBER_FOR_DISPLAYING_GOODS);
+            // Client option "Hide goods in warehouse when fewer than"
+            // (0 = show every storable type, including empty).
+            final int threshold = options.getInteger(
+                ClientOptions.MIN_NUMBER_FOR_DISPLAYING_GOODS);
             final Game game = colony.getGame();
             final Specification spec = colony.getSpecification();
             for (GoodsType goodsType : spec.getStorableGoodsTypeList()) {
