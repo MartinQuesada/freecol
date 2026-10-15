@@ -16,6 +16,7 @@
 ### User Interface ###
 * Bugfix: the unit menu no longer offers "Assign to teacher" to units outside the colony, such as fortified soldiers; the server always refused it.
 * Bugfix: the name of the independent nation keeps accented letters and ñ ("España Libres" was saved as "Espaa Libres").
+* Spanish: the Man of War is now "Navío de línea" instead of the literal "Hombre de Guerra".
 
 ### Mod development ###
 * New goods type attribute `perishable`: perishable goods can not be bought or sold in Europe or through the custom house. They can still be carried between colonies and traded with the natives.
