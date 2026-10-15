@@ -22,15 +22,23 @@ package net.sf.freecol.server.ai;
 import java.util.Random;
 
 import net.sf.freecol.common.model.AbstractUnit;
+import net.sf.freecol.common.model.Colony;
 import net.sf.freecol.common.model.Force;
 import net.sf.freecol.common.model.Game;
 import net.sf.freecol.common.model.Monarch;
+import net.sf.freecol.common.model.Player.PlayerType;
+import net.sf.freecol.common.model.Role;
 import net.sf.freecol.common.model.Specification;
+import net.sf.freecol.common.model.Tile;
 import net.sf.freecol.common.model.Turn;
 import net.sf.freecol.common.model.Unit;
+import net.sf.freecol.common.model.UnitType;
+import static net.sf.freecol.common.util.CollectionUtils.*;
 import net.sf.freecol.server.ServerTestHelper;
+import net.sf.freecol.server.ai.mission.UnitSeekAndDestroyMission;
 import net.sf.freecol.server.control.InGameController;
 import net.sf.freecol.server.model.ServerPlayer;
+import net.sf.freecol.server.model.ServerUnit;
 import net.sf.freecol.util.test.FreeColTestCase;
 
 
@@ -69,6 +77,44 @@ public class REFTest extends FreeColTestCase {
                    exf.matchAll(newf));
     }
 
+
+    public void testREFLaunchAgainstRingedColony() {
+        final Specification spec = spec();
+        Game game = ServerTestHelper.startServerGame(
+            getCoastTestMap(spec.getTileType("model.tile.plains"), true));
+        InGameController igc = ServerTestHelper.getInGameController();
+        ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
+
+        Colony colony = createStandardColony(3, 9, 8);
+        assertTrue(colony.isConnectedPort());
+        final UnitType soldierType = spec.getUnitType("model.unit.veteranSoldier");
+        final Role soldierRole = spec.getRole("model.role.soldier");
+        for (Tile t : transform(colony.getTile().getSurroundingTiles(1, 1),
+                                Tile::isLand)) {
+            new ServerUnit(game, t, dutch, soldierType, soldierRole);
+        }
+
+        dutch.getMonarch().getExpeditionaryForce().prepareToBoard(null);
+        ServerPlayer refPlayer = igc.createREFPlayer(dutch);
+        refPlayer.exploreMap(true);
+        dutch.changePlayerType(PlayerType.REBEL);
+        dutch.setIndependentNationName("Vrije Nederlands");
+        REFAIPlayer refAI = (REFAIPlayer)ServerTestHelper.getServer()
+            .getAIPlayer(refPlayer);
+
+        Unit loose = find(refPlayer.getUnits(), u -> !u.isNaval());
+        loose.setLocation(refPlayer.getEurope());
+        assertNull(loose.getCarrier());
+
+        assertTrue("REF launches against a colony ringed by units",
+                   refAI.initialize(false));
+        assertNotNull("Loose units are put back aboard", loose.getCarrier());
+        AIUnit attacker = refAI.getAIMain().getAIUnit(loose);
+        assertTrue("REF attacks the guards",
+            attacker.getMission() instanceof UnitSeekAndDestroyMission
+            && attacker.getMission().getTarget() instanceof Unit
+            && dutch.owns((Unit)attacker.getMission().getTarget()));
+    }
 
     public void testAddToREF() {
         Game game = ServerTestHelper.startServerGame(getTestMap());

@@ -42,6 +42,7 @@ import net.sf.freecol.common.io.FreeColXMLReader;
 import net.sf.freecol.common.model.Ability;
 import net.sf.freecol.common.model.Building;
 import net.sf.freecol.common.model.Colony;
+import net.sf.freecol.common.model.Europe;
 import net.sf.freecol.common.model.Location;
 import net.sf.freecol.common.model.PathNode;
 import net.sf.freecol.common.model.Player;
@@ -137,10 +138,12 @@ public final class REFAIPlayer extends EuropeanAIPlayer {
         public double score;
         public Tile disembarkTile;
         public Tile entry;
+        public Location target;
 
 
         public TargetTuple(Colony colony, PathNode path, double score) {
             this.colony = colony;
+            this.target = colony;
             this.path = path;
             this.score = score;
             this.disembarkTile = null;
@@ -293,7 +296,64 @@ public final class REFAIPlayer extends EuropeanAIPlayer {
         List<TargetTuple> targets = findColonyTargets(aiu, true, aiCarrier);
         if (targets.isEmpty())
             targets = findColonyTargets(aiu, false, aiCarrier);
+        if (targets.isEmpty())
+            targets = findGuardTargets(aiu, aiCarrier);
         return targets;
+    }
+
+    /**
+     * Find rebel units guarding the colonies.  Paths never pass
+     * through rebel units, so when every approach to the colonies is
+     * held the REF has to attack the guards first.
+     *
+     * @param aiu The {@code AIUnit} to search with.
+     * @param aiCarrier The {@code AIUnit} to use as a carrier.
+     * @return A list of {@code TargetTuple} target choices.
+     */
+    private List<TargetTuple> findGuardTargets(AIUnit aiu, AIUnit aiCarrier) {
+        final Unit unit = aiu.getUnit();
+        final Unit carrier = aiCarrier.getUnit();
+        final List<TargetTuple> targets = new ArrayList<>();
+        for (Player rebel : getPlayer().getRebels()) {
+            for (Colony c : rebel.getColonyList()) {
+                TargetTuple best = null;
+                for (Tile t : c.getTile().getSurroundingTiles(1)) {
+                    if (!t.isLand()) continue;
+                    Unit guard = t.getDefendingUnit(unit);
+                    if (guard == null || !rebel.owns(guard)) continue;
+                    PathNode path = unit.findPath(carrier, t, carrier);
+                    if (path == null) continue;
+                    double score = 1020 - 100 * path.getTotalTurns();
+                    if (best == null || score > best.score) {
+                        best = new TargetTuple(c, path, score);
+                        best.target = guard;
+                    }
+                }
+                if (best != null) targets.add(best);
+            }
+        }
+        targets.sort(Comparator.naturalOrder());
+        return targets;
+    }
+
+    /**
+     * Put the land units in Europe back aboard the navy.  They end up
+     * there if the REF ran a normal turn before it was launched, and
+     * the launch needs them on the carriers.
+     */
+    private void embarkInEurope() {
+        final Europe europe = getPlayer().getEurope();
+        if (europe == null) return;
+        final List<Unit> ships = transform(europe.getUnits(), Unit::isNaval);
+        for (Unit u : transform(europe.getUnits(), u -> !u.isNaval())) {
+            Unit ship = find(ships, s -> s.getSpaceLeft() >= u.getSpaceTaken());
+            if (ship == null) {
+                logger.warning("REF has no room aboard for: " + u);
+                continue;
+            }
+            u.setLocation(ship);//-vis: safe, in Europe
+            u.setState(Unit.UnitState.SENTRY);
+        }
     }
                 
     /**
@@ -323,10 +383,16 @@ public final class REFAIPlayer extends EuropeanAIPlayer {
     public boolean initialize(boolean teleport) {
         final AIMain aiMain = getAIMain();
         final Random aiRandom = getAIRandom();
+        embarkInEurope();
         // Find a representative offensive land unit to use to search
         // for the initial target.
         AIUnit aiUnit = find(getAIUnits(), aiu -> !aiu.getUnit().isNaval()
-            && aiu.getUnit().isOffensiveUnit());
+            && aiu.getUnit().isOffensiveUnit()
+            && aiu.getUnit().getCarrier() != null);
+        if (aiUnit == null) {
+            aiUnit = find(getAIUnits(), aiu -> !aiu.getUnit().isNaval()
+                && aiu.getUnit().isOffensiveUnit());
+        }
         if (aiUnit == null) {
             logger.warning("REF has no army?!?");
             return false;
@@ -462,7 +528,7 @@ public final class REFAIPlayer extends EuropeanAIPlayer {
                 used = 0;
                 for (Unit u : aiu.getUnit().getUnitList()) {
                     AIUnit laiu = aiMain.getAIUnit(u);
-                    m = getSeekAndDestroyMission(laiu, t.colony);
+                    m = getSeekAndDestroyMission(laiu, t.target);
                     if (m != null) lb.add(" ", m);
                     used++;
                 }

@@ -137,6 +137,8 @@ FreeCol build those mods still load, but the affected effects do nothing.
   `model.option.loyalistColoniesThreshold` (50%): when independence is
   declared, colonies below the threshold stay loyal to the Crown and join
   the REF, and have to be taken back to win.
+- Bugfix: the REF no longer stays in Europe when every rebel colony is
+  surrounded by units; it lands and attacks the guards.
 
 ### Playing with the mods
 

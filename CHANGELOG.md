@@ -6,10 +6,10 @@
 * New game option "Ship repair costs lumber" (off by default): each turn of repairing a ship in a colony with a drydock takes lumber (option "Lumber per turn of ship repair", 20 by default) left over after the colony's production; without it the repair does not advance that turn. Repair in Europe stays free.
 * New game option "Regulars teach regulars" (off by default): colonial regulars, who need a university to teach, train free colonists into colonial regulars in 8 turns, instead of veteran soldiers, which a veteran can teach at a college.
 * New game option "Building on hills costs more" (off by default): in colonies on hills, buildings, fortifications included, cost a percentage more hammers and tools (option "Extra building cost on hills", 25% by default, rounded up). Units cost the same. The build panels, turns to complete and the price to pay for a building use the higher cost.
+* Bugfix: the Royal Expeditionary Force no longer stays in Europe for ever when every rebel colony is surrounded by units. It lands and attacks the units guarding a colony. Its land units left in Europe after a failed launch are put back aboard the navy. Games already waiting for it are fixed on the next turn.
 
 ### User Interface ###
 * Bugfix: the unit menu no longer offers "Assign to teacher" to units outside the colony, such as fortified soldiers; the server always refused it.
-
 ## Libertadores mod pack 0.3.3 (7th of October, 2026) ##
 
 ### Mods ###
