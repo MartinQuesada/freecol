@@ -21,9 +21,9 @@ learn trades. A few small engine changes support them.
 |-----|---------|--------------|
 | [Libertadores](data/mods/libertadores/README.md) | 0.4 | 23 founding fathers (San Martín, Miranda, Sor Juana, Humboldt, Hamilton, Colbert, Champlain, Vauban…); 48 candidates in total |
 | [Deeper Buildings](data/mods/deeperBuildings/README.md) | 0.3 | Timber mill, City hall, Basilica and Citadel, with their own art (the citadel is a bastioned star fort on the map) |
-| [Tasajo](data/mods/tasajo/README.md) | 0.5 | Hunting meat, salt mines and the salting house chain to export salt meat |
+| [Tasajo](data/mods/tasajo/README.md) | 0.6 | Hunting meat, salt mines and the salting house chain to export salt meat |
 | [Lumber Craft](data/mods/lumberCraft/README.md) | 0.1 | Tools and muskets also consume lumber |
-| [Livestock](data/mods/livestock/README.md) | 0.3 | Cows and sheep: milk, cheese, wool; brotherhood hall turns cheese into crosses |
+| [Livestock](data/mods/livestock/README.md) | 0.4 | Cows and sheep: milk, cheese, wool; brotherhood hall turns cheese into crosses |
 | [Cacao](data/mods/cacao/README.md) | 0.3 | Cacao and chocolate; creole salon turns chocolate into liberty bells |
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla, a raw luxury export like silver |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
@@ -143,6 +143,9 @@ FreeCol build those mods still load, but the affected effects do nothing.
   REF can attack from its ships when the target's land mass has no free
   beach (`Map.hasFreeBeach()`), with the amphibious attack penalty. AI
   units aboard a ship next to their target attack from it.
+- Goods type attribute `perishable`: the goods can not be traded in Europe
+  or through the custom house (`Player.canTrade()` refuses them). Livestock
+  milk and Tasajo meat are perishable.
 
 ### Playing with the mods
 

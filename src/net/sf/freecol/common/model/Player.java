@@ -1843,6 +1843,7 @@ public class Player extends FreeColGameObject implements Nameable {
      * @return True if type of goods can be traded.
      */
     public boolean canTrade(GoodsType type, Market.Access access) {
+        if (type.isPerishable()) return false;
         return getArrears(type) == 0
             || (access == Market.Access.CUSTOM_HOUSE
                 && (getSpecification().getBoolean(GameOptions.CUSTOM_IGNORE_BOYCOTT)

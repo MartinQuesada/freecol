@@ -9,7 +9,7 @@ Adds a salt-meat export chain inspired by FreeCol 2 forum ideas
 | Mine | **Salt** on hills, mountains, and desert (bonus from **Salt** deposits / flats) |
 | Process | **Salting house** (32 hammers) → **Salting works** → **Packing house** (Adam Smith) |
 |         | meat + salt → salt meat (3+3→3 / 6+6→6 / 6+6→9) |
-| Export | **Salt meat / Tasajo** to Europe (not edible) |
+| Export | **Salt meat / Tasajo** to Europe (not edible). Fresh meat is perishable and can not be traded in Europe |
 | Food | Colonists still eat **grain / fish** as usual |
 | Experts | **Expert Hunter**, **Expert Salt Miner**, **Expert Meat Salter** |
 

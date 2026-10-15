@@ -35,6 +35,7 @@ import net.sf.freecol.common.model.GoodsContainer;
 import net.sf.freecol.common.model.GoodsType;
 import net.sf.freecol.common.model.Market;
 import net.sf.freecol.common.model.Player;
+import net.sf.freecol.common.model.StringTemplate;
 import net.sf.freecol.common.model.Unit;
 
 
@@ -77,7 +78,10 @@ public final class MarketLabel extends AbstractGoodsLabel
         if (player == null || player.canTrade(type)) {
             setEnabled(true);
         } else {
-            toolTipText = Messages.message(type.getLabel());
+            toolTipText = (type.isPerishable())
+                ? Messages.message(StringTemplate.template("perishable.label")
+                    .addNamed("%goods%", type))
+                : Messages.message(type.getLabel());
             setEnabled(false);
         }
         if (FreeColDebugger.isInDebugMode(DebugMode.MENUS)) {

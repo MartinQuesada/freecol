@@ -23,10 +23,11 @@
       hunt meat (warehouse raw) + mine salt → salting house → saltMeat (export)
       Meat is NOT food: colonists eat grain/fish; meat is for salting only.
   -->
-<freecol-specification id="tasajo" version="0.5">
+<freecol-specification id="tasajo" version="0.6">
   <goods-types>
     <goods-type id="model.goods.meat" is-farmed="true"
-                new-world-goods="true" production-weight="2.5">
+                new-world-goods="true" perishable="true"
+                production-weight="2.5">
       <market initial-amount="1200" initial-price="3" price-difference="2"/>
     </goods-type>
 

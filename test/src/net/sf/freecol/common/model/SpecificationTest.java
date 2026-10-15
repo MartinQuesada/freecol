@@ -420,4 +420,33 @@ public final class SpecificationTest extends FreeColTestCase {
             fail(ex.toString());
         }
     }
+
+    public void testPerishableGoods() {
+        try {
+            Specification spec = FreeColRules.getFreeColRulesFile("freecol")
+                .getSpecification();
+            List<FreeColModFile> mods = new ArrayList<>();
+            mods.add(new FreeColModFile(new File("data/mods/livestock")));
+            mods.add(new FreeColModFile(new File("data/mods/tasajo")));
+            spec.loadMods(mods);
+            final GoodsType milk = spec.getGoodsType("model.goods.milk");
+            final GoodsType meat = spec.getGoodsType("model.goods.meat");
+            final GoodsType cheese = spec.getGoodsType("model.goods.cheese");
+            final GoodsType saltMeat
+                = spec.getGoodsType("model.goods.saltMeat");
+            assertTrue(milk.isPerishable());
+            assertTrue(meat.isPerishable());
+            assertFalse(cheese.isPerishable());
+            assertFalse(saltMeat.isPerishable());
+
+            Game game = getStandardGame();
+            Player dutch = game.getPlayerByNationId("model.nation.dutch");
+            assertFalse("No milk in Europe", dutch.canTrade(milk));
+            assertFalse("No meat through the custom house",
+                dutch.canTrade(meat, Market.Access.CUSTOM_HOUSE));
+            assertTrue("Cheese is exported", dutch.canTrade(cheese));
+        } catch (IOException|XMLStreamException ex) {
+            fail(ex.toString());
+        }
+    }
 }

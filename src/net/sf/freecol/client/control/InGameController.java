@@ -4540,6 +4540,12 @@ public final class InGameController extends FreeColClientHolder {
      */
     public boolean payArrears(GoodsType type) {
         if (!requireOurTurn() || type == null) return false;
+        if (type.isPerishable()) {
+            showInformationPanel(null, StringTemplate
+                .template("perishable.noTrade")
+                .addNamed("%goods%", type));
+            return false;
+        }
 
         final Player player = getMyPlayer();
         int arrears = player.getArrears(type);

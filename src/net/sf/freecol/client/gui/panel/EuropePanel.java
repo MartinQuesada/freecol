@@ -466,6 +466,8 @@ public final class EuropePanel extends PortPanel {
                 Goods goods = ((GoodsLabel)comp).getGoods();
                 if (getMyPlayer().canTrade(goods.getType())) {
                     igc().sellGoods(goods);
+                } else if (goods.getType().isPerishable()) {
+                    igc().payArrears(goods.getType());
                 } else {
                     BoycottAction act = getGUI()
                         .getBoycottChoice(goods, europe);

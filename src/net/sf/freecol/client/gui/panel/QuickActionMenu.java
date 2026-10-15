@@ -757,7 +757,8 @@ public final class QuickActionMenu extends JPopupMenu {
         } else if (goods.getLocation() instanceof Europe) {
             Europe europe = (Europe)goods.getLocation();
             addLoadItems(goods, europe);
-            if (!player.canTrade(goods.getType())) {
+            if (!player.canTrade(goods.getType())
+                && !goods.getType().isPerishable()) {
                 addPayArrears(goods.getType());
             }
 
@@ -777,7 +778,8 @@ public final class QuickActionMenu extends JPopupMenu {
                 this.add(unload);
             } else {
                 if (carrier.isInEurope()
-                    && !player.canTrade(goods.getType())) {
+                    && !player.canTrade(goods.getType())
+                    && !goods.getType().isPerishable()) {
                     addPayArrears(goods.getType());
                 }
 
@@ -849,7 +851,7 @@ public final class QuickActionMenu extends JPopupMenu {
         final Europe europe = this.freeColClient.getMyPlayer().getEurope();
         addMarketItems(ag, europe);
 
-        if (!player.canTrade(ag.getType())) {
+        if (!player.canTrade(ag.getType()) && !ag.getType().isPerishable()) {
             addPayArrears(ag.getType());
         }
     }

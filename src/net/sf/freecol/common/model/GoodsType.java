@@ -62,6 +62,9 @@ public final class GoodsType extends FreeColSpecObjectType {
     /** Is this goods type native to the New World. */
     private boolean newWorldGoods;
 
+    /** Does this goods type spoil before it could be shipped to Europe. */
+    private boolean perishable;
+
     /**
      * Whether this type of goods is required for building equipment
      * that grants an offence bonus or defence bonus.
@@ -191,6 +194,16 @@ public final class GoodsType extends FreeColSpecObjectType {
      */
     public boolean isNewWorldGoodsType() {
         return newWorldGoods;
+    }
+
+    /**
+     * Is this goods type perishable?  Perishable goods can not be
+     * traded in Europe or through the custom house.
+     *
+     * @return True if this goods type is perishable.
+     */
+    public boolean isPerishable() {
+        return perishable;
     }
 
     /**
@@ -562,6 +575,7 @@ public final class GoodsType extends FreeColSpecObjectType {
         this.isFood = o.isFoodType();
         this.ignoreLimit = o.limitIgnored();
         this.newWorldGoods = o.isNewWorldGoodsType();
+        this.perishable = o.isPerishable();
         this.isMilitary = o.getMilitary();
         this.buildingMaterial = o.isBuildingMaterial();
         this.tradeGoods = o.isTradeGoods();
@@ -594,6 +608,7 @@ public final class GoodsType extends FreeColSpecObjectType {
     private static final String MADE_FROM_TAG = "made-from";
     private static final String MARKET_TAG = "market";
     private static final String NEW_WORLD_GOODS_TAG = "new-world-goods";
+    private static final String PERISHABLE_TAG = "perishable";
     private static final String PRICE_TAG = "price";
     private static final String PRICE_DIFFERENCE_TAG = "price-difference";
     private static final String PRODUCTION_WEIGHT_TAG = "production-weight";
@@ -619,6 +634,8 @@ public final class GoodsType extends FreeColSpecObjectType {
         xw.writeAttribute(IGNORE_LIMIT_TAG, ignoreLimit);
 
         xw.writeAttribute(NEW_WORLD_GOODS_TAG, newWorldGoods);
+
+        if (perishable) xw.writeAttribute(PERISHABLE_TAG, perishable);
 
         xw.writeAttribute(TRADE_GOODS_TAG, tradeGoods);
 
@@ -691,6 +708,8 @@ public final class GoodsType extends FreeColSpecObjectType {
         ignoreLimit = xr.getAttribute(IGNORE_LIMIT_TAG, false);
 
         newWorldGoods = xr.getAttribute(NEW_WORLD_GOODS_TAG, false);
+
+        perishable = xr.getAttribute(PERISHABLE_TAG, false);
 
         tradeGoods = xr.getAttribute(TRADE_GOODS_TAG, false);
 

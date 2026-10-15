@@ -26,7 +26,7 @@
     Dairy and wool shed take 1 animal per 3 output, so the herd size and
     the pen's breeding rate cap how much milk and wool a colony can make.
   -->
-<freecol-specification id="livestock" version="0.3">
+<freecol-specification id="livestock" version="0.4">
   <goods-types>
     <goods-type id="model.goods.cows" is-farmed="false"
                 breeding-number="2" made-from="model.goods.food">
@@ -37,7 +37,7 @@
       <market initial-amount="2000" initial-price="2" price-difference="2"/>
     </goods-type>
     <goods-type id="model.goods.milk" is-farmed="false"
-                production-weight="2.5">
+                perishable="true" production-weight="2.5">
       <market initial-amount="1200" initial-price="3" price-difference="2"/>
     </goods-type>
     <goods-type id="model.goods.wool" is-farmed="false"

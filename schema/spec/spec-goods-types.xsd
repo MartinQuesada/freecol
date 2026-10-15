@@ -61,6 +61,7 @@
       <xs:attribute name="low-production-threshold" use="optional" type="xs:float"/>
       <xs:attribute name="made-from" type="GoodsTypeId"/>
       <xs:attribute name="new-world-goods" type="xs:boolean"/>
+      <xs:attribute name="perishable" type="xs:boolean"/>
       <xs:attribute name="price" type="xs:nonNegativeInteger"/>
       <xs:attribute name="production-weight" use="optional" type="xs:float"/>
       <xs:attribute name="storable" type="xs:boolean"/>
