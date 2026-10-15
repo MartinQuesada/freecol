@@ -23,11 +23,15 @@ import static net.sf.freecol.common.util.CollectionUtils.find;
 import static net.sf.freecol.common.util.CollectionUtils.matchKey;
 import static net.sf.freecol.common.util.CollectionUtils.none;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import javax.xml.stream.XMLStreamException;
 
 import junit.framework.TestCase;
 import net.sf.freecol.FreeCol;
@@ -39,6 +43,7 @@ import net.sf.freecol.common.model.Colony;
 import net.sf.freecol.common.model.CombatModel;
 import net.sf.freecol.common.model.CombatModel.CombatOdds;
 import net.sf.freecol.common.model.CombatModel.CombatEffectType;
+import net.sf.freecol.common.model.FoundingFather;
 import net.sf.freecol.common.model.FreeColGameObject;
 import net.sf.freecol.common.model.Game;
 import net.sf.freecol.common.model.IndianSettlement;
@@ -151,6 +156,32 @@ public class FreeColTestCase extends TestCase {
             }
         }
         return result;
+    }
+
+    /**
+     * Gets a founding father defined by a mod, so that its features
+     * can be given to a player of a test game with
+     * {@link Player#addFather}.
+     *
+     * @param mod The mod identifier (its directory under data/mods).
+     * @param id The founding father identifier.
+     * @return The {@code FoundingFather}.
+     */
+    public static FoundingFather getModFather(String mod, String id) {
+        FreeColRules.loadRules();
+        try {
+            Specification spec = FreeColRules.getFreeColRulesFile("freecol")
+                .getSpecification();
+            List<FreeColModFile> mods = new ArrayList<>();
+            mods.add(new FreeColModFile(new File("data/mods/" + mod)));
+            spec.loadMods(mods);
+            FoundingFather father = spec.getFoundingFather(id);
+            assertNotNull("No " + id + " in " + mod, father);
+            return father;
+        } catch (IOException|XMLStreamException ex) {
+            fail(ex.toString());
+            return null;
+        }
     }
 
     /**

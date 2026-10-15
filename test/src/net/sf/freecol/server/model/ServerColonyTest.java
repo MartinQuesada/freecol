@@ -23,11 +23,13 @@ import static net.sf.freecol.common.util.CollectionUtils.first;
 import static net.sf.freecol.common.util.CollectionUtils.transform;
 
 import net.sf.freecol.common.model.AbstractGoods;
+import net.sf.freecol.common.model.BuildableType;
 import net.sf.freecol.common.model.Building;
 import net.sf.freecol.common.model.BuildingType;
 import net.sf.freecol.common.model.Colony;
 import net.sf.freecol.common.model.Game;
 import net.sf.freecol.common.model.GoodsType;
+import net.sf.freecol.common.model.Player;
 import net.sf.freecol.common.model.Tile;
 import net.sf.freecol.common.model.TileType;
 import net.sf.freecol.common.model.Unit;
@@ -45,6 +47,7 @@ public class ServerColonyTest extends FreeColTestCase {
     private static final BuildingType carpenterHouseType = spec().getBuildingType("model.building.carpenterHouse");
     private static final BuildingType depotType = spec().getBuildingType("model.building.depot");
     private static final BuildingType lumberMillType = spec().getBuildingType("model.building.lumberMill");
+    private static final BuildingType stockadeType = spec().getBuildingType("model.building.stockade");
     private static final BuildingType townHallType = spec().getBuildingType("model.building.townHall");
     private static final BuildingType warehouseType = spec().getBuildingType("model.building.warehouse");
 
@@ -53,6 +56,7 @@ public class ServerColonyTest extends FreeColTestCase {
     private static final GoodsType grainType = spec().getGoodsType("model.goods.grain");
     private static final GoodsType hammerGoodsType = spec().getGoodsType("model.goods.hammers");
     private static final GoodsType lumberGoodsType = spec().getGoodsType("model.goods.lumber");
+    private static final GoodsType toolsType = spec().getGoodsType("model.goods.tools");
     private static final GoodsType foodType = spec().getGoodsType("model.goods.food");
     private static final GoodsType foodGoodsType = spec().getPrimaryFoodType();
 
@@ -61,9 +65,62 @@ public class ServerColonyTest extends FreeColTestCase {
     private static final TileType marsh = spec().getTileType("model.tile.marsh");
     private static final TileType plains = spec().getTileType("model.tile.plains");
     
+    private static final UnitType artilleryType = spec().getUnitType("model.unit.artillery");
+    private static final UnitType caravelType = spec().getUnitType("model.unit.caravel");
     private static final UnitType colonistType = spec().getUnitType("model.unit.freeColonist");
     private static final UnitType wagonTrainType = spec().getUnitType("model.unit.wagonTrain");
 
+
+    private static int cost(Colony colony, BuildableType type,
+                            GoodsType goodsType) {
+        return AbstractGoods.getCount(goodsType, colony.getBuildCost(type));
+    }
+
+    public void testFatherBuildCost() {
+        ServerTestHelper.startServerGame(getTestMap(plains));
+        Colony colony = createStandardColony(3);
+        Player owner = colony.getOwner();
+        assertEquals("No hammers made in the test colony", 0,
+                     colony.getNetProductionOf(hammerGoodsType));
+        final int artilleryHammers
+            = artilleryType.getRequiredAmountOf(hammerGoodsType);
+        final int artilleryTools = artilleryType.getRequiredAmountOf(toolsType);
+        final int caravelHammers
+            = caravelType.getRequiredAmountOf(hammerGoodsType);
+        final int stockadeHammers
+            = stockadeType.getRequiredAmountOf(hammerGoodsType);
+        assertEquals(artilleryHammers,
+                     cost(colony, artilleryType, hammerGoodsType));
+
+        owner.addFather(getModFather("libertadores",
+                                     "model.foundingFather.henryKnox"));
+        assertEquals(Math.round(artilleryHammers * 0.75f),
+                     cost(colony, artilleryType, hammerGoodsType));
+        assertEquals(Math.round(artilleryTools * 0.75f),
+                     cost(colony, artilleryType, toolsType));
+        assertEquals("Ships cost the same", caravelHammers,
+                     cost(colony, caravelType, hammerGoodsType));
+
+        owner.addFather(getModFather("libertadores",
+                                     "model.foundingFather.joshuaHumphreys"));
+        assertEquals(Math.round(caravelHammers * 0.75f),
+                     cost(colony, caravelType, hammerGoodsType));
+        assertEquals("Wagons cost the same",
+            wagonTrainType.getRequiredAmountOf(hammerGoodsType),
+            cost(colony, wagonTrainType, hammerGoodsType));
+        assertEquals("Buildings cost the same", stockadeHammers,
+                     cost(colony, stockadeType, hammerGoodsType));
+
+        owner.addFather(getModFather("libertadores",
+                                     "model.foundingFather.vauban"));
+        assertEquals(stockadeHammers / 2,
+                     cost(colony, stockadeType, hammerGoodsType));
+        colony.setCurrentlyBuilding(stockadeType);
+        colony.addGoods(hammerGoodsType, stockadeHammers / 2);
+        ServerTestHelper.newTurn();
+        assertNotNull("Built with half the hammers",
+                      colony.getBuilding(stockadeType));
+    }
 
     public void testHillsBuildingCost() {
         BooleanOption option = spec().getOption(GameOptions.HILLS_BUILDING_COST,

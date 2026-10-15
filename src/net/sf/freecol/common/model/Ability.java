@@ -375,6 +375,13 @@ public final class Ability extends Feature {
     public static final String REPAIR_DEMOTED_UNITS
         = "model.ability.repairDemotedUnits";
 
+    /**
+     * A player with this ability repairs damaged artillery even if the
+     * game option does not allow it.
+     */
+    public static final String REPAIR_DAMAGED_ARTILLERY
+        = "model.ability.repairDamagedArtillery";
+
     /** A national ability required to generate a REF. */
     public static final String ROYAL_EXPEDITIONARY_FORCE
         = "model.ability.royalExpeditionaryForce";

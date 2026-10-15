@@ -341,7 +341,8 @@ public class ServerUnit extends Unit implements TurnTaker {
      */
     public void csRepairUnit(ChangeSet cs) {
         final Player owner =  getOwner();
-        setHitPoints(getHitPoints() + 1);
+        setHitPoints(Math.min(getMaximumHitPoints(),
+                              getHitPoints() + getRepairRate()));
         if (!isDamaged()) {
             Location loc = Location.upLoc(getLocation());
             cs.addMessage(owner,
@@ -972,10 +973,8 @@ public class ServerUnit extends Unit implements TurnTaker {
         final UnitType repaired = getRepairedType();
         final GoodsType hammers = spec.getGoodsType("model.goods.hammers");
         final GoodsType tools = spec.getGoodsType("model.goods.tools");
-        final int needHammers
-            = spec.getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_HAMMERS);
-        final int needTools
-            = spec.getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_TOOLS);
+        final int needHammers = getRepairHammersNeeded();
+        final int needTools = getRepairToolsNeeded();
 
         int done = getRepairHammers();
         int take = Math.min(colony.getGoodsCount(hammers),

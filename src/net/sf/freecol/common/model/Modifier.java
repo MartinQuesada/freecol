@@ -67,6 +67,8 @@ public class Modifier extends Feature {
         = "model.modifier.breedingFactor";
     public static final String BUILDING_PRICE_BONUS
         = "model.modifier.buildingPriceBonus";
+    public static final String BUILD_COST
+        = "model.modifier.buildCost";
     public static final String CARGO_PENALTY
         = "model.modifier.cargoPenalty";
     public static final String COLONY_GOODS_PARTY
@@ -114,6 +116,10 @@ public class Modifier extends Feature {
         = "model.modifier.popularSupport";
     public static final String RELIGIOUS_UNREST_BONUS
         = "model.modifier.religiousUnrestBonus";
+    public static final String REPAIR_COST
+        = "model.modifier.repairCost";
+    public static final String REPAIR_RATE
+        = "model.modifier.repairRate";
     public static final String SAIL_HIGH_SEAS
         = "model.modifier.sailHighSeas";
     public static final String SHIP_TRADE_PENALTY

@@ -562,8 +562,7 @@ public class Unit extends GoodsLocation
         if (!isDamaged() && getDemotedRepairColony() != null) {
             return StringTemplate.template("model.unit.underDemotedRepair")
                 .addAmount("%hammers%", getRepairHammers())
-                .addAmount("%total%", getSpecification()
-                    .getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_HAMMERS));
+                .addAmount("%total%", getRepairHammersNeeded());
         }
         return StringTemplate.template("model.unit.underRepair")
             .addAmount("%turns%", getTurnsForRepair());
@@ -1491,15 +1490,43 @@ public class Unit extends GoodsLocation
     }
 
     /**
+     * Gets the hammers it takes to repair this demoted unit, with the
+     * owner's repair cost modifiers.
+     *
+     * @return The number of hammers.
+     */
+    public int getRepairHammersNeeded() {
+        return applyRepairCost(getSpecification()
+            .getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_HAMMERS));
+    }
+
+    /**
+     * Gets the tools it takes to repair this demoted unit, with the
+     * owner's repair cost modifiers.
+     *
+     * @return The number of tools.
+     */
+    public int getRepairToolsNeeded() {
+        return applyRepairCost(getSpecification()
+            .getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_TOOLS));
+    }
+
+    private int applyRepairCost(int amount) {
+        return Math.max(0, Math.round(getOwner().apply((float)amount,
+                    getGame().getTurn(), Modifier.REPAIR_COST, getType())));
+    }
+
+    /**
      * Gets the colony repairing this demoted unit (damaged artillery).
-     * The game option has to allow it, and the unit has to be on the
-     * tile of one of its owner's colonies with a building able to
-     * repair it (an armory).
+     * The game option or an ability of the owner has to allow it, and
+     * the unit has to be on the tile of one of its owner's colonies
+     * with a building able to repair it (an armory).
      *
      * @return The repairing {@code Colony}, or null if none.
      */
     public Colony getDemotedRepairColony() {
-        if (!getSpecification().getBoolean(GameOptions.REPAIR_DAMAGED_ARTILLERY)
+        if (!(getSpecification().getBoolean(GameOptions.REPAIR_DAMAGED_ARTILLERY)
+                || getOwner().hasAbility(Ability.REPAIR_DAMAGED_ARTILLERY))
             || !(getLocation() instanceof Tile)) return null;
         final Colony colony = getTile().getColony();
         return (colony != null && colony.getOwner() == getOwner()
@@ -1816,7 +1843,19 @@ public class Unit extends GoodsLocation
      * @return The number of turns left to be repaired.
      */
     public int getTurnsForRepair() {
-        return getMaximumHitPoints() - getHitPoints();
+        final int rate = getRepairRate();
+        return (getMaximumHitPoints() - getHitPoints() + rate - 1) / rate;
+    }
+
+    /**
+     * Gets the hit points this unit recovers each turn of repair, with
+     * the owner's repair rate modifiers.
+     *
+     * @return The hit points recovered per turn, at least one.
+     */
+    public int getRepairRate() {
+        return Math.max(1, (int)getOwner().apply(1f, getGame().getTurn(),
+                Modifier.REPAIR_RATE, getType()));
     }
 
     /**
@@ -3789,8 +3828,8 @@ public class Unit extends GoodsLocation
                 if (full) {
                     ret = StringTemplate.label(":")
                         .add("model.unit.occupation.underRepair")
-                        .addName(getRepairHammers() + "/" + getSpecification()
-                            .getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_HAMMERS));
+                        .addName(getRepairHammers() + "/"
+                            + getRepairHammersNeeded());
                 } else {
                     ret = StringTemplate.key("model.unit.occupation.underRepair");
                 }

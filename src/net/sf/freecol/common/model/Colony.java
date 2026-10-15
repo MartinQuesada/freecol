@@ -1176,7 +1176,8 @@ public class Colony extends Settlement implements TradeLocation {
 
     /**
      * Gets the goods it takes to build a buildable in this colony,
-     * including the extra cost of buildings on hills.
+     * including the extra cost of buildings on hills and the owner's
+     * build cost modifiers (from founding fathers).
      *
      * @param type The {@code BuildableType} to build.
      * @return A list of the required {@code AbstractGoods}.
@@ -1184,10 +1185,17 @@ public class Colony extends Settlement implements TradeLocation {
     public List<AbstractGoods> getBuildCost(BuildableType type) {
         final int bonus = (type instanceof BuildingType)
             ? getBuildingCostBonus() : 0;
-        if (bonus == 0) return type.getRequiredGoodsList();
-        return transform(type.getRequiredGoods(), alwaysTrue(),
-            ag -> new AbstractGoods(ag.getType(),
-                (ag.getAmount() * (100 + bonus) + 99) / 100));
+        final List<Modifier> mods = (owner == null)
+            ? Collections.<Modifier>emptyList()
+            : toList(owner.getModifiers(Modifier.BUILD_COST, type,
+                                        getGame().getTurn()));
+        if (bonus == 0 && mods.isEmpty()) return type.getRequiredGoodsList();
+        return transform(type.getRequiredGoods(), alwaysTrue(), ag -> {
+                int amount = (ag.getAmount() * (100 + bonus) + 99) / 100;
+                amount = Math.round(FeatureContainer.applyModifiers((float)amount,
+                        getGame().getTurn(), mods));
+                return new AbstractGoods(ag.getType(), Math.max(0, amount));
+            });
     }
 
     /**

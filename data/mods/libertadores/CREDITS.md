@@ -1,7 +1,8 @@
 # Image credits (Wikimedia Commons)
 
-All portraits are public-domain historical artworks (or PD reproductions)
-sourced from Wikimedia Commons and cropped/resized for FreeCol.
+All portraits but Joshua Humphreys's are public-domain historical artworks
+(or PD reproductions) sourced from Wikimedia Commons and cropped/resized for
+FreeCol.
 
 | Father | Source file | Artist / notes | License |
 |--------|-------------|----------------|---------|
@@ -28,5 +29,7 @@ sourced from Wikimedia Commons and cropped/resized for FreeCol.
 | Michiel de Ruyter | [Bol, Michiel de Ruyter.jpg](https://commons.wikimedia.org/wiki/File:Bol,_Michiel_de_Ruyter.jpg) | Ferdinand Bol, 1667 | PD |
 | Vauban | [Studio of Hyacinthe Rigaud – Vauban](https://commons.wikimedia.org/wiki/File:Studio_of_Hyacinthe_Rigaud_-_Portrait_of_S%C3%A9bastien_le_Prestre,_Marquis_de_Vauban.jpg) | Studio of Hyacinthe Rigaud, c.1700 | PD |
 | Marie de l'Incarnation | [Portrait de Mère Marie de l'Incarnation.jpg](https://commons.wikimedia.org/wiki/File:Portrait_de_M%C3%A8re_Marie_de_l%27Incarnation.jpg) | Attributed to Hugues Pommier, 1672 | PD |
+| Henry Knox | [Henry Knox by Gilbert Stuart 1806.jpeg](https://commons.wikimedia.org/wiki/File:Henry_Knox_by_Gilbert_Stuart_1806.jpeg) | Gilbert Stuart, 1806 | PD |
+| Joshua Humphreys | Imaginary likeness (no portrait of him is known) | Generated with an AI image model, like the HD Graphics portraits | GPL |
 
 Original full-resolution files were downloaded from the Commons links above and cropped to FreeCol card size (200×237 and 400×473).

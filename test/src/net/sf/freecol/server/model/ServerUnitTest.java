@@ -789,6 +789,80 @@ public class ServerUnitTest extends FreeColTestCase {
         }
     }
 
+    public void testShipRepairRate() {
+        BooleanOption cost = spec().getOption(GameOptions.SHIP_REPAIR_COSTS_LUMBER,
+                                              BooleanOption.class);
+        final boolean oldCost = cost.getValue();
+        cost.setValue(false);
+        try {
+            Unit ship = setUpDamagedShip();
+            assertEquals(1, ship.getRepairRate());
+            assertEquals(3, ship.getTurnsForRepair());
+
+            ship.getOwner().addFather(getModFather("libertadores",
+                    "model.foundingFather.joshuaHumphreys"));
+            assertEquals(2, ship.getRepairRate());
+            assertEquals(2, ship.getTurnsForRepair());
+
+            final int hp = ship.getHitPoints();
+            nextTurn(ship.getGame());
+            assertEquals(hp + 2, ship.getHitPoints());
+            nextTurn(ship.getGame());
+            assertEquals("Not repaired past the maximum",
+                         ship.getMaximumHitPoints(), ship.getHitPoints());
+            assertFalse(ship.isDamaged());
+        } finally {
+            cost.setValue(oldCost);
+        }
+    }
+
+    public void testFatherRepairsDamagedArtillery() {
+        BooleanOption repair = spec().getOption(GameOptions.REPAIR_DAMAGED_ARTILLERY,
+                                                BooleanOption.class);
+        final boolean oldRepair = repair.getValue();
+        repair.setValue(false);
+        try {
+            Unit unit = setUpDamagedArtillery(true);
+            Colony colony = unit.getTile().getColony();
+            assertNull("The option is off", unit.getDemotedRepairColony());
+
+            unit.getOwner().addFather(getModFather("libertadores",
+                    "model.foundingFather.henryKnox"));
+            assertEquals(colony, unit.getDemotedRepairColony());
+            final int hammers = spec()
+                .getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_HAMMERS) / 2;
+            final int tools = spec()
+                .getInteger(GameOptions.REPAIR_DAMAGED_ARTILLERY_TOOLS) / 2;
+            assertEquals("Half the hammers", hammers,
+                         unit.getRepairHammersNeeded());
+            assertEquals("Half the tools", tools, unit.getRepairToolsNeeded());
+
+            colony.addGoods(hammersType, hammers);
+            colony.addGoods(toolsType, tools + 5);
+            nextTurn(unit.getGame());
+            assertEquals(artilleryType, unit.getType());
+            assertEquals(0, colony.getGoodsCount(hammersType));
+            assertEquals(5, colony.getGoodsCount(toolsType));
+        } finally {
+            repair.setValue(oldRepair);
+        }
+    }
+
+    public void testFatherNeedsArmory() {
+        BooleanOption repair = spec().getOption(GameOptions.REPAIR_DAMAGED_ARTILLERY,
+                                                BooleanOption.class);
+        final boolean oldRepair = repair.getValue();
+        repair.setValue(false);
+        try {
+            Unit unit = setUpDamagedArtillery(false);
+            unit.getOwner().addFather(getModFather("libertadores",
+                    "model.foundingFather.henryKnox"));
+            assertNull("Not without an armory", unit.getDemotedRepairColony());
+        } finally {
+            repair.setValue(oldRepair);
+        }
+    }
+
     public void testUnitLumberDelivery() {
         Game game = ServerTestHelper.startServerGame(getTestMap(savannahForest));
         InGameController igc = ServerTestHelper.getInGameController();

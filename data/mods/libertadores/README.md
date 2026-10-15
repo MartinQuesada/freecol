@@ -1,8 +1,8 @@
 # Libertadores
 
 Adds founding fathers to FreeCol, most of them from Latin American history,
-plus several from 17th-century North America and Europe. With the base
-game's 25 the Congress has **48** candidates, which helps on games with
+plus several from colonial North America and Europe. With the base
+game's 25 the Congress has **50** candidates, which helps on games with
 monthly turns.
 
 ## New fathers
@@ -13,7 +13,7 @@ monthly turns.
 | Alexander von Humboldt | Exploration | +50% grain and fish production |
 | José de San Martín | Military | +10% Sons of Liberty; +25% offence for soldiers and dragoons |
 | Francisco de Miranda | Political | +50% liberty bell production |
-| Sor Juana Inés de la Cruz | Religious | +25% crosses; schools/colleges/universities cost 50% less |
+| Sor Juana Inés de la Cruz | Religious | +25% crosses; schools/colleges/universities cost 50% less hammers and tools |
 | Francisco de Orellana | Exploration | +1 line of sight and +1 movement for land units |
 | Toussaint Louverture | Military | +15% Sons of Liberty; +25% defence for soldiers and dragoons |
 | Vasco da Gama | Trade | Naval +1 movement; Europe voyages −1 turn (lighter than Magellan) |
@@ -30,8 +30,10 @@ monthly turns.
 | John Rolfe | Trade | +50% tobacco |
 | Samuel de Champlain | Exploration | Free seasoned scout; native tension grows 25% slower |
 | Michiel de Ruyter | Military | +50% defence for naval units |
-| Vauban | Military | Stockades, forts and fortresses cost 50% less to buy |
+| Vauban | Military | Stockades, forts and fortresses cost 50% less hammers and tools |
 | Marie de l'Incarnation | Religious | Free schoolhouse in every colony that can have one |
+| Joshua Humphreys | Trade | Ships repair twice as fast and cost 25% less hammers and tools |
+| Henry Knox | Military | Artillery costs 25% less; damaged artillery is repaired in colonies with an armory, at half the cost |
 
 Jacob Fugger and Henry Hudson from the base game are kept.
 
@@ -44,9 +46,9 @@ Minuit early, Adam Smith in the middle, Stuyvesant late):
 - Early: Vasco da Gama, Orellana, Humboldt, Azara, Jorge Juan and Ulloa,
   Vieira, John Rolfe, Champlain.
 - Middle: Hamilton, Cochrane, Sor Juana, Roque González, Colbert,
-  De Ruyter, Vauban, Roger Williams, Marie de l'Incarnation.
+  De Ruyter, Vauban, Roger Williams, Marie de l'Incarnation, Joshua Humphreys.
 - Late: the independence leaders (San Martín, Miranda, Toussaint, Hidalgo),
-  Eli Whitney, Blas de Lezo.
+  Eli Whitney, Blas de Lezo, Henry Knox.
 
 Hernando de Soto from the base game is moved to the early game, while
 there are still lost city rumours to explore.
@@ -56,10 +58,12 @@ offered from the era in which his weight is highest.
 
 ## Requirements
 
-Félix de Azara and Jorge Juan y Ulloa need this repository's `FreeCol.jar`
-(owner breeding modifiers and the `exploreAroundColonies` event). On a stock
-FreeCol build they can be elected but do nothing. Roque González also counts
-native experts from the **Conversos** mod.
+Félix de Azara, Jorge Juan y Ulloa, Joshua Humphreys and Henry Knox need
+this repository's `FreeCol.jar` (owner breeding modifiers, the
+`exploreAroundColonies` event, and the build cost, repair rate and repair
+cost modifiers). On a stock FreeCol build they can be elected but do
+nothing, and neither do the building discounts of Sor Juana and Vauban.
+Roque González also counts native experts from the **Conversos** mod.
 
 ## Enable
 

@@ -1,6 +1,9 @@
 ## Libertadores mod pack 0.3.4 (In development) ##
 
 ### Mods ###
+* Libertadores 0.5: two new founding fathers, for 50 candidates in total. Joshua Humphreys (trade): ships are repaired twice as fast and cost 25% less hammers and tools to build. Henry Knox (military): artillery costs 25% less to build, and damaged artillery is repaired in colonies with an armory even with the "Repair damaged artillery" option off, at half the hammers and tools.
+* Libertadores 0.5: Vauban and Sor Juana now make their buildings cost 50% less hammers and tools. Before, only the price to pay to finish them was lower.
+* HD Graphics 0.2: portraits for Joshua Humphreys and Henry Knox.
 * Livestock 0.4: milk is perishable, it can not be traded in Europe or through the custom house. Make it into cheese to export it.
 * Tasajo 0.6: fresh meat is perishable, it can not be traded in Europe or through the custom house. Salt it into tasajo to export it.
 
@@ -20,6 +23,7 @@
 
 ### Mod development ###
 * New goods type attribute `perishable`: perishable goods can not be bought or sold in Europe or through the custom house. They can still be carried between colonies and traded with the natives.
+* New modifiers for founding fathers and other player features: `model.modifier.buildCost` (percentage of the hammers and tools to build a unit or building, by scope), `model.modifier.repairRate` (hit points repaired per turn) and `model.modifier.repairCost` (hammers and tools to repair damaged artillery). New ability `model.ability.repairDamagedArtillery`: the player repairs damaged artillery even with the game option off.
 
 ## Libertadores mod pack 0.3.3 (7th of October, 2026) ##
 

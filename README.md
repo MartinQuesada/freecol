@@ -19,7 +19,7 @@ learn trades. A few small engine changes support them.
 
 | Mod | Version | What it adds |
 |-----|---------|--------------|
-| [Libertadores](data/mods/libertadores/README.md) | 0.4 | 23 founding fathers (San Martín, Miranda, Sor Juana, Humboldt, Hamilton, Colbert, Champlain, Vauban…); 48 candidates in total |
+| [Libertadores](data/mods/libertadores/README.md) | 0.5 | 25 founding fathers (San Martín, Miranda, Sor Juana, Humboldt, Hamilton, Colbert, Champlain, Vauban, Henry Knox…); 50 candidates in total |
 | [Deeper Buildings](data/mods/deeperBuildings/README.md) | 0.3 | Timber mill, City hall, Basilica and Citadel, with their own art (the citadel is a bastioned star fort on the map) |
 | [Tasajo](data/mods/tasajo/README.md) | 0.6 | Hunting meat, salt mines and the salting house chain to export salt meat |
 | [Lumber Craft](data/mods/lumberCraft/README.md) | 0.1 | Tools and muskets also consume lumber |
@@ -28,7 +28,7 @@ learn trades. A few small engine changes support them.
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla, a raw luxury export like silver |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | With Las Casas, converts gain experience in outdoor jobs and become native experts |
-| [HD Graphics](data/mods/hdGraphics/README.md) | 0.1 | High-resolution units, ships and settlements, painted founding father portraits and smoother terrain transitions |
+| [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-resolution units, ships and settlements, painted founding father portraits and smoother terrain transitions |
 
 ### What's new in v0.3.3
 
@@ -97,8 +97,7 @@ FreeCol build those mods still load, but the affected effects do nothing.
 - Owner `breedingFactor` modifiers apply to breeding buildings (Félix de
   Azara).
 - `model.event.exploreAroundColonies` father event (Jorge Juan and Ulloa).
-- `buildingPriceBonus` works at any percentage, not only −100% (Sor Juana,
-  Vauban).
+- `buildingPriceBonus` works at any percentage, not only −100%.
 - Founding father `<unit>` accepts `role` and `number` in the schema
   (Champlain's scout).
 - Game option `model.option.historicalFoundingFathers`, shown as "Founding
@@ -146,6 +145,12 @@ FreeCol build those mods still load, but the affected effects do nothing.
 - Goods type attribute `perishable`: the goods can not be traded in Europe
   or through the custom house (`Player.canTrade()` refuses them). Livestock
   milk and Tasajo meat are perishable.
+- Player modifiers `model.modifier.buildCost` (percentage of the hammers
+  and tools to build, applied in `Colony.getBuildCost()`; Sor Juana, Vauban,
+  Humphreys, Knox), `model.modifier.repairRate` (hit points repaired per
+  turn; Humphreys) and `model.modifier.repairCost` (cost of repairing
+  damaged artillery; Knox), and ability `model.ability.repairDamagedArtillery`
+  (repair damaged artillery with the game option off; Knox).
 
 ### Playing with the mods
 

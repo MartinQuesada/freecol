@@ -85,15 +85,15 @@
                 type="percentage" value="25">
         <scope ability-id="model.ability.person" match-negated="true"/>
       </modifier>
-      <modifier id="model.modifier.buildingPriceBonus"
+      <modifier id="model.modifier.buildCost"
                 type="percentage" value="-50">
         <scope type="model.building.schoolhouse"/>
       </modifier>
-      <modifier id="model.modifier.buildingPriceBonus"
+      <modifier id="model.modifier.buildCost"
                 type="percentage" value="-50">
         <scope type="model.building.college"/>
       </modifier>
-      <modifier id="model.modifier.buildingPriceBonus"
+      <modifier id="model.modifier.buildCost"
                 type="percentage" value="-50">
         <scope type="model.building.university"/>
       </modifier>
@@ -303,19 +303,19 @@
     <!-- Vauban: Louis XIV's fortifications — cheaper defences -->
     <founding-father id="model.foundingFather.vauban" type="military"
                      weight1="1" weight2="8" weight3="5">
-      <modifier id="model.modifier.buildingPriceBonus"
+      <modifier id="model.modifier.buildCost"
                 type="percentage" value="-50">
         <scope type="model.building.stockade"/>
       </modifier>
-      <modifier id="model.modifier.buildingPriceBonus"
+      <modifier id="model.modifier.buildCost"
                 type="percentage" value="-50">
         <scope type="model.building.fort"/>
       </modifier>
-      <modifier id="model.modifier.buildingPriceBonus"
+      <modifier id="model.modifier.buildCost"
                 type="percentage" value="-50">
         <scope type="model.building.fortress"/>
       </modifier>
-      <modifier id="model.modifier.buildingPriceBonus"
+      <modifier id="model.modifier.buildCost"
                 type="percentage" value="-50">
         <scope type="model.building.citadel"/>
       </modifier>
@@ -329,6 +329,33 @@
       <modifier id="model.modifier.buildingPriceBonus"
                 type="percentage" value="-100">
         <scope type="model.building.schoolhouse"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Joshua Humphreys: the first frigates of the US Navy — shipyards -->
+    <founding-father id="model.foundingFather.joshuaHumphreys" type="trade"
+                     weight1="1" weight2="8" weight3="5">
+      <modifier id="model.modifier.repairRate"
+                type="multiplicative" value="2">
+        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
+      </modifier>
+      <modifier id="model.modifier.buildCost"
+                type="percentage" value="-25">
+        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
+      </modifier>
+    </founding-father>
+
+    <!-- Henry Knox: Washington's chief of artillery — artillery -->
+    <founding-father id="model.foundingFather.henryKnox" type="military"
+                     weight1="0" weight2="3" weight3="8">
+      <modifier id="model.modifier.buildCost"
+                type="percentage" value="-25">
+        <scope type="model.unit.artillery"/>
+      </modifier>
+      <ability id="model.ability.repairDamagedArtillery" value="true"/>
+      <modifier id="model.modifier.repairCost"
+                type="percentage" value="-50">
+        <scope type="model.unit.damagedArtillery"/>
       </modifier>
     </founding-father>
   </founding-fathers>

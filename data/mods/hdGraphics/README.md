@@ -6,7 +6,7 @@ Graphics only: no rule changes.
 |--|--|
 | Units | All 64 base unit images (colonists, experts, soldiers, dragoons, scouts, pioneers, missionaries, native and royal units, ships, artillery and wagons) redrawn as detailed paintings |
 | Settlements | Sharper native settlements |
-| Founding fathers | New oil-painting portraits for all 48 fathers, including the Libertadores ones |
+| Founding fathers | New oil-painting portraits for all 50 fathers, including the Libertadores ones |
 | Terrain | Wider, irregular transitions between terrain types instead of a hard edge |
 
 Each image keeps the size and position of the original on the map, and
