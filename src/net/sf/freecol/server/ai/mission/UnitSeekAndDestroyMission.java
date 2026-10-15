@@ -504,6 +504,18 @@ public final class UnitSeekAndDestroyMission extends Mission {
         // Go to the target.
         Location currentTarget = (nearbyTarget != null) ? nearbyTarget
             : getTarget();
+
+        // Attack straight from the carrier where that is allowed, as
+        // the transport can not drop a unit into an enemy tile.
+        if (unit.isOnCarrier() && unit.hasTile()
+            && currentTarget.getTile() != null) {
+            Direction d = unit.getTile().getDirection(currentTarget.getTile());
+            if (d != null && unit.getMoveType(d).isAttack()) {
+                AIMessage.askAttack(aiUnit, d);
+                return lbAttack(lb, currentTarget);
+            }
+        }
+
         // Note avoiding other targets by choice of cost decider.
         Unit.MoveType mt = travelToTarget(currentTarget,
             CostDeciders.avoidSettlementsAndBlockingUnits(), lb);

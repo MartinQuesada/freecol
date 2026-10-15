@@ -256,6 +256,13 @@ public class GameOptions {
         = "model.option.loyalistColoniesThreshold";
 
     /**
+     * Can the REF attack from its ships when the rebel land it attacks
+     * has no free beach to land on?
+     */
+    public static final String REF_AMPHIBIOUS_ASSAULT
+        = "model.option.refAmphibiousAssault";
+
+    /**
      * Does a hammer surplus after a build completes accumulate to
      * the next build?
      */

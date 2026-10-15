@@ -139,6 +139,10 @@ FreeCol build those mods still load, but the affected effects do nothing.
   the REF, and have to be taken back to win.
 - Bugfix: the REF no longer stays in Europe when every rebel colony is
   surrounded by units; it lands and attacks the guards.
+- Game option `model.option.refAmphibiousAssault` (on by default): the
+  REF can attack from its ships when the target's land mass has no free
+  beach (`Map.hasFreeBeach()`), with the amphibious attack penalty. AI
+  units aboard a ship next to their target attack from it.
 
 ### Playing with the mods
 

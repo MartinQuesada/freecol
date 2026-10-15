@@ -301,6 +301,10 @@ public class Map extends FreeColGameObject implements Location, Iterable<Tile> {
     /** The search tracing status. */
     private boolean traceSearch = false;
 
+    /** The last free beach found, by player and land mass. */
+    private final java.util.Map<String, Tile> freeBeaches
+        = new java.util.concurrent.ConcurrentHashMap<>();
+
 
     /**
      * Create a new {@code Map} from a collection of tiles.
@@ -719,7 +723,45 @@ public class Map extends FreeColGameObject implements Location, Iterable<Tile> {
             : (l1 == l2) ? true
             : (l1.getTile() == null || l2.getTile() == null) ? false
             : l1.getTile().isConnectedTo(l2.getTile());
-    }            
+    }
+
+    /**
+     * Does the land mass of a tile have a beach a player can land on,
+     * that is a coastland tile with no settlement and no units of
+     * other players?
+     *
+     * @param tile A land {@code Tile} of the land mass.
+     * @param player The {@code Player} that would land.
+     * @return True if there is a free beach.
+     */
+    public boolean hasFreeBeach(Tile tile, Player player) {
+        if (tile == null || !tile.isLand()) return false;
+        final Predicate<Tile> freePred = t -> t.isCoastland()
+            && !t.hasSettlement()
+            && find(t.getUnits(), u -> !player.owns(u)) == null;
+        final String key = (tile.getContiguity() < 0) ? null
+            : player.getId() + "/" + tile.getContiguity();
+        if (key != null) {
+            Tile beach = freeBeaches.get(key);
+            if (beach != null && beach.isConnectedTo(tile)
+                && freePred.test(beach)) return true;
+        }
+        final Set<Tile> seen = new HashSet<>();
+        final List<Tile> todo = new ArrayList<>();
+        seen.add(tile);
+        todo.add(tile);
+        while (!todo.isEmpty()) {
+            final Tile t = todo.remove(todo.size() - 1);
+            if (freePred.test(t)) {
+                if (key != null) freeBeaches.put(key, t);
+                return true;
+            }
+            for (Tile n : t.getSurroundingTiles(1)) {
+                if (n.isLand() && seen.add(n)) todo.add(n);
+            }
+        }
+        return false;
+    }
 
     /**
      * Is a tile in the map in a polar region?

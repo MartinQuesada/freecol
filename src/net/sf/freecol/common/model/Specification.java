@@ -3130,6 +3130,9 @@ public final class Specification implements OptionContainer {
         ret |= checkOp(GameOptions.LOYALIST_COLONIES_THRESHOLD,
                 GameOptions.GAMEOPTIONS_MAP,
                 50, IntegerOption.class);
+        ret |= checkOp(GameOptions.REF_AMPHIBIOUS_ASSAULT,
+                GameOptions.GAMEOPTIONS_MAP,
+                Boolean.TRUE, BooleanOption.class);
         
         // SAVEGAME_VERSION == 14
         return ret;

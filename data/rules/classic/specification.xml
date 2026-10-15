@@ -4812,6 +4812,10 @@
              declaration of independence. -->
         <integerOption id="model.option.loyalistColoniesThreshold"
                        value="50" minimumValue="1" maximumValue="100"/>
+        <!-- Can the REF attack from its ships when the rebel land it
+             attacks has no free beach to land on? -->
+        <booleanOption id="model.option.refAmphibiousAssault"
+                       defaultValue="true"/>
         <!-- Can colony buildings be completed quickly by paying for the
              missing goods? -->
         <booleanOption id="model.option.payForBuilding"

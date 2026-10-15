@@ -2502,7 +2502,7 @@ public class Unit extends GoodsLocation
                     } else if (!isOffensiveUnit()) {
                         return MoveType.MOVE_NO_ATTACK_CIVILIAN;
                     } else {
-                        return (allowMoveFrom(from))
+                        return (allowAttackFrom(from, target))
                             ? MoveType.ATTACK_UNIT
                             : MoveType.MOVE_NO_ATTACK_MARINE;
                     }
@@ -2532,7 +2532,7 @@ public class Unit extends GoodsLocation
                         ? MoveType.ENTER_INDIAN_SETTLEMENT_WITH_SCOUT
                         : MoveType.MOVE_NO_ACCESS_WATER;
                 } else if (isOffensiveUnit()) {
-                    return (allowMoveFrom(from))
+                    return (allowAttackFrom(from, target))
                         ? MoveType.ATTACK_SETTLEMENT
                         : MoveType.MOVE_NO_ATTACK_MARINE;
                 } else if (hasAbility(Ability.ESTABLISH_MISSION)) {
@@ -2541,7 +2541,7 @@ public class Unit extends GoodsLocation
                     return getLearnMoveType(from, settlement);
                 }
             } else if (isOffensiveUnit()) {
-                return (allowMoveFrom(from))
+                return (allowAttackFrom(from, target))
                     ? MoveType.ATTACK_SETTLEMENT
                     : MoveType.MOVE_NO_ATTACK_MARINE;
             } else {
@@ -2646,6 +2646,23 @@ public class Unit extends GoodsLocation
         return from.isLand()
             || (!getOwner().isREF()
                 && getSpecification().getBoolean(GameOptions.AMPHIBIOUS_MOVES));
+    }
+
+    /**
+     * Is this unit allowed to attack a tile from a source tile?
+     * The REF can attack from its ships only when it has nowhere
+     * to land on the target's land mass.
+     *
+     * @param from The {@code Tile} to attack from.
+     * @param target The {@code Tile} to attack.
+     * @return True if the attack is allowed.
+     */
+    private boolean allowAttackFrom(Tile from, Tile target) {
+        return allowMoveFrom(from)
+            || (getOwner().isREF()
+                && getSpecification()
+                    .getBoolean(GameOptions.REF_AMPHIBIOUS_ASSAULT)
+                && !getGame().getMap().hasFreeBeach(target, getOwner()));
     }
 
     /**
