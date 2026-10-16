@@ -131,6 +131,7 @@ imaginary likeness (no portrait of him is known). See
   (not fortified soldiers outside).
 - **Independent nation name:** keeps accented letters and ñ.
 - **Spanish:** Man of War is "Navío de línea" (not "Hombre de Guerra").
+  Continental Army is "Ejército continental" (not "Armada continental").
 - **Founding father recruitment:** no longer stalls when every remaining
   father of a type has no weight in the current era (common with monthly
   turns before 1600).
