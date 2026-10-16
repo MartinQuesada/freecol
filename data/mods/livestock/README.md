@@ -7,6 +7,7 @@ Import **cows** and **sheep** cheaply from Europe, breed them in the colony, and
 | Dairy | Buy/breed **cows** → **Dairy** (1 cow → 3 milk) → **Cheese house** (milk → cheese export) |
 | Wool | Buy/breed **sheep** → **Wool shed** (1 sheep → 3 wool) → **Weaver** (wool → cloth, or cotton as usual) |
 | Feasts | Cheese → **Brotherhood hall** (2 cheese → 1 cross per turn, no workers) |
+| Experts | **Expert Dairy Worker**, **Expert Shepherd**, **Master Cheesemaker** (recruit, teach or learn by experience). Cloth still uses the base-game Master Weaver. |
 
 Milk is perishable: it can not be traded in Europe or through the custom
 house. Make it into cheese to export it.

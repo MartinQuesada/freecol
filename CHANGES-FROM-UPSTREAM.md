@@ -20,7 +20,7 @@ affected effects do nothing.
 | [Deeper Buildings](data/mods/deeperBuildings/README.md) | 0.3 | Timber mill, City hall, Basilica and Citadel (star fort on the map) |
 | [Tasajo](data/mods/tasajo/README.md) | 0.6 | Hunting meat, salt mines, salting house → salt meat (tasajo) |
 | [Lumber Craft](data/mods/lumberCraft/README.md) | 0.1 | Tools and muskets also consume lumber |
-| [Livestock](data/mods/livestock/README.md) | 0.4 | Cows and sheep: milk, cheese, wool; brotherhood hall |
+| [Livestock](data/mods/livestock/README.md) | 0.5 | Cows and sheep: milk, cheese, wool; dairy/shepherd/cheesemaker experts; brotherhood hall |
 | [Cacao](data/mods/cacao/README.md) | 0.3 | Cacao and chocolate; creole salon |
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla as a raw luxury export |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
@@ -89,6 +89,9 @@ imaginary likeness (no portrait of him is known). See
   colonists.
 - **Native experts** in Cacao, Vanilla and Tasajo (cacao/vanilla planters,
   hunters, salt miners) for use with Conversos.
+- **Livestock experts:** Expert Dairy Worker, Expert Shepherd and Master
+  Cheesemaker (recruit in Europe, school or experience); each doubles milk,
+  wool or cheese. Cloth still uses the base-game Master Weaver.
 - **Perishable goods:** Livestock milk and Tasajo fresh meat cannot be
   traded in Europe or through the custom house. Export cheese or tasajo
   instead.
@@ -183,7 +186,7 @@ in each mod README.
 | 0.3.1 | 6 Oct 2026 | Boycott / independence / loyalist colony options |
 | 0.3.2 | 6 Oct 2026 | Father weights by usefulness; framed portraits; option renamed |
 | 0.3.3 | 7 Oct 2026 | HD Graphics; father cost scaled by turns per year; recruitment stall fix |
-| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix |
+| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts |
 
 Detailed per-release notes live in [CHANGELOG.md](CHANGELOG.md) under
 "Libertadores mod pack". Upstream FreeCol notes follow below those sections.

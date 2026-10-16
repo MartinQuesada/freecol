@@ -26,7 +26,7 @@
     Dairy and wool shed take 1 animal per 3 output, so the herd size and
     the pen's breeding rate cap how much milk and wool a colony can make.
   -->
-<freecol-specification id="livestock" version="0.4">
+<freecol-specification id="livestock" version="0.5">
   <goods-types>
     <goods-type id="model.goods.cows" is-farmed="false"
                 breeding-number="2" made-from="model.goods.food">
@@ -50,6 +50,66 @@
       <market initial-amount="800" initial-price="9" price-difference="2"/>
     </goods-type>
   </goods-types>
+
+  <unit-types>
+    <unit-type id="model.unit.expertDairyWorker" extends="colonist"
+               price="900" skill="1" expert-production="model.goods.milk"
+               recruit-probability="1" score-value="4">
+      <modifier id="model.goods.milk" index="30"
+                type="multiplicative" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.expertShepherd" extends="colonist"
+               price="900" skill="1" expert-production="model.goods.wool"
+               recruit-probability="1" score-value="4">
+      <modifier id="model.goods.wool" index="30"
+                type="multiplicative" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.masterCheesemaker" extends="colonist"
+               price="1100" skill="2" expert-production="model.goods.cheese"
+               recruit-probability="1" score-value="5">
+      <modifier id="model.goods.cheese" index="30"
+                type="multiplicative" value="2"/>
+    </unit-type>
+  </unit-types>
+
+  <unit-change-types>
+    <unit-change-type id="model.unitChange.clearSkill" preserve="true">
+      <unit-type-change id="model.unitChange.clearSkill.expertDairyWorker"
+                        from="model.unit.expertDairyWorker"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.expertShepherd"
+                        from="model.unit.expertShepherd"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.masterCheesemaker"
+                        from="model.unit.masterCheesemaker"
+                        to="model.unit.freeColonist" probability="100"/>
+    </unit-change-type>
+    <unit-change-type id="model.unitChange.education" preserve="true">
+      <unit-type-change id="model.unitChange.education.expertDairyWorker"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertDairyWorker"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.expertShepherd"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertShepherd"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterCheesemaker"
+                        from="model.unit.freeColonist"
+                        to="model.unit.masterCheesemaker"
+                        probability="100" turns="6"/>
+    </unit-change-type>
+    <unit-change-type id="model.unitChange.experience" preserve="true">
+      <unit-type-change id="model.unitChange.experience.expertDairyWorker"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertDairyWorker" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.expertShepherd"
+                        from="model.unit.freeColonist"
+                        to="model.unit.expertShepherd" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.masterCheesemaker"
+                        from="model.unit.freeColonist"
+                        to="model.unit.masterCheesemaker" probability="4"/>
+    </unit-change-type>
+  </unit-change-types>
 
   <building-types>
     <!-- Breeding: buildable (not free like country pasture for horses) -->
