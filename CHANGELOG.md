@@ -4,6 +4,7 @@
 * Libertadores 0.5: two new founding fathers, for 50 candidates in total. Joshua Humphreys (trade): ships are repaired twice as fast and cost 25% less hammers and tools to build. Henry Knox (military): artillery costs 25% less to build, and damaged artillery is repaired in colonies with an armory even with the "Repair damaged artillery" option off, at half the hammers and tools.
 * Libertadores 0.5: Vauban and Sor Juana now make their buildings cost 50% less hammers and tools. Before, only the price to pay to finish them was lower.
 * HD Graphics 0.2: portraits for Joshua Humphreys and Henry Knox.
+* HD Graphics: the Petty Criminal is no longer in stocks. He is shown as a transported convict — ragged clothes, barefoot, sack over the shoulder.
 * Livestock 0.5: Expert Dairy Worker, Expert Shepherd and Master Cheesemaker. They can be recruited in Europe, taught in a school, or learned by experience. Each doubles production of milk, wool or cheese.
 * Livestock 0.4: milk is perishable, it can not be traded in Europe or through the custom house. Make it into cheese to export it.
 * Tasajo 0.6: fresh meat is perishable, it can not be traded in Europe or through the custom house. Salt it into tasajo to export it.

@@ -97,7 +97,8 @@ imaginary likeness (no portrait of him is known). See
   instead.
 - **HD Graphics:** all 64 base unit images redrawn; sharper native
   settlements; oil portraits for all 50 fathers; wider terrain transitions.
-  Graphics only.
+  The Petty Criminal is a transported convict (ragged, barefoot, sack), not
+  in stocks. Graphics only.
 
 ---
 
@@ -186,7 +187,7 @@ in each mod README.
 | 0.3.1 | 6 Oct 2026 | Boycott / independence / loyalist colony options |
 | 0.3.2 | 6 Oct 2026 | Father weights by usefulness; framed portraits; option renamed |
 | 0.3.3 | 7 Oct 2026 | HD Graphics; father cost scaled by turns per year; recruitment stall fix |
-| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts |
+| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts; Petty Criminal HD without stocks |
 
 Detailed per-release notes live in [CHANGELOG.md](CHANGELOG.md) under
 "Libertadores mod pack". Upstream FreeCol notes follow below those sections.
