@@ -26,7 +26,7 @@ affected effects do nothing.
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla as a raw luxury export |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | Converts learn outdoor trades and become native experts |
-| [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-res units, goods icons, settlements, father portraits, terrain blends |
+| [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-res units, goods icons, buildings, settlements, father portraits, terrain blends |
 
 Enable them under Preferences → Mods, or run:
 
@@ -100,8 +100,10 @@ imaginary likeness (no portrait of him is known). See
   settlements; oil portraits for all 50 fathers; wider terrain transitions.
   Units refreshed in a consistent painted style (civilians, soldiers,
   natives, ships, wagons/artillery, scout/pioneer/missionary roles);
-  goods icons too (base + Libertadores mod goods). The Petty Criminal is a
-  transported convict (ragged, barefoot, sack), not in stocks. Graphics only.
+  goods icons (base + Libertadores mod goods); colony building icons
+  (base + Deeper Buildings, Cacao, Livestock, Taverns, Tasajo). The Petty
+  Criminal is a transported convict (ragged, barefoot, sack), not in
+  stocks. Graphics only.
 
 ---
 

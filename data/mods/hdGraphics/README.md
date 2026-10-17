@@ -6,6 +6,7 @@ Graphics only: no rule changes.
 |--|--|
 | Units | All 64 base unit images (colonists, experts, soldiers, dragoons, scouts, pioneers, missionaries, native and royal units, ships, artillery and wagons) redrawn as detailed paintings |
 | Goods | All base goods icons plus Libertadores mod goods (cacao, chocolate, vanilla, milk, cheese, wool, cows, sheep, salt, salt meat) redrawn in the same painted style |
+| Buildings | All base colony building icons plus Deeper Buildings, Cacao, Livestock, Taverns and Tasajo, in a painted colonial diorama style |
 | Settlements | Sharper native settlements |
 | Founding fathers | New oil-painting portraits for all 50 fathers, including the Libertadores ones |
 | Terrain | Wider, irregular transitions between terrain types instead of a hard edge |
