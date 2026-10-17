@@ -1,9 +1,10 @@
 # Changes from FreeCol 1.2.1
 
 This document lists everything this fork adds on top of upstream
-[FreeCol 1.2.1](https://github.com/FreeCol/freecol). It is the
-**Libertadores mod pack** (currently 0.3.4 in development): optional mods
-plus a few engine changes that support them.
+[FreeCol 1.2.1](https://github.com/FreeCol/freecol). The project is
+**FreeCol Americas** (currently 0.3.4 in development): optional mods plus a
+few engine changes that support them. **Libertadores** is the founding-fathers
+mod within the pack.
 
 Mod games need a **new game**. Savegames without these mods are unaffected.
 Some father and goods effects need the `FreeCol.jar` built from this
@@ -25,7 +26,7 @@ affected effects do nothing.
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla as a raw luxury export |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | Converts learn outdoor trades and become native experts |
-| [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-res units, settlements, father portraits, terrain blends |
+| [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-res units, goods icons, settlements, father portraits, terrain blends |
 
 Enable them under Preferences → Mods, or run:
 
@@ -98,9 +99,9 @@ imaginary likeness (no portrait of him is known). See
 - **HD Graphics:** all 64 base unit images redrawn; sharper native
   settlements; oil portraits for all 50 fathers; wider terrain transitions.
   Units refreshed in a consistent painted style (civilians, soldiers,
-  natives, ships, wagons/artillery, scout/pioneer/missionary roles); the
-  Petty Criminal is a transported convict (ragged, barefoot, sack), not in
-  stocks. Graphics only.
+  natives, ships, wagons/artillery, scout/pioneer/missionary roles);
+  goods icons too (base + Libertadores mod goods). The Petty Criminal is a
+  transported convict (ragged, barefoot, sack), not in stocks. Graphics only.
 
 ---
 
@@ -192,4 +193,4 @@ in each mod README.
 | 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts; full HD unit refresh (Petty Criminal without stocks) |
 
 Detailed per-release notes live in [CHANGELOG.md](CHANGELOG.md) under
-"Libertadores mod pack". Upstream FreeCol notes follow below those sections.
+"FreeCol Americas". Upstream FreeCol notes follow below those sections.

@@ -1,4 +1,4 @@
-## Libertadores mod pack 0.3.4 (In development) ##
+## FreeCol Americas 0.3.4 (In development) ##
 
 ### Mods ###
 * Libertadores 0.5: two new founding fathers, for 50 candidates in total. Joshua Humphreys (trade): ships are repaired twice as fast and cost 25% less hammers and tools to build. Henry Knox (military): artillery costs 25% less to build, and damaged artillery is repaired in colonies with an armory even with the "Repair damaged artillery" option off, at half the hammers and tools.
@@ -8,6 +8,7 @@
 * HD Graphics: European civilian unit portraits redrawn in the same painted style (free colonist, servant, experts, masters, preacher, missionary, pioneer, scout, statesman).
 * HD Graphics: soldiers, dragoons, cavalry and native units redrawn in the same painted style.
 * HD Graphics: ships, artillery, wagons, treasure train, and scout/pioneer/missionary role portraits redrawn in the same painted style.
+* HD Graphics: all base goods icons and Libertadores mod goods (cacao, chocolate, vanilla, milk, cheese, wool, cows, sheep, salt, salt meat) redrawn in the same painted style.
 * Livestock: unique portraits for Expert Dairy Worker, Expert Shepherd and Master Cheesemaker (no longer reusing farmer/weaver/distiller art).
 * Livestock 0.5: Expert Dairy Worker, Expert Shepherd and Master Cheesemaker. They can be recruited in Europe, taught in a school, or learned by experience. Each doubles production of milk, wool or cheese.
 * Livestock 0.4: milk is perishable, it can not be traded in Europe or through the custom house. Make it into cheese to export it.
@@ -35,7 +36,7 @@
 * New goods type attribute `perishable`: perishable goods can not be bought or sold in Europe or through the custom house. They can still be carried between colonies and traded with the natives.
 * New modifiers for founding fathers and other player features: `model.modifier.buildCost` (percentage of the hammers and tools to build a unit or building, by scope), `model.modifier.repairRate` (hit points repaired per turn) and `model.modifier.repairCost` (hammers and tools to repair damaged artillery). New ability `model.ability.repairDamagedArtillery`: the player repairs damaged artillery even with the game option off.
 
-## Libertadores mod pack 0.3.3 (7th of October, 2026) ##
+## FreeCol Americas 0.3.3 (7th of October, 2026) ##
 
 ### Mods ###
 * New mod HD Graphics: high-resolution redraws of all 64 base unit images (colonists, experts, soldiers, dragoons, scouts, pioneers, missionaries, native and royal units, ships, artillery and wagons), sharper native settlements, oil-painting portraits for all 48 Founding Fathers and smoother transitions between terrain types. Graphics only.
@@ -45,7 +46,7 @@
 * New game option "Founding Father cost by turns per year" (on by default): with more than two turns a year, Founding Fathers cost proportionally more liberty bells from the season year on (six times as much with monthly turns). No change with the standard two seasons.
 * Bugfix: founding father recruitment no longer stalls when every remaining father of a type has no weight in the current era (common with monthly turns before 1600). The weights of the next era that has some are used instead. With "Founding Fathers by game phase" on, later-phase fathers are still not offered.
 
-## Libertadores mod pack 0.3.2 (6th of October, 2026) ##
+## FreeCol Americas 0.3.2 (6th of October, 2026) ##
 
 ### Mods ###
 * Libertadores 0.4: founding fathers are weighted by the phase of the game in which their effect is most useful, as the base game does, instead of by when they lived. Humboldt, Azara, Jorge Juan and Ulloa, Vieira, John Rolfe and Champlain move to the early game; Hamilton and Cochrane to the middle. Hernando de Soto moves to the early game, while there are still lost city rumours.
@@ -54,16 +55,16 @@
 ### Rule Changes ###
 * The "Historical order of Founding Fathers" option is renamed "Founding Fathers by game phase", which is what it does: a father is offered from the era in which his weight is highest.
 
-## Libertadores mod pack 0.3.1 (6th of October, 2026) ##
+## FreeCol Americas 0.3.1 (6th of October, 2026) ##
 
 ### Rule Changes ###
 * New game option "Boycotts block paying for buildings" (off by default): a buildable can not be paid for while goods it is missing, such as tools, are boycotted in Europe.
 * New game option "Minimum colonies for independence" (0 by default, no minimum).
 * New game option "Loyalist colonies" (off by default): when independence is declared, colonies with less than 50% rebels (configurable) stay loyal to the Crown and join the Royal Expeditionary Force with every unit on their tiles. Since the REF does not surrender while it holds a colony, they have to be taken back to win. The declaration warns which colonies would stay loyal, and is refused if none would join.
 
-## Libertadores mod pack 0.3.0 (5th of October, 2026) ##
+## FreeCol Americas 0.3.0 (5th of October, 2026) ##
 
-Changes in this fork, on top of FreeCol 1.2.1. See README.md for the list of mods. Mod games need a new game; savegames without mods are unaffected.
+Changes in this fork, on top of FreeCol 1.2.1. See README.md for the list of mods. Mod games need a new game; savegames without mods are unaffected. (This pack was first published under the working name “Libertadores mod pack”.)
 
 ### Mods ###
 * Libertadores 0.3: six new founding fathers from Latin American history (Hidalgo, Vieira, Roque González, Azara, Jorge Juan and Ulloa, Cochrane) and seven from the 17th century (Roger Williams, Colbert, John Rolfe, Champlain, De Ruyter, Vauban, Marie de l'Incarnation). Jacob Fugger and Henry Hudson are back. Hamilton now gives +50% tools. 48 candidates in total.

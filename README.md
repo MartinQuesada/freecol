@@ -7,13 +7,16 @@
 
 [![Latest Release](https://img.shields.io/github/release/FreeCol/freecol/all.svg)](https://github.com/FreeCol/freecol/releases) [![Latest Release Downloads](https://img.shields.io/github/downloads/FreeCol/freecol/total.svg)](https://github.com/FreeCol/freecol/releases)
 
-## This fork: Libertadores mod pack (v0.3.3)
+## This fork: FreeCol Americas (v0.3.4)
 
-This fork of FreeCol 1.2.1 adds a set of mods inspired by the
+**FreeCol Americas** is a fork of FreeCol 1.2.1 with an optional mod pack
+inspired by the
 [FreeCol 2 ideas forum](https://sourceforge.net/p/freecol/discussion/719665/):
-Latin American and 17th-century founding fathers, deeper building chains,
-new colonial goods, local consumption of luxuries and native converts that
-learn trades. A few small engine changes support them.
+founding fathers (including Latin American and 17th-century figures), deeper
+building chains, new colonial goods, local consumption of luxuries, native
+converts that learn trades, HD graphics, and extra game rules. A few small
+engine changes support them. **Libertadores** is one of the included mods
+(the founding fathers), not the name of the whole pack.
 
 ### Mods
 
@@ -28,7 +31,7 @@ learn trades. A few small engine changes support them.
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla, a raw luxury export like silver |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | With Las Casas, converts gain experience in outdoor jobs and become native experts |
-| [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-resolution units, ships and settlements, painted founding father portraits and smoother terrain transitions |
+| [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-resolution units, goods icons, ships and settlements, painted founding father portraits and smoother terrain transitions |
 
 ### What's new in v0.3.3
 
