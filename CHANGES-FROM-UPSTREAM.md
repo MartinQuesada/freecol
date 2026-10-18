@@ -103,9 +103,10 @@ imaginary likeness (no portrait of him is known). See
   goods icons (base + Libertadores mod goods); colony building icons
   (base + Deeper Buildings, Cacao, Livestock, Taverns, Tasajo) and
   fortification outside backgrounds (stockade through citadel); attack
-  animations for soldiers, dragoons, frigates, privateers and artillery.
-  The Petty Criminal is a transported convict (ragged, barefoot, sack),
-  not in stocks. Graphics only.
+  animations for soldiers, dragoons, frigates, privateers and artillery;
+  Libertadores mod expert portraits (cacao, livestock, tasajo, vanilla,
+  conversos). The Petty Criminal is a transported convict (ragged,
+  barefoot, sack), not in stocks. Graphics only.
 
 ---
 
