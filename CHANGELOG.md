@@ -10,6 +10,8 @@
 * HD Graphics: ships, artillery, wagons, treasure train, and scout/pioneer/missionary role portraits redrawn in the same painted style.
 * HD Graphics: all base goods icons and Libertadores mod goods (cacao, chocolate, vanilla, milk, cheese, wool, cows, sheep, salt, salt meat) redrawn in the same painted style.
 * HD Graphics: all base colony building icons plus Deeper Buildings, Cacao, Livestock, Taverns and Tasajo redrawn as painted colonial dioramas.
+* HD Graphics: colony outside fortification backgrounds (stockade, fort, fortress and citadel, including national variants).
+* HD Graphics: attack animations for soldiers, dragoons, frigates, privateers and artillery.
 * Livestock: unique portraits for Expert Dairy Worker, Expert Shepherd and Master Cheesemaker (no longer reusing farmer/weaver/distiller art).
 * Livestock 0.5: Expert Dairy Worker, Expert Shepherd and Master Cheesemaker. They can be recruited in Europe, taught in a school, or learned by experience. Each doubles production of milk, wool or cheese.
 * Livestock 0.4: milk is perishable, it can not be traded in Europe or through the custom house. Make it into cheese to export it.

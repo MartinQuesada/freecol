@@ -4,9 +4,9 @@ Graphics only: no rule changes.
 
 | | |
 |--|--|
-| Units | All 64 base unit images (colonists, experts, soldiers, dragoons, scouts, pioneers, missionaries, native and royal units, ships, artillery and wagons) redrawn as detailed paintings |
+| Units | All 64 base unit images (colonists, experts, soldiers, dragoons, scouts, pioneers, missionaries, native and royal units, ships, artillery and wagons) redrawn as detailed paintings; attack animations for soldiers, dragoons, frigates, privateers and artillery |
 | Goods | All base goods icons plus Libertadores mod goods (cacao, chocolate, vanilla, milk, cheese, wool, cows, sheep, salt, salt meat) redrawn in the same painted style |
-| Buildings | All base colony building icons plus Deeper Buildings, Cacao, Livestock, Taverns and Tasajo, in a painted colonial diorama style |
+| Buildings | All base colony building icons plus Deeper Buildings, Cacao, Livestock, Taverns and Tasajo, in a painted colonial diorama style; stockade/fort/fortress/citadel outside backgrounds too |
 | Settlements | Sharper native settlements |
 | Founding fathers | New oil-painting portraits for all 50 fathers, including the Libertadores ones |
 | Terrain | Wider, irregular transitions between terrain types instead of a hard edge |
@@ -16,8 +16,9 @@ comes with larger versions (`.size2`, `.size4`…) that the game uses when
 zoomed in or on high-resolution screens. The larger versions need FreeCol to
 run with at least 2 GB of memory (`-Xmx2G`, as `./bin/run-mods.sh` does).
 
-Units added by other mods (cacao planters, hunters, salt miners…) and attack
-animations keep their original art.
+Attack animations for soldiers, dragoons, frigates, privateers and artillery
+are included. Units added by other mods (cacao planters, hunters, salt
+miners…) keep their original portraits.
 
 ## Enable
 
