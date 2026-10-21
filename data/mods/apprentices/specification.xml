@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Apprentices: free colonists (and converts, for guild crafts) learn an
+    intermediate apprentice skill before becoming experts. Apprentices are
+    not recruited in Europe. Field experts for converts remain the Conversos
+    / Las Casas path; this mod only opens guild apprenticeships for natives.
+  -->
+<freecol-specification id="apprentices" version="0.1">
+
+  <unit-types>
+    <!-- European apprentices: born in the colony path only (no Europe recruit). -->
+    <unit-type id="model.unit.apprenticeFarmer" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.grain"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.grain" index="30" type="additive" value="1"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeFisherman" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.fish"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.fish" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeFurTrapper" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.furs"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.furs" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeSilverMiner" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.silver"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.silver" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeLumberJack" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.lumber"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.lumber" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeOreMiner" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.ore"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.ore" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeSugarPlanter" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.sugar"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.sugar" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeCottonPlanter" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.cotton"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.cotton" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeTobaccoPlanter" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.tobacco"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.tobacco" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeCarpenter" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.hammers"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.hammers" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeDistiller" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.rum"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.rum" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeWeaver" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.cloth"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.cloth" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeTobacconist" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.cigars"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.cigars" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeFurTrader" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.coats"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.coats" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeBlacksmith" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.tools"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.tools" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeGunsmith" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.muskets"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.muskets" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticePreacher" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.crosses"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.crosses" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeStatesman" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.bells"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.bells" index="30" type="additive" value="2"/>
+    </unit-type>
+
+    <!-- Native guild apprentices: stay converts, cannot become European experts. -->
+    <unit-type id="model.unit.nativeApprenticeCarpenter" extends="model.unit.indianConvert"
+               expert-production="model.goods.hammers" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.hammers" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeDistiller" extends="model.unit.indianConvert"
+               expert-production="model.goods.rum" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.rum" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeWeaver" extends="model.unit.indianConvert"
+               expert-production="model.goods.cloth" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.cloth" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeTobacconist" extends="model.unit.indianConvert"
+               expert-production="model.goods.cigars" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.cigars" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeFurTrader" extends="model.unit.indianConvert"
+               expert-production="model.goods.coats" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.coats" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeBlacksmith" extends="model.unit.indianConvert"
+               expert-production="model.goods.tools" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.tools" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeGunsmith" extends="model.unit.indianConvert"
+               expert-production="model.goods.muskets" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.muskets" index="30" type="additive" value="2"/>
+    </unit-type>
+  </unit-types>
+
+  <unit-change-types>
+    <!-- Replace education so colonists must pass through apprentice. -->
+    <unit-change-type id="model.unitChange.education">
+      <unit-type-change id="model.unitChange.education.indenturedServant"
+                        from="model.unit.pettyCriminal"
+                        to="model.unit.indenturedServant"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.freeColonist"
+                        from="model.unit.indenturedServant"
+                        to="model.unit.freeColonist"
+                        probability="100" turns="4"/>
+
+      <!-- Colonist -> apprentice -->
+      <unit-type-change id="model.unitChange.education.apprenticeFarmer"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeFarmer"
+                        probability="100" turns="2"/>
+      <unit-type-change id="model.unitChange.education.apprenticeFisherman"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeFisherman"
+                        probability="100" turns="2"/>
+      <unit-type-change id="model.unitChange.education.apprenticeFurTrapper"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeFurTrapper"
+                        probability="100" turns="2"/>
+      <unit-type-change id="model.unitChange.education.apprenticeSilverMiner"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeSilverMiner"
+                        probability="100" turns="2"/>
+      <unit-type-change id="model.unitChange.education.apprenticeLumberJack"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeLumberJack"
+                        probability="100" turns="2"/>
+      <unit-type-change id="model.unitChange.education.apprenticeOreMiner"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeOreMiner"
+                        probability="100" turns="2"/>
+      <unit-type-change id="model.unitChange.education.apprenticeSugarPlanter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeSugarPlanter"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticeCottonPlanter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeCottonPlanter"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticeTobaccoPlanter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeTobaccoPlanter"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticeCarpenter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeCarpenter"
+                        probability="100" turns="2"/>
+      <unit-type-change id="model.unitChange.education.apprenticeDistiller"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeDistiller"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticeWeaver"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeWeaver"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticeTobacconist"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeTobacconist"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticeFurTrader"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeFurTrader"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticeBlacksmith"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeBlacksmith"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticeGunsmith"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeGunsmith"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticePreacher"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticePreacher"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.apprenticeStatesman"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeStatesman"
+                        probability="100" turns="4"/>
+
+      <!-- Apprentice -> expert -->
+      <unit-type-change id="model.unitChange.education.expertFarmer"
+                        from="model.unit.apprenticeFarmer"
+                        to="model.unit.expertFarmer"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.expertFisherman"
+                        from="model.unit.apprenticeFisherman"
+                        to="model.unit.expertFisherman"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.expertFurTrapper"
+                        from="model.unit.apprenticeFurTrapper"
+                        to="model.unit.expertFurTrapper"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.expertSilverMiner"
+                        from="model.unit.apprenticeSilverMiner"
+                        to="model.unit.expertSilverMiner"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.expertLumberJack"
+                        from="model.unit.apprenticeLumberJack"
+                        to="model.unit.expertLumberJack"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.expertOreMiner"
+                        from="model.unit.apprenticeOreMiner"
+                        to="model.unit.expertOreMiner"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.masterSugarPlanter"
+                        from="model.unit.apprenticeSugarPlanter"
+                        to="model.unit.masterSugarPlanter"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterCottonPlanter"
+                        from="model.unit.apprenticeCottonPlanter"
+                        to="model.unit.masterCottonPlanter"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterTobaccoPlanter"
+                        from="model.unit.apprenticeTobaccoPlanter"
+                        to="model.unit.masterTobaccoPlanter"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterCarpenter"
+                        from="model.unit.apprenticeCarpenter"
+                        to="model.unit.masterCarpenter"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.masterDistiller"
+                        from="model.unit.apprenticeDistiller"
+                        to="model.unit.masterDistiller"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterWeaver"
+                        from="model.unit.apprenticeWeaver"
+                        to="model.unit.masterWeaver"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterTobacconist"
+                        from="model.unit.apprenticeTobacconist"
+                        to="model.unit.masterTobacconist"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterFurTrader"
+                        from="model.unit.apprenticeFurTrader"
+                        to="model.unit.masterFurTrader"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterBlacksmith"
+                        from="model.unit.apprenticeBlacksmith"
+                        to="model.unit.masterBlacksmith"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.masterGunsmith"
+                        from="model.unit.apprenticeGunsmith"
+                        to="model.unit.masterGunsmith"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.firebrandPreacher"
+                        from="model.unit.apprenticePreacher"
+                        to="model.unit.firebrandPreacher"
+                        probability="100" turns="5"/>
+      <unit-type-change id="model.unitChange.education.elderStatesman"
+                        from="model.unit.apprenticeStatesman"
+                        to="model.unit.elderStatesman"
+                        probability="100" turns="5"/>
+
+      <!-- Convert -> native guild apprentice (school with European master) -->
+      <unit-type-change id="model.unitChange.education.nativeApprenticeCarpenter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeCarpenter"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeDistiller"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeDistiller"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeWeaver"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeWeaver"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeTobacconist"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeTobacconist"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeFurTrader"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeFurTrader"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeBlacksmith"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeBlacksmith"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeGunsmith"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeGunsmith"
+                        probability="100" turns="4"/>
+
+      <!-- Non-trade skills stay direct -->
+      <unit-type-change id="model.unitChange.education.seasonedScout"
+                        from="model.unit.freeColonist"
+                        to="model.unit.seasonedScout"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.hardyPioneer"
+                        from="model.unit.freeColonist"
+                        to="model.unit.hardyPioneer"
+                        probability="100" turns="4"/>
+      <unit-type-change id="model.unitChange.education.veteranSoldier"
+                        from="model.unit.freeColonist"
+                        to="model.unit.veteranSoldier"
+                        probability="100" turns="6"/>
+      <unit-type-change id="model.unitChange.education.jesuitMissionary"
+                        from="model.unit.freeColonist"
+                        to="model.unit.jesuitMissionary"
+                        probability="100" turns="8"/>
+      <unit-type-change id="model.unitChange.education.colonialRegular"
+                        from="model.unit.freeColonist"
+                        to="model.unit.colonialRegular"
+                        probability="100" turns="8"/>
+    </unit-change-type>
+
+    <!-- Replace experience: colonist -> apprentice -> expert; convert -> guild apprentice. -->
+    <unit-change-type id="model.unitChange.experience">
+      <unit-type-change id="model.unitChange.experience.apprenticeFarmer"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeFarmer" probability="6"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeFisherman"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeFisherman" probability="6"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeFurTrapper"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeFurTrapper" probability="6"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeSilverMiner"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeSilverMiner" probability="6"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeLumberJack"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeLumberJack" probability="6"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeOreMiner"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeOreMiner" probability="6"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeSugarPlanter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeSugarPlanter" probability="5"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeCottonPlanter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeCottonPlanter" probability="5"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeTobaccoPlanter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeTobaccoPlanter" probability="5"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeCarpenter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeCarpenter" probability="5"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeDistiller"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeDistiller" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeWeaver"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeWeaver" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeTobacconist"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeTobacconist" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeFurTrader"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeFurTrader" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeBlacksmith"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeBlacksmith" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeGunsmith"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeGunsmith" probability="4"/>
+      <unit-type-change id="model.unitChange.experience.apprenticePreacher"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticePreacher" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeStatesman"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeStatesman" probability="3"/>
+
+      <unit-type-change id="model.unitChange.experience.expertFarmer"
+                        from="model.unit.apprenticeFarmer"
+                        to="model.unit.expertFarmer" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.expertFisherman"
+                        from="model.unit.apprenticeFisherman"
+                        to="model.unit.expertFisherman" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.expertFurTrapper"
+                        from="model.unit.apprenticeFurTrapper"
+                        to="model.unit.expertFurTrapper" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.expertSilverMiner"
+                        from="model.unit.apprenticeSilverMiner"
+                        to="model.unit.expertSilverMiner" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.expertLumberJack"
+                        from="model.unit.apprenticeLumberJack"
+                        to="model.unit.expertLumberJack" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.expertOreMiner"
+                        from="model.unit.apprenticeOreMiner"
+                        to="model.unit.expertOreMiner" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.masterSugarPlanter"
+                        from="model.unit.apprenticeSugarPlanter"
+                        to="model.unit.masterSugarPlanter" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.masterCottonPlanter"
+                        from="model.unit.apprenticeCottonPlanter"
+                        to="model.unit.masterCottonPlanter" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.masterTobaccoPlanter"
+                        from="model.unit.apprenticeTobaccoPlanter"
+                        to="model.unit.masterTobaccoPlanter" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.masterCarpenter"
+                        from="model.unit.apprenticeCarpenter"
+                        to="model.unit.masterCarpenter" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.masterDistiller"
+                        from="model.unit.apprenticeDistiller"
+                        to="model.unit.masterDistiller" probability="2"/>
+      <unit-type-change id="model.unitChange.experience.masterWeaver"
+                        from="model.unit.apprenticeWeaver"
+                        to="model.unit.masterWeaver" probability="2"/>
+      <unit-type-change id="model.unitChange.experience.masterTobacconist"
+                        from="model.unit.apprenticeTobacconist"
+                        to="model.unit.masterTobacconist" probability="2"/>
+      <unit-type-change id="model.unitChange.experience.masterFurTrader"
+                        from="model.unit.apprenticeFurTrader"
+                        to="model.unit.masterFurTrader" probability="2"/>
+      <unit-type-change id="model.unitChange.experience.masterBlacksmith"
+                        from="model.unit.apprenticeBlacksmith"
+                        to="model.unit.masterBlacksmith" probability="2"/>
+      <unit-type-change id="model.unitChange.experience.masterGunsmith"
+                        from="model.unit.apprenticeGunsmith"
+                        to="model.unit.masterGunsmith" probability="2"/>
+      <unit-type-change id="model.unitChange.experience.firebrandPreacher"
+                        from="model.unit.apprenticePreacher"
+                        to="model.unit.firebrandPreacher" probability="2"/>
+      <unit-type-change id="model.unitChange.experience.elderStatesman"
+                        from="model.unit.apprenticeStatesman"
+                        to="model.unit.elderStatesman" probability="2"/>
+
+      <!-- Native guild apprentices by experience (no further upgrade). -->
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeCarpenter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeCarpenter" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeDistiller"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeDistiller" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeWeaver"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeWeaver" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeTobacconist"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeTobacconist" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeFurTrader"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeFurTrader" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeBlacksmith"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeBlacksmith" probability="3"/>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeGunsmith"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeGunsmith" probability="3"/>
+    </unit-change-type>
+
+    <unit-change-type id="model.unitChange.clearSkill" preserve="true">
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeFarmer"
+                        from="model.unit.apprenticeFarmer"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeFisherman"
+                        from="model.unit.apprenticeFisherman"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeFurTrapper"
+                        from="model.unit.apprenticeFurTrapper"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeSilverMiner"
+                        from="model.unit.apprenticeSilverMiner"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeLumberJack"
+                        from="model.unit.apprenticeLumberJack"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeOreMiner"
+                        from="model.unit.apprenticeOreMiner"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeSugarPlanter"
+                        from="model.unit.apprenticeSugarPlanter"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeCottonPlanter"
+                        from="model.unit.apprenticeCottonPlanter"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeTobaccoPlanter"
+                        from="model.unit.apprenticeTobaccoPlanter"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeCarpenter"
+                        from="model.unit.apprenticeCarpenter"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeDistiller"
+                        from="model.unit.apprenticeDistiller"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeWeaver"
+                        from="model.unit.apprenticeWeaver"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeTobacconist"
+                        from="model.unit.apprenticeTobacconist"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeFurTrader"
+                        from="model.unit.apprenticeFurTrader"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeBlacksmith"
+                        from="model.unit.apprenticeBlacksmith"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeGunsmith"
+                        from="model.unit.apprenticeGunsmith"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticePreacher"
+                        from="model.unit.apprenticePreacher"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeStatesman"
+                        from="model.unit.apprenticeStatesman"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeCarpenter"
+                        from="model.unit.nativeApprenticeCarpenter"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeDistiller"
+                        from="model.unit.nativeApprenticeDistiller"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeWeaver"
+                        from="model.unit.nativeApprenticeWeaver"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeTobacconist"
+                        from="model.unit.nativeApprenticeTobacconist"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeFurTrader"
+                        from="model.unit.nativeApprenticeFurTrader"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeBlacksmith"
+                        from="model.unit.nativeApprenticeBlacksmith"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeGunsmith"
+                        from="model.unit.nativeApprenticeGunsmith"
+                        to="model.unit.indianConvert" probability="100"/>
+    </unit-change-type>
+  </unit-change-types>
+</freecol-specification>

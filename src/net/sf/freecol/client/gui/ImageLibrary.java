@@ -124,6 +124,7 @@ public final class ImageLibrary {
                                TILE_TAKEN = "image.tile.tileTaken",
                                TILE_OWNED_BY_INDIANS = "image.tileitem.nativeLand",
                                LOST_CITY_RUMOUR = "image.tileitem.lostCityRumour",
+                               NEW_WORLD = "image.miscicon.newWorld",
                                DARKNESS = "image.halo.dark",
                                ICON_LOCK = "image.icon.lock",
                                ICON_COIN = "image.icon.coin",

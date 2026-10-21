@@ -1,12 +1,15 @@
 # Cacao
 
-Grow **cacao** on savannah, tropical forest, scrub forest and plains, then refine it into **chocolate** for Europe.
+Grow **cacao** on savannah, tropical forest, scrub forest and plains, then
+refine it with **milk** into **chocolate** for Europe. Milk comes from the
+**Livestock** mod (enable both).
 
 | Step | What |
 |------|------|
 | Farm | Cacao on warm tiles (bonus from **Cacao grove** resource) |
 | Process | Chocolatier's house (**32 hammers**) → shop → factory (Adam Smith) |
 | Experts | Expert Cacao Planter, Master Chocolatier |
+| Chocolate | Chocolatier house/shop/factory: cacao + milk → chocolate (1:1 inputs) |
 | Local use | **Creole salon** (64 hammers, population 3): 3 chocolate → 2 bells per turn |
 
 Aztec, Inca and Tupi settlements may teach cacao planting.

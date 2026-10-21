@@ -509,12 +509,16 @@ public final class UnitType extends BuildableType implements Consumer {
                 todo.add(uc.to);
         }
         // Can the teacher teach any of the intermediate changes? If so,
-        // that change is valid. Otherwise, education is not possible.
+        // that change is valid.
         for (UnitType ut : todo) {
             if (ut.getTeachingType(teacherType) != null)
                 return ut;
         }
-        return null;
+        // No path reaches the teacher's specialty, but an intermediate
+        // upgrade still exists (e.g. convert -> guild apprentice with no
+        // further step to European expert). Allow teaching up to that
+        // intermediate rather than failing entirely.
+        return first(todo);
     }
 
     /**

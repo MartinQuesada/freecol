@@ -50,8 +50,8 @@ Minuit early, Adam Smith in the middle, Stuyvesant late):
 - Late: the independence leaders (San Martín, Miranda, Toussaint, Hidalgo),
   Eli Whitney, Blas de Lezo, Henry Knox.
 
-Hernando de Soto from the base game is moved to the early game, while
-there are still lost city rumours to explore.
+Hernando de Soto from the base game is weighted almost only for the early
+game (`15/2/0`), while there are still lost city rumours to explore.
 
 With the "Founding Fathers by game phase" game option, a father is only
 offered from the era in which his weight is highest.

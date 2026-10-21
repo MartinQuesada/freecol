@@ -136,8 +136,10 @@
 
   <building-types>
     <building-type id="model.building.chocolatierHouse">
+      <!-- Cacao + milk (Livestock). Without milk in store, no chocolate. -->
       <production>
         <input goods-type="model.goods.cacao" value="3"/>
+        <input goods-type="model.goods.milk" value="3"/>
         <output goods-type="model.goods.chocolate" value="3"/>
       </production>
       <required-goods id="model.goods.hammers" value="32"/>
@@ -149,6 +151,7 @@
                    upkeep="5">
       <production>
         <input goods-type="model.goods.cacao" value="6"/>
+        <input goods-type="model.goods.milk" value="6"/>
         <output goods-type="model.goods.chocolate" value="6"/>
       </production>
       <required-goods id="model.goods.hammers" value="64"/>
@@ -162,6 +165,7 @@
                    required-population="8" upkeep="15">
       <production>
         <input goods-type="model.goods.cacao" value="6"/>
+        <input goods-type="model.goods.milk" value="6"/>
         <output goods-type="model.goods.chocolate" value="9"/>
       </production>
       <required-goods id="model.goods.hammers" value="160"/>

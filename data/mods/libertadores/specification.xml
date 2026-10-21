@@ -20,11 +20,11 @@
   -->
 <freecol-specification id="libertadores" version="0.4">
   <founding-fathers>
-    <!-- Hernando de Soto (base game): weighted towards the early game,
-         while lost city rumours remain. -->
+    <!-- Hernando de Soto (base game): almost only early game, while
+         lost city rumours remain (weight3=0 so game-phase gating stays early). -->
     <founding-father id="model.foundingFather.hernandoDeSoto"
                      type="exploration"
-                     weight1="10" weight2="5" weight3="1">
+                     weight1="15" weight2="2" weight3="0">
       <modifier id="model.modifier.lineOfSightBonus"
                 type="additive" value="1">
         <scope ability-id="model.ability.navalUnit" ability-value="false"/>

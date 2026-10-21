@@ -22,10 +22,11 @@ affected effects do nothing.
 | [Tasajo](data/mods/tasajo/README.md) | 0.6 | Hunting meat, salt mines, salting house → salt meat (tasajo) |
 | [Lumber Craft](data/mods/lumberCraft/README.md) | 0.1 | Tools and muskets also consume lumber |
 | [Livestock](data/mods/livestock/README.md) | 0.5 | Cows and sheep: milk, cheese, wool; dairy/shepherd/cheesemaker experts; brotherhood hall |
-| [Cacao](data/mods/cacao/README.md) | 0.3 | Cacao and chocolate; creole salon |
+| [Cacao](data/mods/cacao/README.md) | 0.3 | Cacao + milk → chocolate (needs Livestock); creole salon |
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla as a raw luxury export |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | Converts learn outdoor trades and become native experts |
+| [Apprentices](data/mods/apprentices/README.md) | 0.1 | Free colonist → apprentice → expert; native guild apprentices (ceiling below European master) |
 | [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-res units, goods icons, buildings, settlements, father portraits, terrain blends |
 
 Enable them under Preferences → Mods, or run:
@@ -69,8 +70,10 @@ With the base game's 25 fathers, the Congress has **50** candidates.
 | Henry Knox | Military | Artillery costs 25% less; damaged artillery repaired at half cost in colonies with an armory |
 
 Jacob Fugger and Henry Hudson from the base game are kept. Hernando de Soto
-is moved to the early game. Weights follow game phase (early / middle /
-late) by usefulness of the effect, not by when the father lived.
+is weighted almost only for the early game (`weight1=15`, `weight2=2`,
+`weight3=0`) so he is offered while lost city rumours remain. Weights follow
+game phase (early / middle / late) by usefulness of the effect, not by when
+the father lived.
 
 Portraits use the same gilded frame as the base game. Most are cropped
 from public-domain works on Wikimedia Commons; Joshua Humphreys has an
@@ -88,6 +91,12 @@ imaginary likeness (no portrait of him is known). See
   and become native experts. They stay converts (no colonies, poor in
   buildings, no teaching). Las Casas no longer turns converts into free
   colonists.
+- **Apprentices:** European trades go free colonist → apprentice → expert
+  (apprentices are not recruited in Europe; school totals 5/7/9 turns).
+  Native converts can learn guild crafts up to native apprentice; they do
+  not unlock European masters. Use with Conversos for outdoor native experts.
+- **Cacao chocolate:** chocolatier buildings consume cacao and milk
+  (Livestock). Without milk in the warehouse, no chocolate is made.
 - **Native experts** in Cacao, Vanilla and Tasajo (cacao/vanilla planters,
   hunters, salt miners) for use with Conversos.
 - **Livestock experts:** Expert Dairy Worker, Expert Shepherd and Master
@@ -105,8 +114,9 @@ imaginary likeness (no portrait of him is known). See
   fortification outside backgrounds (stockade through citadel); attack
   animations for soldiers, dragoons, frigates, privateers and artillery;
   Libertadores mod expert portraits (cacao, livestock, tasajo, vanilla,
-  conversos). The Petty Criminal is a transported convict (ragged,
-  barefoot, sack), not in stocks. Graphics only.
+  conversos, apprentices). The Petty Criminal is a transported convict
+  (ragged, barefoot, sack), not in stocks. Distinct New World destination
+  icon (not Lost City). Graphics only.
 
 ---
 
@@ -166,6 +176,9 @@ in each mod README.
 
 - Experience targets the expert a unit can actually become (shared expert
   production for native experts).
+- `UnitType.getTeachingType` may teach an intermediate specialty when there
+  is no path to the teacher's full type (Apprentices: converts → guild
+  apprentice without unlocking European masters).
 - Ability `model.ability.rebelBonusUnattended`: unattended buildings get
   the colony rebel production bonus.
 - Owner `model.modifier.breedingFactor` on breeding buildings (Azara).
@@ -195,7 +208,7 @@ in each mod README.
 | 0.3.1 | 6 Oct 2026 | Boycott / independence / loyalist colony options |
 | 0.3.2 | 6 Oct 2026 | Father weights by usefulness; framed portraits; option renamed |
 | 0.3.3 | 7 Oct 2026 | HD Graphics; father cost scaled by turns per year; recruitment stall fix |
-| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts; full HD unit refresh (Petty Criminal without stocks) |
+| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts; full HD unit refresh (Petty Criminal without stocks); **Apprentices** mod (5/7/9 school turns); chocolate needs milk; De Soto early-only (`15/2/0`); New World icon; ship/tobacco transparency fixes |
 
 Detailed per-release notes live in [CHANGELOG.md](CHANGELOG.md) under
 "FreeCol Americas". Upstream FreeCol notes follow below those sections.

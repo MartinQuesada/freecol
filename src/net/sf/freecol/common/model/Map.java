@@ -2747,7 +2747,7 @@ ok:     while (!openMap.isEmpty()) {
      */
     @Override
     public String getLocationImageKey() {
-        return ImageLibrary.LOST_CITY_RUMOUR;
+        return ImageLibrary.NEW_WORLD;
     }
 
 
