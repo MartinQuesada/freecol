@@ -38,15 +38,19 @@ engine changes support them. **Libertadores** is one of the included mods
 
 - **Apprentices** (new mod): colonists learn trades as apprentices before
   becoming experts (New World only; school totals 5/7/9 turns by trade).
+  Own portraits; load before Conversos; disable expandExperience with it.
 - **Conversos:** Las Casas unlocks convert experience in outdoor jobs
-  (native experts) and guild crafts (native apprentices, ceiling). Needs
-  this fork’s jar for experience targets and education scopes.
+  (native experts) and guild crafts (native apprentices, ceiling). Convert
+  paths live only here. Needs this fork’s jar for experience targets and
+  education scopes.
 - **Cacao:** chocolate now needs **cacao and milk** (enable Livestock).
 - **Hernando de Soto** (Libertadores): almost only early game (`15/2/0`)
   while lost city rumours remain.
-- HD Graphics: apprentice portraits; ship and native tobacco-planter
-  transparency fixes; distinct New World destination icon.
+- HD Graphics: apprentice portraits; nation veteran uniforms; fort
+  backgrounds; ship and tobacco transparency; New World destination icon.
+  Attack animations use base FreeCol sprites for now.
 - Converts after Las Casas show the experience progress bar like colonists.
+- Combat: missing/failed attack animation no longer drops the result message.
 
 ### What's new in v0.3.3
 

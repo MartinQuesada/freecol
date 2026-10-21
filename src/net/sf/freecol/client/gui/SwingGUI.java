@@ -275,12 +275,19 @@ public class SwingGUI extends GUI {
             bounds = (bounds == null) ? r : bounds.union(r);
         }
 
-        // Define a callback to wrap Canvas.paintImmediately(Rectangle)
+        // HD attack frames are often larger than a tile; also union the
+        // unit label (and previous frame) so heads/legs are not clipped.
         final Canvas can = this.canvas;
         final Rectangle aBounds = bounds;
+        final Rectangle[] prevLabelBounds = new Rectangle[1];
         final Animations.Procedure painter = new Animations.Procedure() {
                 public void execute() {
-                    can.paintImmediately(aBounds);
+                    Rectangle paint = aBounds.union(unitLabel.getBounds());
+                    if (prevLabelBounds[0] != null) {
+                        paint = paint.union(prevLabelBounds[0]);
+                    }
+                    prevLabelBounds[0] = unitLabel.getBounds();
+                    can.paintImmediately(paint);
                 }
             };
 

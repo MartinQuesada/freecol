@@ -2670,8 +2670,18 @@ public final class InGameController extends FreeColClientHolder {
     public void animateAttackHandler(Unit attacker, Unit defender,
                                      Tile attackerTile, Tile defenderTile,
                                      boolean success) {
+        // Attack is often handled on the EDT (mouse → goto → attack).
+        // invokeNowOrLater then runs the animation immediately: any
+        // uncaught failure would abort the rest of the MultipleMessage
+        // (including combat result ModelMessages).  Keep going either way.
         invokeLater(() -> {
-            getGUI().animateUnitAttack(attacker, defender, attackerTile, defenderTile, success);
+            try {
+                getGUI().animateUnitAttack(attacker, defender,
+                    attackerTile, defenderTile, success);
+            } catch (Exception ex) {
+                logger.log(Level.WARNING, "Attack animation failed for "
+                    + attacker + " v " + defender, ex);
+            }
         });
     }
 

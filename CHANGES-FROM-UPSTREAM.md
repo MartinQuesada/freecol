@@ -111,12 +111,12 @@ imaginary likeness (no portrait of him is known). See
   natives, ships, wagons/artillery, scout/pioneer/missionary roles);
   goods icons (base + Libertadores mod goods); colony building icons
   (base + Deeper Buildings, Cacao, Livestock, Taverns, Tasajo) and
-  fortification outside backgrounds (stockade through citadel); attack
-  animations for soldiers, dragoons, frigates, privateers and artillery;
+  fortification outside backgrounds (stockade through citadel);
   Libertadores mod expert portraits (cacao, livestock, tasajo, vanilla,
   conversos, apprentices). The Petty Criminal is a transported convict
   (ragged, barefoot, sack), not in stocks. Distinct New World destination
-  icon (not Lost City). Graphics only.
+  icon (not Lost City). Attack animations stay on the base FreeCol sprites
+  for now. Graphics only.
 
 ---
 
@@ -211,7 +211,7 @@ in each mod README.
 | 0.3.1 | 6 Oct 2026 | Boycott / independence / loyalist colony options |
 | 0.3.2 | 6 Oct 2026 | Father weights by usefulness; framed portraits; option renamed |
 | 0.3.3 | 7 Oct 2026 | HD Graphics; father cost scaled by turns per year; recruitment stall fix |
-| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts; full HD unit refresh (Petty Criminal without stocks); **Apprentices** mod (5/7/9 school turns); chocolate needs milk; De Soto early-only (`15/2/0`); New World icon; ship/tobacco transparency fixes |
+| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts; full HD unit refresh (Petty Criminal without stocks); **Apprentices** mod (colonists only, 5/7/9 school turns); **Conversos** Las Casas gate for convert outdoor+guild paths; chocolate needs milk; De Soto early-only (`15/2/0`); New World icon; ship/tobacco transparency fixes; combat animation load no longer drops result messages |
 
 Detailed per-release notes live in [CHANGELOG.md](CHANGELOG.md) under
 "FreeCol Americas". Upstream FreeCol notes follow below those sections.

@@ -86,15 +86,32 @@ public class SZAResource extends Resource {
 
     /**
      * Get the {@code SimpleZippedAnimation} using the specified scale.
-     * 
+     *
+     * Lazy-loads like {@link ImageResource} when preload has not finished
+     * (or failed).  Returns null rather than throwing if the animation
+     * cannot be loaded, so combat UI can continue without it.
+     *
      * @param scale The scale of the requested animation.
-     * @return The {@code SimpleZippedAnimation}.
+     * @return The {@code SimpleZippedAnimation}, or null if unavailable.
      */
     public synchronized SimpleZippedAnimation getSimpleZippedAnimation(float scale) {
         final SimpleZippedAnimation cached = this.cache.get(scale);
         if (cached != null) return cached;
-        SimpleZippedAnimation sza
-            = this.cache.get(DEFAULT_SCALE).createScaledVersion(scale);
+        // Ensure the unscaled version is present (preload may still be
+        // running, or may have failed for a bad/missing SZA).
+        if (!this.cache.containsKey(DEFAULT_SCALE)) {
+            preload();
+        }
+        final SimpleZippedAnimation base = this.cache.get(DEFAULT_SCALE);
+        if (base == null) {
+            logger.warning("SimpleZippedAnimation unavailable: "
+                + getResourceLocator());
+            return null;
+        }
+        if (Float.compare(scale, DEFAULT_SCALE) == 0) {
+            return base;
+        }
+        SimpleZippedAnimation sza = base.createScaledVersion(scale);
         this.cache.put(scale, sza);
         return sza;
     }

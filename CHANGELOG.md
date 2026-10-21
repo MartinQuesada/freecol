@@ -11,8 +11,12 @@
 * HD Graphics: all base goods icons and Libertadores mod goods (cacao, chocolate, vanilla, milk, cheese, wool, cows, sheep, salt, salt meat) redrawn in the same painted style.
 * HD Graphics: all base colony building icons plus Deeper Buildings, Cacao, Livestock, Taverns and Tasajo redrawn as painted colonial dioramas.
 * HD Graphics: colony outside fortification backgrounds (stockade, fort, fortress and citadel, including national variants).
-* HD Graphics: attack animations for soldiers, dragoons, frigates, privateers and artillery.
-* HD Graphics: Libertadores mod expert unit portraits (cacao, livestock, tasajo, vanilla, conversos).
+* HD Graphics: Libertadores mod expert unit portraits (cacao, livestock, tasajo, vanilla, conversos, apprentices).
+* HD Graphics: nation veteran uniforms (foot and dragoon) for Spain, England, France, Netherlands, Portugal, Russia, Sweden and Denmark; meadow fort outside backgrounds; goods and ship transparency fixes; distinct New World destination icon.
+* **Apprentices** 0.1 (new): free colonist → apprentice → expert for European trades (New World only; not recruited in Europe). School totals 5 / 7 / 9 turns by trade. Own portraits (plus HD versions). Disable expandExperience while using it. Load before Conversos.
+* **Conversos:** with Las Casas, converts gain outdoor experience (native experts) and guild crafts (native apprentices, ceiling below European master). Convert progression is only here, not in Apprentices. Converts show the experience progress bar after Las Casas.
+* Cacao: chocolate now needs cacao and milk (enable Livestock).
+* Libertadores: Hernando de Soto almost early-only (`15/2/0`) while lost city rumours remain.
 * Livestock: unique portraits for Expert Dairy Worker, Expert Shepherd and Master Cheesemaker (no longer reusing farmer/weaver/distiller art).
 * Livestock 0.5: Expert Dairy Worker, Expert Shepherd and Master Cheesemaker. They can be recruited in Europe, taught in a school, or learned by experience. Each doubles production of milk, wool or cheese.
 * Livestock 0.4: milk is perishable, it can not be traded in Europe or through the custom house. Make it into cheese to export it.

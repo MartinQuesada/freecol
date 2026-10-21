@@ -4,7 +4,7 @@ Graphics only: no rule changes.
 
 | | |
 |--|--|
-| Units | All 64 base unit images (colonists, experts, soldiers, dragoons, scouts, pioneers, missionaries, native and royal units, ships, artillery and wagons) redrawn as detailed paintings; Libertadores mod experts too (cacao, livestock, tasajo, vanilla, conversos, apprentices); attack animations for soldiers, dragoons, frigates, privateers and artillery |
+| Units | All 64 base unit images (colonists, experts, soldiers, dragoons, scouts, pioneers, missionaries, native and royal units, ships, artillery and wagons) redrawn as detailed paintings; Libertadores mod experts too (cacao, livestock, tasajo, vanilla, conversos, apprentices) |
 | Goods | All base goods icons plus Libertadores mod goods (cacao, chocolate, vanilla, milk, cheese, wool, cows, sheep, salt, salt meat) redrawn in the same painted style |
 | Buildings | All base colony building icons plus Deeper Buildings, Cacao, Livestock, Taverns and Tasajo, in a painted colonial diorama style; stockade/fort/fortress/citadel outside backgrounds too |
 | Settlements | Sharper native settlements |
@@ -16,10 +16,10 @@ comes with larger versions (`.size2`, `.size4`…) that the game uses when
 zoomed in or on high-resolution screens. The larger versions need FreeCol to
 run with at least 2 GB of memory (`-Xmx2G`, as `./bin/run-mods.sh` does).
 
-Attack animations for soldiers, dragoons, frigates, privateers and artillery
-are included. Libertadores mod expert portraits (cacao, chocolate, dairy,
-shepherd, cheese, hunter, salt, vanilla, conversos native experts, and
-Apprentices European/native specialty portraits) are included as well.
+Libertadores mod expert portraits (cacao, chocolate, dairy, shepherd, cheese,
+hunter, salt, vanilla, conversos native experts, and Apprentices European
+specialty portraits) are included. Attack animations use the base FreeCol
+sprites for now.
 
 ## Enable
 
