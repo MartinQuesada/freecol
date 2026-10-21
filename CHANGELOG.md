@@ -36,6 +36,7 @@
 * The colony warehouse goods bar always follows the client option "Hide goods in warehouse when fewer than", including in debug mode (debug no longer forces hiding empty goods).
 * Bugfix: ending a turn no longer hangs when a natural disaster damages a building and ejects its workers. The production calculator accepted a worker with no production type yet and threw a NullPointerException that killed the turn thread.
 * Bugfix: the unit menu no longer offers "Assign to teacher" to units outside the colony, such as fortified soldiers; the server always refused it.
+* Bug fix: combat result messages no longer disappear when an attack animation fails to load (SZA preload race); the animation is skipped and the fight continues.
 * Bugfix: the name of the independent nation keeps accented letters and ñ ("España Libres" was saved as "Espaa Libres").
 * Spanish: the Man of War is now "Navío de línea" instead of the literal "Hombre de Guerra".
 * Spanish: the Continental Army (colonial regular infantry) is "Ejército continental", not "Armada continental".
