@@ -493,32 +493,67 @@ public final class UnitType extends BuildableType implements Consumer {
     public UnitType getTeachingType(UnitType teacherType) {
         final Specification spec = getSpecification();
         final UnitType taught = teacherType.getSkillTaught();
+        if (taught == null) return null;
         final int taughtLevel = taught.getSkill();
         if (getSkill() >= taughtLevel)
             return null; // Fail fast
 
-        // Is there an education change that gets this unit type to the
-        // type taught by the teacher type? If so, the taught type is valid
-        // and should be returned at once. Accumulate other intermediate
-        // changes that do not reach the taught type level.
+        // Prefer an education change to the teacher's specialty, or to
+        // another unit with the same expert-production (convert -> native
+        // expert/apprentice).  Do not fall back to an unrelated first
+        // change (that made fishing/farming converts become carpenters).
+        final GoodsType taughtGoods = taught.getExpertProduction();
+        UnitType matched = matchTeachingChange(
+            spec.getUnitChanges(UnitChangeType.EDUCATION, this),
+            teacherType, taught, taughtGoods, taughtLevel);
+        if (matched != null) return matched;
+
+        // Older Conversos saves had outdoor convert upgrades only under
+        // experience; allow school to teach that same specialty.
+        matched = matchTeachingChange(
+            spec.getUnitChanges(UnitChangeType.EXPERIENCE, this),
+            teacherType, taught, taughtGoods, taughtLevel);
+        if (matched != null) return matched;
+
+        return null;
+    }
+
+    /**
+     * Find a unit-type change that matches what a teacher can teach.
+     *
+     * @param changes Candidate {@code UnitTypeChange}s from this type.
+     * @param teacherType The teacher {@code UnitType}.
+     * @param taught The specialty the teacher teaches.
+     * @param taughtGoods Expert production of {@code taught}, or null.
+     * @param taughtLevel Skill level of {@code taught}.
+     * @return The matching result unit type, or null.
+     */
+    private UnitType matchTeachingChange(List<UnitTypeChange> changes,
+                                         UnitType teacherType,
+                                         UnitType taught,
+                                         GoodsType taughtGoods,
+                                         int taughtLevel) {
         List<UnitType> todo = new ArrayList<>();
-        for (UnitTypeChange uc : spec.getUnitChanges(UnitChangeType.EDUCATION, this)) {
+        for (UnitTypeChange uc : changes) {
             if (uc.to == taught)
                 return taught;
+            if (sameExpertGoods(taughtGoods, uc.to.getExpertProduction()))
+                return uc.to;
             if (uc.to.getSkill() < taughtLevel)
                 todo.add(uc.to);
         }
-        // Can the teacher teach any of the intermediate changes? If so,
-        // that change is valid.
         for (UnitType ut : todo) {
             if (ut.getTeachingType(teacherType) != null)
                 return ut;
         }
-        // No path reaches the teacher's specialty, but an intermediate
-        // upgrade still exists (e.g. convert -> guild apprentice with no
-        // further step to European expert). Allow teaching up to that
-        // intermediate rather than failing entirely.
-        return first(todo);
+        return null;
+    }
+
+    /**
+     * Whether two expert-production goods types are the same specialty.
+     */
+    private static boolean sameExpertGoods(GoodsType a, GoodsType b) {
+        return a != null && b != null && a.getId().equals(b.getId());
     }
 
     /**

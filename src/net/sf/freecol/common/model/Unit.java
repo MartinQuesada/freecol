@@ -1548,9 +1548,18 @@ public class Unit extends GoodsLocation
         // number of turns is 4/6/8 for skill 1/2/3
         int result = 0;
         if (student != null) {
-            result = getSpecification()
-                .getNeededTurnsOfTraining(getType(), student.getType());
-            
+            // Resolve via Unit.getTeachingType (Las Casas / Conversos compat),
+            // not UnitType alone — otherwise end-turn throws when the student
+            // was assigned through the native-specialty fallback.
+            final UnitType learn = student.getTeachingType(this);
+            if (learn == null) {
+                result = 4;
+            } else {
+                result = getSpecification()
+                    .getNeededTurnsOfTraining(getType(), student.getType(),
+                                              learn);
+            }
+
             /*
              * Allows mod to apply modifiers to the number of turns:
              */
@@ -1664,10 +1673,42 @@ public class Unit extends GoodsLocation
             .getUnitChangeType(UnitChangeType.EDUCATION).appliesTo(this))
             ? getType().getTeachingType(teacherType)
             : null;
+        // Compat: if Apprentices was loaded after Conversos it wiped convert
+        // education/experience changes.  With Las Casas, still allow teaching
+        // a convert into the matching native specialty by expert-production.
+        if (ret == null
+            && hasAbility(Ability.UPGRADE_CONVERT)
+            && "model.unit.indianConvert".equals(getType().getId())) {
+            ret = findNativeSpecialty(teacherType);
+        }
         if (ret == null || !ret.isAvailableTo(getOwner())) return null;
-        // Honour per-change scopes (e.g. Las Casas for convert guild paths).
-        return (getUnitChange(UnitChangeType.EDUCATION, ret) == null)
-            ? null : ret;
+        // Honour per-change scopes (e.g. Las Casas for convert paths).
+        if (getUnitChange(UnitChangeType.EDUCATION, ret) != null) return ret;
+        // Compat: early Conversos saves only listed outdoor convert upgrades
+        // under experience; still allow school if that path exists.
+        if (getUnitChange(UnitChangeType.EXPERIENCE, ret) != null) return ret;
+        // Paths wiped by mod order, but Las Casas + native specialty found.
+        return (hasAbility(Ability.UPGRADE_CONVERT)
+            && ret.getId().startsWith("model.unit.native")) ? ret : null;
+    }
+
+    /**
+     * Find a Conversos native unit type that matches what a teacher teaches,
+     * used when education tables were wiped by a bad mod load order.
+     *
+     * @param teacherType The teacher {@code UnitType}.
+     * @return A matching native specialty, or null.
+     */
+    private UnitType findNativeSpecialty(UnitType teacherType) {
+        final UnitType taught = teacherType.getSkillTaught();
+        if (taught == null) return null;
+        final GoodsType goods = taught.getExpertProduction();
+        if (goods == null) return null;
+        final String goodsId = goods.getId();
+        return find(getSpecification().getUnitTypeList(), ut ->
+            ut.getId().startsWith("model.unit.native")
+            && ut.getExpertProduction() != null
+            && goodsId.equals(ut.getExpertProduction().getId()));
     }
 
     /**

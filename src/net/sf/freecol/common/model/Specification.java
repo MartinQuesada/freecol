@@ -1865,12 +1865,34 @@ public final class Specification implements OptionContainer {
      */
     public int getNeededTurnsOfTraining(UnitType typeTeacher,
                                         UnitType typeStudent) {
-        UnitType learn = typeStudent.getTeachingType(typeTeacher);
+        return getNeededTurnsOfTraining(typeTeacher, typeStudent,
+            typeStudent.getTeachingType(typeTeacher));
+    }
+
+    /**
+     * Turns of training when the result specialty is already known
+     * (e.g. resolved via {@link Unit#getTeachingType} for Conversos).
+     *
+     * @param typeTeacher The teacher {@code UnitType}.
+     * @param typeStudent The student {@code UnitType}.
+     * @param learn The {@code UnitType} the student will become.
+     * @return The turns of training needed.
+     */
+    public int getNeededTurnsOfTraining(UnitType typeTeacher,
+                                        UnitType typeStudent,
+                                        UnitType learn) {
         if (learn == null) {
             throw new RuntimeException("Can not learn: teacher=" + typeTeacher
                 + " student=" + typeStudent);
         }
-        return getUnitChange(UnitChangeType.EDUCATION, typeStudent, learn).turns;
+        UnitTypeChange uc = getUnitChange(UnitChangeType.EDUCATION,
+                                          typeStudent, learn);
+        if (uc != null) return uc.turns;
+        // Compat when only an experience path exists (old Conversos saves),
+        // or education tables were wiped by mod load order.
+        UnitType taught = typeTeacher.getSkillTaught();
+        int skill = (taught != null) ? taught.getSkill() : 1;
+        return (skill <= 1) ? 4 : (skill == 2) ? 6 : 8;
     }
 
     // -- Units --

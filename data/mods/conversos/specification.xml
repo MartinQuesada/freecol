@@ -27,6 +27,17 @@
     colonists is removed. European apprentice ladders belong in Apprentices.
   -->
 <freecol-specification id="conversos" version="0.1">
+  <!-- Manual student assignment so converts can be paired with the right
+       teacher (fishing with a fisherman, not the first guild apprentice). -->
+  <options>
+    <optionGroup id="gameOptions">
+      <optionGroup id="gameOptions.colony">
+        <booleanOption id="model.option.allowStudentSelection"
+                       defaultValue="true"/>
+      </optionGroup>
+    </optionGroup>
+  </options>
+
   <unit-change-types>
     <!-- Empty redefinition: Las Casas no longer turns converts into
          free colonists. -->
@@ -116,9 +127,65 @@
       </unit-type-change>
     </unit-change-type>
 
-    <!-- School to native guild apprentice after Las Casas (append; load
-         Apprentices before this mod so education is not wiped later). -->
+    <!-- School after Las Casas (append; load Apprentices before this mod
+         so education is not wiped later). Outdoor jobs go to native field
+         experts; guild crafts stop at native apprentice. -->
     <unit-change-type id="model.unitChange.education" preserve="true">
+      <unit-type-change id="model.unitChange.education.nativeExpertFarmer"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertFarmer"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeExpertFisherman"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertFisherman"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeExpertFurTrapper"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertFurTrapper"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeExpertSilverMiner"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertSilverMiner"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeExpertLumberJack"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertLumberJack"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeExpertOreMiner"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeExpertOreMiner"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeMasterSugarPlanter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeMasterSugarPlanter"
+                        probability="100" turns="6">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeMasterCottonPlanter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeMasterCottonPlanter"
+                        probability="100" turns="6">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeMasterTobaccoPlanter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeMasterTobaccoPlanter"
+                        probability="100" turns="6">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+
       <unit-type-change id="model.unitChange.education.nativeApprenticeCarpenter"
                         from="model.unit.indianConvert"
                         to="model.unit.nativeApprenticeCarpenter"

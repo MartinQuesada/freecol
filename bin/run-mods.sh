@@ -141,20 +141,11 @@ ${mods_xml}    </modListOption>
 </clientOptions>
 EOF
   else
-    # Ensure default mods are listed without wiping the rest of the options file.
-    local missing=0
-    for mod in "${mod_array[@]}"; do
-      mod="$(echo "$mod" | tr -d '[:space:]')"
-      [[ -z "$mod" ]] && continue
-      if ! grep -q "modOption id=\"${mod}\"" "$OPTIONS_FILE"; then
-        missing=1
-        break
-      fi
-    done
-    if [[ "$missing" -eq 1 ]]; then
-      log "Actualizando lista de mods en opciones: $DEFAULT_MODS"
-      # Replace the modListOption body (keep template + inject defaults)
-      python3 - "$OPTIONS_FILE" "$DEFAULT_MODS" <<'PY'
+    # Keep extras, but always rewrite the pack mods in DEFAULT_MODS order.
+    # Apprentices must load before Conversos or convert school paths are wiped.
+    log "Sincronizando orden de mods: $DEFAULT_MODS"
+    python3 - "$OPTIONS_FILE" "$DEFAULT_MODS" <<'PY'
+import re
 import sys
 from pathlib import Path
 path = Path(sys.argv[1])
@@ -167,6 +158,10 @@ end = text.find("</modListOption>", start)
 if end < 0:
     sys.exit("modListOption end not found")
 end += len("</modListOption>")
+existing = re.findall(
+    r'<modOption id="([^"]+)" value="([^"]+)"/>', text[start:end])
+extra = [(i, v) for i, v in existing
+         if i not in mods and i != "model.option.mod"]
 body = [
     '    <modListOption id="clientOptions.mods.userMods" maximumNumber="20">',
     "      <template>",
@@ -175,10 +170,16 @@ body = [
 ]
 for m in mods:
     body.append(f'      <modOption id="{m}" value="{m}"/>')
+for i, v in extra:
+    body.append(f'      <modOption id="{i}" value="{v}"/>')
 body.append("    </modListOption>")
-path.write_text(text[:start] + "\n".join(body) + text[end:])
+new = text[:start] + "\n".join(body) + text[end:]
+if new != text:
+    path.write_text(new)
+    print("updated mod order")
+else:
+    print("mod order ok")
 PY
-    fi
   fi
 }
 

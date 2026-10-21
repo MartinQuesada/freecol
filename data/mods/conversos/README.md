@@ -9,8 +9,8 @@ but they stay converts.
 | | |
 |--|--|
 | Las Casas | Converts gain experience in outdoor jobs **and** guild crafts |
-| Outdoor | Grain, fish, furs, lumber, ore, silver, sugar, cotton, tobacco → **native expert** |
-| Guild | Hammers, rum, cloth, cigars, coats, tools, muskets → **native apprentice** (ceiling) |
+| Outdoor | Grain, fish, furs, lumber, ore, silver, sugar, cotton, tobacco → **native expert** (experience or school) |
+| Guild | Hammers, rum, cloth, cigars, coats, tools, muskets → **native apprentice** (ceiling; experience or school) |
 | Chance | Outdoor up to 4% / guild up to 3% per turn with full experience |
 | Lost skill | Native experts and apprentices who lose skill go back to convert |
 
@@ -36,12 +36,25 @@ Needs this repository's `FreeCol.jar`: experience looks for the expert a
 unit can actually become, and education respects per-change scopes (Las
 Casas). On a stock FreeCol build converts gain no experience.
 
-With **Apprentices**, load Apprentices before Conversos (as
-`./bin/run-mods.sh` does) so convert experience and education paths are
-appended after the colonist tables are replaced.
+With **Apprentices**, load **Apprentices before Conversos** (as
+`./bin/run-mods.sh` does). If Conversos is listed first, Apprentices
+wipes convert school paths and converts cannot be assigned to teachers.
 
 Do not enable it together with the **convertUpgrade** mod: both use the Las
 Casas ability.
+
+## School
+
+Converts do not enter the school building (that seat is for the teacher).
+They stay on a tile or in another building and are linked to the teacher.
+
+1. Elect **Las Casas** (otherwise convert school paths are locked).
+2. Enable **Allow student selection** (Preferences → Game options → Colony),
+   or start a new game with this mod (it turns that option on by default).
+3. Right-click the convert → **Assign to teacher**.
+4. Match the teacher to the skill: a fisherman teaches fishing (native expert
+   fisherman), a farmer farming, a master carpenter the native carpenter
+   apprentice, and so on.
 
 ## Enable
 
