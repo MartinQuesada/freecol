@@ -30,21 +30,23 @@ engine changes support them. **Libertadores** is one of the included mods
 | [Cacao](data/mods/cacao/README.md) | 0.3 | Cacao + milk → chocolate (needs Livestock); creole salon turns chocolate into liberty bells |
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla, a raw luxury export like silver |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
-| [Conversos](data/mods/conversos/README.md) | 0.1 | With Las Casas, converts gain experience in outdoor jobs and become native experts |
-| [Apprentices](data/mods/apprentices/README.md) | 0.1 | Free colonist → apprentice → expert (school totals 5/7/9 turns); native converts learn guild crafts up to apprentice |
+| [Conversos](data/mods/conversos/README.md) | 0.1 | With Las Casas, converts gain outdoor and guild experience (native experts / apprentices) |
+| [Apprentices](data/mods/apprentices/README.md) | 0.1 | Free colonist → apprentice → expert (school totals 5/7/9 turns; colonists only) |
 | [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-resolution units, goods icons, ships and settlements, painted founding father portraits and smoother terrain transitions |
 
 ### What's new in v0.3.4 (in development)
 
 - **Apprentices** (new mod): colonists learn trades as apprentices before
   becoming experts (New World only; school totals 5/7/9 turns by trade).
-  Converts can reach native guild apprentices; field native experts stay
-  with Conversos. Needs this fork’s jar for convert schooling.
+- **Conversos:** Las Casas unlocks convert experience in outdoor jobs
+  (native experts) and guild crafts (native apprentices, ceiling). Needs
+  this fork’s jar for experience targets and education scopes.
 - **Cacao:** chocolate now needs **cacao and milk** (enable Livestock).
 - **Hernando de Soto** (Libertadores): almost only early game (`15/2/0`)
   while lost city rumours remain.
 - HD Graphics: apprentice portraits; ship and native tobacco-planter
   transparency fixes; distinct New World destination icon.
+- Converts after Las Casas show the experience progress bar like colonists.
 
 ### What's new in v0.3.3
 

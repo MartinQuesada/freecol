@@ -20,10 +20,11 @@
   -->
 <!--
     Converts: with Bartolome de las Casas in the Congress, Indian converts
-    gain experience in outdoor work and may become native experts.  They
-    stay converts in every other respect: they cannot found colonies, are
-    poor at indoor work and cannot teach (skill 0).  The one-time
-    conversion of all converts into free colonists is removed.
+    gain experience in outdoor work (native field experts) and in guild
+    crafts (native apprentices, ceiling). They stay converts in every other
+    respect: they cannot found colonies, are poor at indoor work and cannot
+    teach (skill 0). The one-time conversion of all converts into free
+    colonists is removed. European apprentice ladders belong in Apprentices.
   -->
 <freecol-specification id="conversos" version="0.1">
   <unit-change-types>
@@ -76,7 +77,92 @@
                         to="model.unit.nativeMasterTobaccoPlanter" probability="4">
         <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
       </unit-type-change>
+
+      <!-- Guild crafts: ceiling at native apprentice (Las Casas). -->
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeCarpenter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeCarpenter" probability="3">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeDistiller"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeDistiller" probability="3">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeWeaver"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeWeaver" probability="3">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeTobacconist"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeTobacconist" probability="3">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeFurTrader"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeFurTrader" probability="3">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeBlacksmith"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeBlacksmith" probability="3">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.experience.nativeApprenticeGunsmith"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeGunsmith" probability="3">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
     </unit-change-type>
+
+    <!-- School to native guild apprentice after Las Casas (append; load
+         Apprentices before this mod so education is not wiped later). -->
+    <unit-change-type id="model.unitChange.education" preserve="true">
+      <unit-type-change id="model.unitChange.education.nativeApprenticeCarpenter"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeCarpenter"
+                        probability="100" turns="3">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeDistiller"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeDistiller"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeWeaver"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeWeaver"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeTobacconist"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeTobacconist"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeFurTrader"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeFurTrader"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeBlacksmith"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeBlacksmith"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+      <unit-type-change id="model.unitChange.education.nativeApprenticeGunsmith"
+                        from="model.unit.indianConvert"
+                        to="model.unit.nativeApprenticeGunsmith"
+                        probability="100" turns="4">
+        <scope ability-id="model.ability.upgradeConvert" ability-value="true"/>
+      </unit-type-change>
+    </unit-change-type>
+
     <unit-change-type id="model.unitChange.clearSkill" preserve="true">
       <unit-type-change id="model.unitChange.clearSkill.nativeExpertFarmer"
                         from="model.unit.nativeExpertFarmer"
@@ -104,6 +190,27 @@
                         to="model.unit.indianConvert" probability="100"/>
       <unit-type-change id="model.unitChange.clearSkill.nativeMasterTobaccoPlanter"
                         from="model.unit.nativeMasterTobaccoPlanter"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeCarpenter"
+                        from="model.unit.nativeApprenticeCarpenter"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeDistiller"
+                        from="model.unit.nativeApprenticeDistiller"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeWeaver"
+                        from="model.unit.nativeApprenticeWeaver"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeTobacconist"
+                        from="model.unit.nativeApprenticeTobacconist"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeFurTrader"
+                        from="model.unit.nativeApprenticeFurTrader"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeBlacksmith"
+                        from="model.unit.nativeApprenticeBlacksmith"
+                        to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.nativeApprenticeGunsmith"
+                        from="model.unit.nativeApprenticeGunsmith"
                         to="model.unit.indianConvert" probability="100"/>
     </unit-change-type>
   </unit-change-types>
@@ -185,6 +292,43 @@
                expert-production="model.goods.tobacco" score-value="4"
                maximum-experience="0">
       <modifier id="model.goods.tobacco" index="30" type="multiplicative" value="2"/>
+    </unit-type>
+
+    <!-- Native guild apprentices: ceiling below European master. -->
+    <unit-type id="model.unit.nativeApprenticeCarpenter" extends="model.unit.indianConvert"
+               expert-production="model.goods.hammers" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.hammers" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeDistiller" extends="model.unit.indianConvert"
+               expert-production="model.goods.rum" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.rum" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeWeaver" extends="model.unit.indianConvert"
+               expert-production="model.goods.cloth" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.cloth" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeTobacconist" extends="model.unit.indianConvert"
+               expert-production="model.goods.cigars" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.cigars" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeFurTrader" extends="model.unit.indianConvert"
+               expert-production="model.goods.coats" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.coats" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeBlacksmith" extends="model.unit.indianConvert"
+               expert-production="model.goods.tools" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.tools" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.nativeApprenticeGunsmith" extends="model.unit.indianConvert"
+               expert-production="model.goods.muskets" score-value="3"
+               maximum-experience="0">
+      <modifier id="model.goods.muskets" index="30" type="additive" value="2"/>
     </unit-type>
   </unit-types>
 </freecol-specification>

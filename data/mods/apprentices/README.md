@@ -2,13 +2,13 @@
 
 Colonists learn trades as **apprentices** before becoming experts. Apprentices are formed in the New World only (not recruited in Europe).
 
+Convert progression (field experts and guild apprentices) belongs in **Conversos**, gated by Bartolomé de las Casas.
+
 ## Progression
 
 | Path | Steps |
 |------|--------|
 | European trades | Free colonist → Apprentice → Expert/Master |
-| Native guild crafts | Indian convert → Native apprentice (ceiling) |
-| Native field work | Unchanged: use **Conversos** (Las Casas) for native field experts |
 
 Scout, pioneer, veteran soldier and missionary teaching stay direct (no apprentice step).
 
@@ -16,7 +16,6 @@ Scout, pioneer, veteran soldier and missionary teaching stay direct (no apprenti
 
 - Apprentice farmer: **+1** grain
 - Other apprentices: **+2** (additive) to their goods
-- Native guild apprentices keep convert limits (no founding colonies, cannot teach, no European master upgrade)
 
 ## School timing
 
@@ -30,15 +29,12 @@ Scout, pioneer, veteran soldier and missionary teaching stay direct (no apprenti
 
 ## Graphics
 
-Each European and native guild apprentice has its own portrait (plus `.size2` /
-`.size4` variants). Enable **HD Graphics** last so the painted versions load.
+Each European apprentice has its own portrait (plus `.size2` / `.size4`
+variants). Enable **HD Graphics** last so the painted versions load.
 
 ## Compatibility
 
-- Enable **Conversos** for native outdoor experts; enable this mod for the apprentice ladder and native guild apprentices.
-- Prefer loading **Apprentices** before mods that append education/experience with `preserve="true"` (e.g. Livestock, expandExperience), or those mods may reintroduce direct colonist→expert shortcuts.
+- Load **Apprentices before Conversos** (and before other mods that append
+  experience or education with `preserve="true"`). This mod replaces those
+  tables for colonists; Conversos then appends convert paths.
 - Disable **expandExperience** while using this mod (indoor experience is already covered here).
-
-## Engine note
-
-`UnitType.getTeachingType` allows teaching up to an intermediate type when there is no path to the teacher's full specialty (so converts can be schooled to guild apprentice without unlocking European experts).

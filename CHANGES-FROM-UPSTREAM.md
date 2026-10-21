@@ -25,8 +25,8 @@ affected effects do nothing.
 | [Cacao](data/mods/cacao/README.md) | 0.3 | Cacao + milk → chocolate (needs Livestock); creole salon |
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla as a raw luxury export |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
-| [Conversos](data/mods/conversos/README.md) | 0.1 | Converts learn outdoor trades and become native experts |
-| [Apprentices](data/mods/apprentices/README.md) | 0.1 | Free colonist → apprentice → expert; native guild apprentices (ceiling below European master) |
+| [Conversos](data/mods/conversos/README.md) | 0.1 | Las Casas: convert outdoor experts and guild apprentices |
+| [Apprentices](data/mods/apprentices/README.md) | 0.1 | Free colonist → apprentice → expert (colonists only) |
 | [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-res units, goods icons, buildings, settlements, father portraits, terrain blends |
 
 Enable them under Preferences → Mods, or run:
@@ -88,13 +88,13 @@ imaginary likeness (no portrait of him is known). See
   bells) and brotherhood hall (cheese → crosses) work with no colonists and
   give a bonus at ≥50% rebels.
 - **Conversos:** with Las Casas, converts gain experience in outdoor jobs
-  and become native experts. They stay converts (no colonies, poor in
+  (native experts) and guild crafts (native apprentices, ceiling below
+  European master). They stay converts (no colonies, poor in untrained
   buildings, no teaching). Las Casas no longer turns converts into free
   colonists.
 - **Apprentices:** European trades go free colonist → apprentice → expert
   (apprentices are not recruited in Europe; school totals 5/7/9 turns).
-  Native converts can learn guild crafts up to native apprentice; they do
-  not unlock European masters. Use with Conversos for outdoor native experts.
+  Convert progression is only in Conversos.
 - **Cacao chocolate:** chocolatier buildings consume cacao and milk
   (Livestock). Without milk in the warehouse, no chocolate is made.
 - **Native experts** in Cacao, Vanilla and Tasajo (cacao/vanilla planters,
@@ -161,6 +161,9 @@ imaginary likeness (no portrait of him is known). See
 - **Warehouse display:** the goods bar always follows the client option
   "Hide goods in warehouse when fewer than" (0 = show every type,
   including empty). Debug mode no longer forces hiding empty goods.
+- **Convert experience UI:** after Las Casas, converts show the same
+  experience progress bar as colonists (menu falls back to work type;
+  Apprentices keeps Conversos outdoor upgrade paths).
 - **Trade routes:** the editor states that listed goods are loaded at a
   stop, that other goods on the carrier are unloaded, and that a stop
   with nothing listed unloads everything ("Unload all" on empty stops).

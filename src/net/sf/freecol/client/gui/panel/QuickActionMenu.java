@@ -482,6 +482,9 @@ public final class QuickActionMenu extends JPopupMenu {
         }
         int experience = unit.getExperience();
         GoodsType goods = unit.getExperienceType();
+        // Older partial updates only synced experience; fall back to work type
+        // so converts (and others) still show the progress bar.
+        if (goods == null) goods = unit.getWorkType();
         if (experience > 0 && goods != null) {
             UnitTypeChange uc = unit.getExperienceChange(goods);
             if (uc != null) {

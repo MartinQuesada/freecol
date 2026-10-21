@@ -8,7 +8,8 @@
 #   ./bin/run-mods.sh --no-splash  # any FreeCol CLI args are forwarded
 #   JAVA_XMX=1G ./bin/run-mods.sh  # less memory (default 2G; HD images need 2G)
 #
-# Default mods: libertadores, deeperBuildings, tasajo, lumberCraft, livestock, cacao, vanilla, tabernas, conversos, apprentices, hdGraphics
+# Default mods: libertadores, deeperBuildings, tasajo, lumberCraft, livestock, cacao, vanilla, tabernas, apprentices, conversos, hdGraphics
+# (Apprentices before Conversos so convert experience/education is appended, not wiped.)
 # Config/saves for this launcher live in .freecol-dev/ (not your main FreeCol prefs).
 
 set -euo pipefail
@@ -21,7 +22,7 @@ CONFIG_DIR="$DEV_DIR/config"
 DATA_DIR="$DEV_DIR/data"
 OPTIONS_FILE="$CONFIG_DIR/freecol/options.xml"
 JAR="$ROOT/FreeCol.jar"
-DEFAULT_MODS="${MODS:-libertadores,deeperBuildings,tasajo,lumberCraft,livestock,cacao,vanilla,tabernas,conversos,apprentices,hdGraphics}"
+DEFAULT_MODS="${MODS:-libertadores,deeperBuildings,tasajo,lumberCraft,livestock,cacao,vanilla,tabernas,apprentices,conversos,hdGraphics}"
 
 log() { printf '==> %s\n' "$*"; }
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }

@@ -1664,7 +1664,10 @@ public class Unit extends GoodsLocation
             .getUnitChangeType(UnitChangeType.EDUCATION).appliesTo(this))
             ? getType().getTeachingType(teacherType)
             : null;
-        return (ret == null || !ret.isAvailableTo(getOwner())) ? null : ret;
+        if (ret == null || !ret.isAvailableTo(getOwner())) return null;
+        // Honour per-change scopes (e.g. Las Casas for convert guild paths).
+        return (getUnitChange(UnitChangeType.EDUCATION, ret) == null)
+            ? null : ret;
     }
 
     /**
