@@ -165,7 +165,10 @@ public final class DragListener extends MouseAdapter {
         } else if (comp instanceof GoodsTypeLabel) {
             ; // Do nothing, TradeRouteInputPanel handles this
         } else {
-            System.err.println("DragListener did not recognize:" + comp);
+            // Drop-target panels (colony tiles, buildings, cargo holds, …)
+            // also get this listener for right-click menus.  Left-click on
+            // them has nothing to drag — do not spam stderr or start DnD.
+            return;
         }
 
         final TransferHandler handler = comp.getTransferHandler();
