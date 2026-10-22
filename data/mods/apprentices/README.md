@@ -9,6 +9,7 @@ Convert progression (field experts and guild apprentices) belongs in **Conversos
 | Path | Steps |
 |------|--------|
 | European trades | Free colonist → Apprentice → Expert/Master |
+| Livestock, Cacao, Vanilla, Tasajo | Same two steps, appended by those mods |
 
 Scout, pioneer, veteran soldier and missionary teaching stay direct (no apprentice step).
 
@@ -34,7 +35,9 @@ variants). Enable **HD Graphics** last so the painted versions load.
 
 ## Compatibility
 
-- Load **Apprentices before Conversos** (and before other mods that append
-  experience or education with `preserve="true"`). This mod replaces those
-  tables for colonists; Conversos then appends convert paths.
+- Load **Apprentices before Tasajo, Livestock, Cacao, Vanilla and Conversos**.
+  This mod replaces the colonist experience and education tables. Those mods
+  then append their own paths with `preserve="true"` (dairy, wool, cheese,
+  cacao, chocolate, vanilla, hunting, salt and salting, plus convert paths).
+  If Apprentices loads later, it wipes them.
 - Disable **expandExperience** while using this mod (indoor experience is already covered here).

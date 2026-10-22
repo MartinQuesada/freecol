@@ -30,15 +30,21 @@ engine changes support them. **Libertadores** is one of the included mods
 | [Cacao](data/mods/cacao/README.md) | 0.3 | Cacao + milk → chocolate (needs Livestock); creole salon turns chocolate into liberty bells |
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla, a raw luxury export like silver |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
+| [Tertulias](data/mods/tertulias/README.md) | 0.1 | Tertulia turns cigars into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | With Las Casas, converts gain outdoor and guild experience (native experts / apprentices) |
 | [Apprentices](data/mods/apprentices/README.md) | 0.1 | Free colonist → apprentice → expert (school totals 5/7/9 turns; colonists only) |
 | [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-resolution units, goods icons, ships and settlements, painted founding father portraits and smoother terrain transitions |
 
 ### What's new in v0.3.4 (in development)
 
+- **Tertulias** (new mod): politicians smoke cigars and plot. 2 cigars → 1
+  liberty bell, no workers, population 3, 48 hammers. +1 bell at 50% rebels,
+  +2 at 100%.
 - **Apprentices** (new mod): colonists learn trades as apprentices before
   becoming experts (New World only; school totals 5/7/9 turns by trade).
-  Own portraits; load before Conversos; disable expandExperience with it.
+  Own portraits; load before Tasajo, Livestock, Cacao, Vanilla and Conversos;
+  disable expandExperience with it. Livestock, Cacao, Vanilla and Tasajo then
+  add apprentices for their own trades, so those colonists learn in two steps.
 - **Conversos:** Las Casas unlocks convert experience in outdoor jobs
   (native experts) and guild crafts (native apprentices, ceiling). Convert
   paths live only here. Needs this fork’s jar for experience targets and

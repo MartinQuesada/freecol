@@ -284,7 +284,8 @@
     </unit-change-type>
 
     <!-- Replace experience: colonist -> apprentice -> expert.
-         Load before Conversos (preserve appends convert paths). -->
+         Load before Tasajo, Livestock, Cacao, Vanilla and Conversos.
+         Those mods append with preserve="true"; loading this later wipes them. -->
     <unit-change-type id="model.unitChange.experience">
       <unit-type-change id="model.unitChange.experience.apprenticeFarmer"
                         from="model.unit.freeColonist"

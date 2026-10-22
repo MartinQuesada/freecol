@@ -42,9 +42,12 @@ Needs this repository's `FreeCol.jar`: experience looks for the expert a
 unit can actually become, and education respects per-change scopes (Las
 Casas). On a stock FreeCol build converts gain no experience.
 
-With **Apprentices**, load **Apprentices before Conversos** (as
-`./bin/run-mods.sh` does). If Conversos is listed first, Apprentices
-wipes convert school paths and converts cannot be assigned to teachers.
+With **Apprentices**, load **Apprentices** first, then **Tasajo, Livestock,
+Cacao and Vanilla**, then **Conversos** (as `./bin/run-mods.sh` does).
+Apprentices replaces the experience and education tables; the goods mods
+and Conversos append their paths afterwards. If Apprentices is listed
+later, it wipes convert school paths and converts cannot be assigned to
+teachers.
 
 Do not enable it together with the **convertUpgrade** mod: both use the Las
 Casas ability.

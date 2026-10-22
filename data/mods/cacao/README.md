@@ -8,7 +8,7 @@ refine it with **milk** into **chocolate** for Europe. Milk comes from the
 |------|------|
 | Farm | Cacao on warm tiles (bonus from **Cacao grove** resource) |
 | Process | Chocolatier's house (**32 hammers**) → shop → factory (Adam Smith) |
-| Experts | Expert Cacao Planter, Master Chocolatier |
+| Experts | Expert Cacao Planter, Master Chocolatier. In the colony a free colonist becomes an apprentice first, then the expert. |
 | Chocolate | Chocolatier house/shop/factory: cacao + milk → chocolate (1:1 inputs) |
 | Local use | **Creole salon** (64 hammers, population 3): 3 chocolate → 2 bells per turn |
 

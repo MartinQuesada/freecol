@@ -25,6 +25,7 @@ affected effects do nothing.
 | [Cacao](data/mods/cacao/README.md) | 0.3 | Cacao + milk → chocolate (needs Livestock); creole salon |
 | [Vanilla](data/mods/vanilla/README.md) | 0.2 | Vanilla as a raw luxury export |
 | [Taverns](data/mods/tabernas/README.md) | 0.2 | Tavern turns rum into liberty bells |
+| [Tertulias](data/mods/tertulias/README.md) | 0.1 | Tertulia turns cigars into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | Las Casas: convert outdoor experts and guild apprentices |
 | [Apprentices](data/mods/apprentices/README.md) | 0.1 | Free colonist → apprentice → expert (colonists only) |
 | [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-res units, goods icons, buildings, settlements, father portraits, terrain blends |
@@ -110,7 +111,7 @@ imaginary likeness (no portrait of him is known). See
   Units refreshed in a consistent painted style (civilians, soldiers,
   natives, ships, wagons/artillery, scout/pioneer/missionary roles);
   goods icons (base + Libertadores mod goods); colony building icons
-  (base + Deeper Buildings, Cacao, Livestock, Taverns, Tasajo) and
+  (base + Deeper Buildings, Cacao, Livestock, Taverns, Tertulias, Tasajo) and
   fortification outside backgrounds (stockade through citadel);
   Libertadores mod expert portraits (cacao, livestock, tasajo, vanilla,
   conversos, apprentices). The Petty Criminal is a transported convict

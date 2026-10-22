@@ -7,7 +7,7 @@
 |--|--|
 | Tiles | Tropical forest (best), rain forest, savannah, scrub forest |
 | Bonus | **Vanilla orchid** resource (×2) |
-| Expert | Expert Vanilla Planter |
+| Expert | Expert Vanilla Planter. In the colony a free colonist becomes an apprentice first. |
 | Market | High Europe price (~silver tier); price falls if you flood the market |
 
 Aztec and Arawak settlements may teach vanilla planting.

@@ -8,8 +8,11 @@
 #   ./bin/run-mods.sh --no-splash  # any FreeCol CLI args are forwarded
 #   JAVA_XMX=1G ./bin/run-mods.sh  # less memory (default 2G; HD images need 2G)
 #
-# Default mods: libertadores, deeperBuildings, tasajo, lumberCraft, livestock, cacao, vanilla, tabernas, apprentices, conversos, hdGraphics
-# (Apprentices before Conversos so convert experience/education is appended, not wiped.)
+# Default mods: libertadores, deeperBuildings, lumberCraft, tabernas, tertulias, apprentices, tasajo, livestock, cacao, vanilla, conversos, hdGraphics
+# Apprentices replaces the colonist experience and education tables.
+# Tasajo, Livestock, Cacao, Vanilla and Conversos must come after it: they
+# append their own paths with preserve="true". Conversos stays after them:
+# it redefines the convert, and those native experts are defined first.
 # Config/saves for this launcher live in .freecol-dev/ (not your main FreeCol prefs).
 
 set -euo pipefail
@@ -22,7 +25,7 @@ CONFIG_DIR="$DEV_DIR/config"
 DATA_DIR="$DEV_DIR/data"
 OPTIONS_FILE="$CONFIG_DIR/freecol/options.xml"
 JAR="$ROOT/FreeCol.jar"
-DEFAULT_MODS="${MODS:-libertadores,deeperBuildings,tasajo,lumberCraft,livestock,cacao,vanilla,tabernas,apprentices,conversos,hdGraphics}"
+DEFAULT_MODS="${MODS:-libertadores,deeperBuildings,lumberCraft,tabernas,tertulias,apprentices,tasajo,livestock,cacao,vanilla,conversos,hdGraphics}"
 
 log() { printf '==> %s\n' "$*"; }
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }
@@ -92,7 +95,7 @@ jar_stale() {
   newest="$(find "$ROOT/src" \
     "$ROOT/data/mods/libertadores" "$ROOT/data/mods/deeperBuildings" "$ROOT/data/mods/tasajo" \
     "$ROOT/data/mods/lumberCraft" "$ROOT/data/mods/livestock" "$ROOT/data/mods/cacao" \
-    "$ROOT/data/mods/vanilla" "$ROOT/data/mods/tabernas" "$ROOT/data/mods/conversos" \
+    "$ROOT/data/mods/vanilla" "$ROOT/data/mods/tabernas" "$ROOT/data/mods/tertulias" "$ROOT/data/mods/conversos" \
     "$ROOT/data/mods/apprentices" \
     "$ROOT/data/mods/basicBuildings" "$ROOT/data/mods/hdGraphics" \
     -type f \( -name '*.java' -o -name '*.xml' -o -name '*.properties' -o -name '*.jpg' -o -name '*.png' \) \
@@ -142,7 +145,8 @@ ${mods_xml}    </modListOption>
 EOF
   else
     # Keep extras, but always rewrite the pack mods in DEFAULT_MODS order.
-    # Apprentices must load before Conversos or convert school paths are wiped.
+    # Apprentices must load before Tasajo, Livestock, Cacao, Vanilla and
+    # Conversos, or it wipes the expert and convert school paths.
     log "Sincronizando orden de mods: $DEFAULT_MODS"
     python3 - "$OPTIONS_FILE" "$DEFAULT_MODS" <<'PY'
 import re

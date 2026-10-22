@@ -11,7 +11,7 @@ Adds a salt-meat export chain inspired by FreeCol 2 forum ideas
 |         | meat + salt → salt meat (3+3→3 / 6+6→6 / 6+6→9) |
 | Export | **Salt meat / Tasajo** to Europe (not edible). Fresh meat is perishable and can not be traded in Europe |
 | Food | Colonists still eat **grain / fish** as usual |
-| Experts | **Expert Hunter**, **Expert Salt Miner**, **Expert Meat Salter** |
+| Experts | **Expert Hunter**, **Expert Salt Miner**, **Expert Meat Salter**. In the colony a free colonist becomes an apprentice first. |
 
 ## Enable
 

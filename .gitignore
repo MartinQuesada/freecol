@@ -211,3 +211,6 @@ www.freecol.org/_site
 # Test reports
 build/TEST-*.txt
 build/dependencies.txt
+
+# VS Code workspace file
+freecol.code-workspace

@@ -15,8 +15,9 @@ drink it while they talk politics.
 Every turn the tavern takes rum from the warehouse. If you would rather sell
 it, load it onto a wagon or ship before the end of the turn.
 
-Pairs well with the **Cacao** mod (creole salon: chocolate → bells) and the
-**Livestock** mod (brotherhood hall: cheese → crosses).
+Pairs well with the **Cacao** mod (creole salon: chocolate → bells), the
+**Livestock** mod (brotherhood hall: cheese → crosses) and **Tertulias**
+(cigars → bells).
 
 The rebel bonus needs the `model.ability.rebelBonusUnattended` support in
 this repository's `FreeCol.jar`; on a stock FreeCol build the tavern still

@@ -69,6 +69,11 @@
       <modifier id="model.goods.vanilla" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>
+    <unit-type id="model.unit.apprenticeVanillaPlanter" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.vanilla"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.vanilla" index="30" type="additive" value="2"/>
+    </unit-type>
     <!-- Native expert, only reachable with the conversos mod. -->
     <unit-type id="model.unit.nativeVanillaPlanter" extends="model.unit.indianConvert"
                expert-production="model.goods.vanilla" score-value="4"
@@ -88,17 +93,28 @@
       <unit-type-change id="model.unitChange.clearSkill.nativeVanillaPlanter"
                         from="model.unit.nativeVanillaPlanter"
                         to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeVanillaPlanter"
+                        from="model.unit.apprenticeVanillaPlanter"
+                        to="model.unit.freeColonist" probability="100"/>
     </unit-change-type>
+    <!-- Append. Load after Apprentices. Planter timing: school 3+4, experience 5 then 3. -->
     <unit-change-type id="model.unitChange.education" preserve="true">
-      <unit-type-change id="model.unitChange.education.expertVanillaPlanter"
+      <unit-type-change id="model.unitChange.education.apprenticeVanillaPlanter"
                         from="model.unit.freeColonist"
+                        to="model.unit.apprenticeVanillaPlanter"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.expertVanillaPlanter"
+                        from="model.unit.apprenticeVanillaPlanter"
                         to="model.unit.expertVanillaPlanter"
-                        probability="100" turns="6"/>
+                        probability="100" turns="4"/>
     </unit-change-type>
     <unit-change-type id="model.unitChange.experience" preserve="true">
-      <unit-type-change id="model.unitChange.experience.expertVanillaPlanter"
+      <unit-type-change id="model.unitChange.experience.apprenticeVanillaPlanter"
                         from="model.unit.freeColonist"
-                        to="model.unit.expertVanillaPlanter" probability="4"/>
+                        to="model.unit.apprenticeVanillaPlanter" probability="5"/>
+      <unit-type-change id="model.unitChange.experience.expertVanillaPlanter"
+                        from="model.unit.apprenticeVanillaPlanter"
+                        to="model.unit.expertVanillaPlanter" probability="3"/>
       <unit-type-change id="model.unitChange.experience.nativeVanillaPlanter"
                         from="model.unit.indianConvert"
                         to="model.unit.nativeVanillaPlanter" probability="4">

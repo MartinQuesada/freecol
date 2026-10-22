@@ -79,6 +79,16 @@
       <modifier id="model.goods.chocolate" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>
+    <unit-type id="model.unit.apprenticeCacaoPlanter" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.cacao"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.cacao" index="30" type="additive" value="2"/>
+    </unit-type>
+    <unit-type id="model.unit.apprenticeChocolatier" extends="model.unit.freeColonist"
+               recruit-probability="0" skill="0" expert-production="model.goods.chocolate"
+               score-value="3" maximum-experience="200">
+      <modifier id="model.goods.chocolate" index="30" type="additive" value="2"/>
+    </unit-type>
     <!-- Native expert, only reachable with the conversos mod. -->
     <unit-type id="model.unit.nativeCacaoPlanter" extends="model.unit.indianConvert"
                expert-production="model.goods.cacao" score-value="4"
@@ -101,24 +111,45 @@
       <unit-type-change id="model.unitChange.clearSkill.nativeCacaoPlanter"
                         from="model.unit.nativeCacaoPlanter"
                         to="model.unit.indianConvert" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeCacaoPlanter"
+                        from="model.unit.apprenticeCacaoPlanter"
+                        to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.apprenticeChocolatier"
+                        from="model.unit.apprenticeChocolatier"
+                        to="model.unit.freeColonist" probability="100"/>
     </unit-change-type>
+    <!-- Append. Load after Apprentices. Planter 3+4 / 5 then 3; guild 3+4 / 4 then 2. -->
     <unit-change-type id="model.unitChange.education" preserve="true">
+      <unit-type-change id="model.unitChange.education.apprenticeCacaoPlanter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeCacaoPlanter"
+                        probability="100" turns="3"/>
+      <unit-type-change id="model.unitChange.education.apprenticeChocolatier"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeChocolatier"
+                        probability="100" turns="3"/>
       <unit-type-change id="model.unitChange.education.expertCacaoPlanter"
-                        from="model.unit.freeColonist"
+                        from="model.unit.apprenticeCacaoPlanter"
                         to="model.unit.expertCacaoPlanter"
-                        probability="100" turns="6"/>
+                        probability="100" turns="4"/>
       <unit-type-change id="model.unitChange.education.masterChocolatier"
-                        from="model.unit.freeColonist"
+                        from="model.unit.apprenticeChocolatier"
                         to="model.unit.masterChocolatier"
-                        probability="100" turns="6"/>
+                        probability="100" turns="4"/>
     </unit-change-type>
     <unit-change-type id="model.unitChange.experience" preserve="true">
+      <unit-type-change id="model.unitChange.experience.apprenticeCacaoPlanter"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeCacaoPlanter" probability="5"/>
+      <unit-type-change id="model.unitChange.experience.apprenticeChocolatier"
+                        from="model.unit.freeColonist"
+                        to="model.unit.apprenticeChocolatier" probability="4"/>
       <unit-type-change id="model.unitChange.experience.expertCacaoPlanter"
-                        from="model.unit.freeColonist"
-                        to="model.unit.expertCacaoPlanter" probability="4"/>
+                        from="model.unit.apprenticeCacaoPlanter"
+                        to="model.unit.expertCacaoPlanter" probability="3"/>
       <unit-type-change id="model.unitChange.experience.masterChocolatier"
-                        from="model.unit.freeColonist"
-                        to="model.unit.masterChocolatier" probability="4"/>
+                        from="model.unit.apprenticeChocolatier"
+                        to="model.unit.masterChocolatier" probability="2"/>
       <unit-type-change id="model.unitChange.experience.nativeCacaoPlanter"
                         from="model.unit.indianConvert"
                         to="model.unit.nativeCacaoPlanter" probability="4">
