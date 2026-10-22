@@ -84,6 +84,7 @@
                expert-production="model.goods.cacao" score-value="4"
                maximum-experience="0">
       <ability id="model.ability.nativeConvert" value="true"/>
+      <ability id="model.ability.canBeEquipped" value="true"/>
       <modifier id="model.goods.cacao" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>

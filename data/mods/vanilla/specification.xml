@@ -74,6 +74,7 @@
                expert-production="model.goods.vanilla" score-value="4"
                maximum-experience="0">
       <ability id="model.ability.nativeConvert" value="true"/>
+      <ability id="model.ability.canBeEquipped" value="true"/>
       <modifier id="model.goods.vanilla" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>

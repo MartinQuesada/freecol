@@ -155,6 +155,7 @@
                expert-production="model.goods.meat" score-value="4"
                maximum-experience="0">
       <ability id="model.ability.nativeConvert" value="true"/>
+      <ability id="model.ability.canBeEquipped" value="true"/>
       <modifier id="model.goods.meat" index="30"
                 type="additive" value="2"/>
     </unit-type>
@@ -162,6 +163,7 @@
                expert-production="model.goods.salt" score-value="4"
                maximum-experience="0">
       <ability id="model.ability.nativeConvert" value="true"/>
+      <ability id="model.ability.canBeEquipped" value="true"/>
       <modifier id="model.goods.salt" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>

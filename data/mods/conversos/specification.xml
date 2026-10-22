@@ -38,6 +38,76 @@
     </optionGroup>
   </options>
 
+  <!-- Colony stock at the European price, but militia combat, not the
+       colonist soldier or dragoon. A free colonist soldier is offence 2 /
+       defence 2 and a dragoon is 3/3; a convert militia is 1/2 and a
+       mounted militia is 2/2. Horses alone stay a mount, not a scout. -->
+  <roles>
+    <role id="model.role.scout" preserve="true">
+      <required-ability id="model.ability.nativeConvert" value="false"/>
+    </role>
+    <role id="model.role.pioneer" preserve="true">
+      <required-ability id="model.ability.nativeConvert" value="false"/>
+    </role>
+    <role id="model.role.soldier" preserve="true">
+      <required-ability id="model.ability.nativeConvert" value="false"/>
+    </role>
+    <role id="model.role.dragoon" preserve="true">
+      <required-ability id="model.ability.nativeConvert" value="false"/>
+    </role>
+    <role id="model.role.mountedConvert" downgrade="model.role.default">
+      <required-ability id="model.ability.canBeEquipped" value="true"/>
+      <required-ability id="model.ability.native" value="false"/>
+      <required-ability id="model.ability.refUnit" value="false"/>
+      <required-ability id="model.ability.nativeConvert" value="true"/>
+      <required-goods id="model.goods.horses" value="50"/>
+
+      <ability id="model.ability.armed" value="true"/>
+      <ability id="model.ability.canBeCaptured" value="false"/>
+      <ability id="model.ability.mounted" value="true"/>
+      <modifier id="model.modifier.defence" index="30"
+                type="additive" value="1"/>
+      <modifier id="model.modifier.offence" index="30"
+                type="additive" value="1"/>
+      <modifier id="model.modifier.lineOfSightBonus"
+                type="additive" value="1"/>
+      <modifier id="model.modifier.movementBonus"
+                type="additive" value="9"/>
+    </role>
+    <role id="model.role.convertMilitia" downgrade="model.role.default">
+      <required-ability id="model.ability.canBeEquipped" value="true"/>
+      <required-ability id="model.ability.native" value="false"/>
+      <required-ability id="model.ability.refUnit" value="false"/>
+      <required-ability id="model.ability.nativeConvert" value="true"/>
+      <required-goods id="model.goods.muskets" value="50"/>
+
+      <ability id="model.ability.armed" value="true"/>
+      <ability id="model.ability.canBeCaptured" value="false"/>
+      <modifier id="model.modifier.defence" index="30"
+                type="additive" value="1"/>
+      <modifier id="model.modifier.offence" index="30"
+                type="additive" value="1"/>
+    </role>
+    <role id="model.role.convertDragoon" downgrade="model.role.convertMilitia">
+      <required-ability id="model.ability.canBeEquipped" value="true"/>
+      <required-ability id="model.ability.native" value="false"/>
+      <required-ability id="model.ability.refUnit" value="false"/>
+      <required-ability id="model.ability.nativeConvert" value="true"/>
+      <required-goods id="model.goods.muskets" value="50"/>
+      <required-goods id="model.goods.horses" value="50"/>
+
+      <ability id="model.ability.armed" value="true"/>
+      <ability id="model.ability.canBeCaptured" value="false"/>
+      <ability id="model.ability.mounted" value="true"/>
+      <modifier id="model.modifier.defence" index="30"
+                type="additive" value="1"/>
+      <modifier id="model.modifier.offence" index="30"
+                type="additive" value="2"/>
+      <modifier id="model.modifier.movementBonus"
+                type="additive" value="9"/>
+    </role>
+  </roles>
+
   <unit-change-types>
     <!-- Empty redefinition: Las Casas no longer turns converts into
          free colonists. -->
@@ -291,6 +361,8 @@
       <consumes id="model.goods.food" value="2"/>
       <consumes id="model.goods.bells" value="1"/>
       <ability id="model.ability.person"
+               value="true"/>
+      <ability id="model.ability.canBeEquipped"
                value="true"/>
       <ability id="model.ability.foundColony"
                value="false"/>

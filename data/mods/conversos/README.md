@@ -23,6 +23,12 @@ but they stay converts.
   convert's building penalty; they do **not** become European masters.
 - Still cannot found colonies, still lose production in buildings they are
   not trained for, and cannot teach in the schoolhouse.
+- Can take muskets and horses from the colony at the European cost (50),
+  as militia, not as colonist soldiers. Horses alone mount them (offence 1,
+  defence 2, and the dragoon's movement; no speaking with the chief, tribute
+  or spying). Muskets make a militia (1/2). Both make a mounted militia
+  (2/2). A free colonist soldier is 2/2 and a dragoon is 3/3; a veteran is
+  stronger still. They cannot take pioneer tools.
 
 With the **Cacao**, **Vanilla** and **Tasajo** mods there are also native
 cacao and vanilla planters, native hunters (meat) and native salt miners.
