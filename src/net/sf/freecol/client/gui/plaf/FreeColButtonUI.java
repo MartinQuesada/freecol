@@ -27,6 +27,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.PointerInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -120,8 +121,9 @@ public class FreeColButtonUI extends MetalButtonUI {
         super.paint(g, c);
 
         AbstractButton a = (AbstractButton) c;
-        if (a.isRolloverEnabled()) {
-            Point p = MouseInfo.getPointerInfo().getLocation();
+        final PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        if (a.isRolloverEnabled() && pointerInfo != null) {
+            Point p = pointerInfo.getLocation();
             SwingUtilities.convertPointFromScreen(p, c);
             boolean rollover = c.contains(p);
             if (rollover) {

@@ -27,6 +27,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.MouseInfo;
+import java.awt.PointerInfo;
 import java.awt.Toolkit;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -379,7 +380,16 @@ public class Utils {
      */
     public static GraphicsDevice getGoodGraphicsDevice() {
         try {
-            return MouseInfo.getPointerInfo().getDevice();
+            // On macOS this is null when the pointer is not on a screen
+            // Java can see (menu bar, another display, or before a window
+            // exists). Falling through uses the default screen.
+            final PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+            if (pointerInfo != null) {
+                final GraphicsDevice device = pointerInfo.getDevice();
+                if (device != null) {
+                    return device;
+                }
+            }
         } catch (HeadlessException he) {}
 
         try {

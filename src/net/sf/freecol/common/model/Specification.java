@@ -344,6 +344,7 @@ public final class Specification implements OptionContainer {
         defaultColors.put("model.nation.spanish",       new Color(0xffff00));
         defaultColors.put("model.nation.inca",          new Color(0xf4f0c4));
         defaultColors.put("model.nation.aztec",         new Color(0xc4a020));
+        defaultColors.put("model.nation.maya",          new Color(0x14967a));
         defaultColors.put("model.nation.arawak",        new Color(0x6888c0));
         defaultColors.put("model.nation.cherokee",      new Color(0x6c3c18));
         defaultColors.put("model.nation.iroquois",      new Color(0x74a44c));

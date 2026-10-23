@@ -73,9 +73,11 @@
       <modifier id="model.goods.cacao" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>
+    <!-- Not bought or recruited in Europe. A Maya city teaches him, or a
+         colonist learns him in the workshop; the school then multiplies him. -->
     <unit-type id="model.unit.masterChocolatier" extends="colonist"
-               price="1100" skill="2" expert-production="model.goods.chocolate"
-               recruit-probability="1" score-value="5">
+               skill="2" expert-production="model.goods.chocolate"
+               score-value="5">
       <modifier id="model.goods.chocolate" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>
@@ -163,6 +165,12 @@
       <unit-type-change id="model.unitChange.natives.freeColonist-expertCacaoPlanter"
                         from="model.unit.freeColonist"
                         to="model.unit.expertCacaoPlanter" probability="100"/>
+      <unit-type-change id="model.unitChange.natives.indenturedServant-masterChocolatier"
+                        from="model.unit.indenturedServant"
+                        to="model.unit.masterChocolatier" probability="100"/>
+      <unit-type-change id="model.unitChange.natives.freeColonist-masterChocolatier"
+                        from="model.unit.freeColonist"
+                        to="model.unit.masterChocolatier" probability="100"/>
     </unit-change-type>
   </unit-change-types>
 
@@ -220,11 +228,12 @@
     <indian-nation-type id="model.nationType.aztec" preserve="true">
       <skill id="model.unit.expertCacaoPlanter" probability="15"/>
     </indian-nation-type>
-    <indian-nation-type id="model.nationType.inca" preserve="true">
-      <skill id="model.unit.expertCacaoPlanter" probability="10"/>
-    </indian-nation-type>
     <indian-nation-type id="model.nationType.tupi" preserve="true">
       <skill id="model.unit.expertCacaoPlanter" probability="10"/>
+    </indian-nation-type>
+    <indian-nation-type id="model.nationType.maya" preserve="true">
+      <skill id="model.unit.expertCacaoPlanter" probability="15"/>
+      <skill id="model.unit.masterChocolatier" probability="40"/>
     </indian-nation-type>
   </indian-nation-types>
 </freecol-specification>

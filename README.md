@@ -14,7 +14,8 @@ inspired by the
 [FreeCol 2 ideas forum](https://sourceforge.net/p/freecol/discussion/719665/):
 founding fathers (including Latin American and 17th-century figures), deeper
 building chains, new colonial goods, local consumption of luxuries, native
-converts that learn trades, HD graphics, and extra game rules. A few small
+converts that learn trades, a Maya nation in the Caribbean, HD graphics, and
+extra game rules. A few small
 engine changes support them. **Libertadores** is one of the included mods
 (the founding fathers), not the name of the whole pack.
 
@@ -33,7 +34,7 @@ engine changes support them. **Libertadores** is one of the included mods
 | [Tertulias](data/mods/tertulias/README.md) | 0.1 | Tertulia turns cigars into liberty bells |
 | [Conversos](data/mods/conversos/README.md) | 0.1 | With Las Casas, converts gain outdoor and guild experience (native experts / apprentices) |
 | [Apprentices](data/mods/apprentices/README.md) | 0.1 | Free colonist → apprentice → expert (school totals 5/7/9 turns; colonists only) |
-| [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-resolution units, goods icons, ships and settlements, painted founding father portraits and smoother terrain transitions |
+| [HD Graphics](data/mods/hdGraphics/README.md) | 0.2 | High-resolution units, goods icons, ships and settlements (including Maya cities), painted founding father portraits and smoother terrain transitions |
 
 ### What's new in v0.3.4 (in development)
 
@@ -49,10 +50,18 @@ engine changes support them. **Libertadores** is one of the included mods
   (native experts) and guild crafts (native apprentices, ceiling). Convert
   paths live only here. Needs this fork’s jar for experience targets and
   education scopes.
-- **Cacao:** chocolate now needs **cacao and milk** (enable Livestock).
+- **Maya:** a city nation in the east, sharing the Caribbean with the Arawak.
+  Ruler Canek, capital Nojpetén, jade on the map. Painted city art in HD
+  Graphics, a default sprite, and an engraving of Canek. About half the settlements there are Maya
+  cities; the rest stay Arawak villages. Calmer than the Arawak.
+- **Cacao:** chocolate needs **cacao and milk** (enable Livestock). The first
+  master chocolatier comes from a Maya city or from experience in the
+  workshop. A master already in the colony trains the next one at the school
+  (apprentice, then master, 3 + 4 turns). Aztec and Tupi settlements teach
+  cacao planting. Inca settlements teach neither planting nor chocolate.
 - **Hernando de Soto** (Libertadores): almost only early game (`15/2/0`)
   while lost city rumours remain.
-- HD Graphics: apprentice portraits; nation veteran uniforms; fort
+- HD Graphics: Maya cities; apprentice portraits; nation veteran uniforms, armed and unarmed; fort
   backgrounds; ship and tobacco transparency; New World destination icon.
   Attack animations use base FreeCol sprites for now.
 - Converts after Las Casas show the experience progress bar like colonists.

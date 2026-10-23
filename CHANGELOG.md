@@ -1,6 +1,8 @@
 ## FreeCol Americas 0.3.4 (In development) ##
 
 ### Mods ###
+* Maya: a city nation in the east, sharing that region with the Arawak. Ruler Canek, capital Nojpetén, jade on the map. Painted city sprite (HD and the default size) and an engraving of Canek. With Cacao, Maya settlements teach cacao planting and the master chocolatier. Aztec and Tupi still teach planting. Inca settlements teach neither.
+* Cacao: the master chocolatier is no longer bought or recruited in Europe. He is taught by the Maya, or learned in the colony (apprentice, then master).
 * Libertadores: Francisco de Miranda increases liberty bell production by 20%. His bonus multiplies with Jefferson's, and at 50% he was a second Jefferson.
 * Apprentices no longer wipes the trades from Livestock, Cacao, Vanilla and Tasajo. Those mods load afterwards and add their own apprentices: a free colonist becomes an apprentice, then the expert. Dairy, shepherd, hunter and salt miner use the short school path (2+3 turns). Cacao, vanilla, cheese, chocolate and salting use the longer one (3+4). Convert paths for cacao, vanilla, hunting and salt stay direct to the native expert.
 * **Tertulias** 0.1 (new): a tertulia turns cigars into liberty bells (2 cigars → 1 bell, no workers, population 3, 48 hammers). Same rebel bonus as the tavern: +1 bell at 50% rebels, +2 at 100%.
@@ -16,6 +18,7 @@
 * HD Graphics: colony outside fortification backgrounds (stockade, fort, fortress and citadel, including national variants).
 * HD Graphics: Libertadores mod expert unit portraits (cacao, livestock, tasajo, vanilla, conversos, apprentices).
 * HD Graphics: nation veteran uniforms (foot and dragoon) for Spain, England, France, Netherlands, Portugal, Russia, Sweden and Denmark; meadow fort outside backgrounds; goods and ship transparency fixes; distinct New World destination icon.
+* HD Graphics: an unarmed veteran soldier wears the uniform of his nation (Spain, England, France, Netherlands, Portugal, Russia, Sweden and Denmark).
 * **Apprentices** 0.1 (new): free colonist → apprentice → expert for European trades (New World only; not recruited in Europe). School totals 5 / 7 / 9 turns by trade. Own portraits (plus HD versions). Disable expandExperience while using it. Load before Conversos.
 * **Conversos:** with Las Casas, converts gain outdoor experience (native experts) and guild crafts (native apprentices, ceiling below European master). Convert progression is only here, not in Apprentices. Converts show the experience progress bar after Las Casas.
 * Cacao: chocolate now needs cacao and milk (enable Livestock).
