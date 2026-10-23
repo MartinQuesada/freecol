@@ -1,6 +1,7 @@
 ## FreeCol Americas 0.3.4 (In development) ##
 
 ### Mods ###
+* Libertadores: Francisco de Miranda increases liberty bell production by 20%. His bonus multiplies with Jefferson's, and at 50% he was a second Jefferson.
 * Apprentices no longer wipes the trades from Livestock, Cacao, Vanilla and Tasajo. Those mods load afterwards and add their own apprentices: a free colonist becomes an apprentice, then the expert. Dairy, shepherd, hunter and salt miner use the short school path (2+3 turns). Cacao, vanilla, cheese, chocolate and salting use the longer one (3+4). Convert paths for cacao, vanilla, hunting and salt stay direct to the native expert.
 * **Tertulias** 0.1 (new): a tertulia turns cigars into liberty bells (2 cigars → 1 bell, no workers, population 3, 48 hammers). Same rebel bonus as the tavern: +1 bell at 50% rebels, +2 at 100%.
 * Libertadores 0.5: two new founding fathers, for 50 candidates in total. Joshua Humphreys (trade): ships are repaired twice as fast and cost 25% less hammers and tools to build. Henry Knox (military): artillery costs 25% less to build, and damaged artillery is repaired in colonies with an armory even with the "Repair damaged artillery" option off, at half the hammers and tools.

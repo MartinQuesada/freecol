@@ -47,7 +47,7 @@ With the base game's 25 fathers, the Congress has **50** candidates.
 | Alexander Hamilton | Trade | +50% tool production |
 | Alexander von Humboldt | Exploration | +50% grain and fish production |
 | José de San Martín | Military | +10% Sons of Liberty; +25% offence for soldiers and dragoons |
-| Francisco de Miranda | Political | +50% liberty bell production |
+| Francisco de Miranda | Political | +20% liberty bell production |
 | Sor Juana Inés de la Cruz | Religious | +25% crosses; schools/colleges/universities cost 50% less hammers and tools |
 | Francisco de Orellana | Exploration | +1 line of sight and +1 movement for land units |
 | Toussaint Louverture | Military | +15% Sons of Liberty; +25% defence for soldiers and dragoons |

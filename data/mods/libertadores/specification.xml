@@ -73,7 +73,7 @@
     <founding-father id="model.foundingFather.franciscoDeMiranda" type="political"
                      weight1="0" weight2="3" weight3="8">
       <modifier id="model.goods.bells" index="40"
-                type="percentage" value="50">
+                type="percentage" value="20">
         <scope ability-id="model.ability.person" match-negated="true"/>
       </modifier>
     </founding-father>
