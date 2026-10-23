@@ -227,6 +227,7 @@
   <indian-nation-types>
     <indian-nation-type id="model.nationType.aztec" preserve="true">
       <skill id="model.unit.expertCacaoPlanter" probability="15"/>
+      <skill id="model.unit.masterChocolatier" probability="40"/>
     </indian-nation-type>
     <indian-nation-type id="model.nationType.tupi" preserve="true">
       <skill id="model.unit.expertCacaoPlanter" probability="10"/>

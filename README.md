@@ -55,10 +55,11 @@ engine changes support them. **Libertadores** is one of the included mods
   Graphics, a default sprite, and an engraving of Canek. About half the settlements there are Maya
   cities; the rest stay Arawak villages. Calmer than the Arawak.
 - **Cacao:** chocolate needs **cacao and milk** (enable Livestock). The first
-  master chocolatier comes from a Maya city or from experience in the
-  workshop. A master already in the colony trains the next one at the school
-  (apprentice, then master, 3 + 4 turns). Aztec and Tupi settlements teach
-  cacao planting. Inca settlements teach neither planting nor chocolate.
+  master chocolatier comes from an Aztec or Maya city, or from experience
+  in the workshop. A master already in the colony trains the next one at the
+  school (apprentice, then master, 3 + 4 turns). Aztec and Maya settlements
+  teach cacao planting and chocolate. Tupi settlements teach planting only.
+  Inca settlements teach their other crops, not cacao and not chocolate.
 - **Hernando de Soto** (Libertadores): almost only early game (`15/2/0`)
   while lost city rumours remain.
 - HD Graphics: Maya cities; apprentice portraits; nation veteran uniforms, armed and unarmed; fort

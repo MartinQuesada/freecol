@@ -12,7 +12,7 @@ refine it with **milk** into **chocolate** for Europe. Milk comes from the
 | Chocolate | Chocolatier house/shop/factory: cacao + milk → chocolate (1:1 inputs) |
 | Local use | **Creole salon** (64 hammers, population 3): 3 chocolate → 2 bells per turn |
 
-Aztec, Tupi and Maya settlements may teach cacao planting. A Maya settlement may also teach the master chocolatier to a free colonist or an indentured servant. That is where the first master comes from, together with experience in the workshop. Once a colony has one, the school trains the next (apprentice, then master). He does not appear on the Europe dock. Inca settlements teach neither planting nor chocolate.
+Aztec and Maya settlements may teach cacao planting and the master chocolatier, to a free colonist or an indentured servant. Tupi settlements may teach cacao planting only. That, together with experience in the workshop, is where the first master comes from. Once a colony has one, the school trains the next (apprentice, then master). He does not appear on the Europe dock. Inca settlements keep their other planting and teach neither cacao nor chocolate.
 
 ## Sell or conspire?
 
