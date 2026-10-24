@@ -170,6 +170,9 @@ imaginary likeness (no portrait of him is known). See
   with nothing listed unloads everything ("Unload all" on empty stops).
 - **End of turn:** no longer hangs when a natural disaster damages a
   building and ejects its workers (null production type).
+- **Autosave:** the save at the start of a turn uses that turn's date.
+  Loading it is the start of the new turn, before answering the king.
+  It used to keep the previous date, with moves already renewed.
 
 ---
 
@@ -212,7 +215,7 @@ in each mod README.
 | 0.3.1 | 6 Oct 2026 | Boycott / independence / loyalist colony options |
 | 0.3.2 | 6 Oct 2026 | Father weights by usefulness; framed portraits; option renamed |
 | 0.3.3 | 7 Oct 2026 | HD Graphics; father cost scaled by turns per year; recruitment stall fix |
-| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts; full HD unit refresh (Petty Criminal without stocks); **Apprentices** mod (colonists only, 5/7/9 school turns); **Conversos** Las Casas gate for convert outdoor+guild paths; chocolate needs milk; De Soto early-only (`15/2/0`); New World icon; ship/tobacco transparency fixes; combat animation load no longer drops result messages |
+| 0.3.4 | in development | Forest regrowth; artillery/ship repair options; hills cost; regulars teach; REF surround + amphibious; perishable milk/meat; nation name / Spanish MoW; Humphreys & Knox (50 fathers); buildCost / repair modifiers; trade-route load/unload labels; warehouse goods display; disaster turn hang fix; Livestock dairy/shepherd/cheesemaker experts; full HD unit refresh (Petty Criminal without stocks); **Apprentices** mod (colonists only, 5/7/9 school turns); **Conversos** Las Casas gate for convert outdoor+guild paths; chocolate needs milk; De Soto early-only (`15/2/0`); New World icon; ship/tobacco transparency fixes; combat animation load no longer drops result messages; turn-start autosave keeps that turn's date |
 
 Detailed per-release notes live in [CHANGELOG.md](CHANGELOG.md) under
 "FreeCol Americas". Upstream FreeCol notes follow below those sections.

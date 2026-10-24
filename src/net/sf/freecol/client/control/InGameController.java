@@ -4458,46 +4458,47 @@ public final class InGameController extends FreeColClientHolder {
     }
 
     /**
-     * Switch to a new turn.
-     *
-     * @param turn The turn number.
-     * @return True if the new turn occurs.
+     * Sound and messages for a turn that is already in the game.
+     * Runs on the event thread. The date itself is set in
+     * {@link #newTurnHandler} before this is queued.
      */
-    private boolean newTurn(int turn) {
-        final Game game = getGame();
+    private void announceNewTurn() {
         final Player player = getMyPlayer();
-
-        if (turn < 0) {
-            logger.warning("Bad turn in newTurn: " + turn);
-            return false;
-        }
-        Turn newTurn = new Turn(turn);
-        game.setTurn(newTurn);
-        logger.info("New turn: " + newTurn + "/" + turn);
+        final Turn currTurn = getGame().getTurn();
 
         if (getClientOptions().getBoolean(ClientOptions.AUDIO_ALERTS)) {
             sound("sound.event.alertSound");
         }
 
-        final Turn currTurn = game.getTurn();
-        if (currTurn.isFirstSeasonTurn()) {
+        if (currTurn != null && currTurn.isFirstSeasonTurn()) {
             player.addModelMessage(new ModelMessage(MessageType.WARNING,
                                                     "twoTurnsPerYear", player)
                 .addStringTemplate("%year%", currTurn.getLabel())
                 .addAmount("%amount%", Turn.getSeasonNumber()));
         }
         player.clearNationCache();
-        
-        return true;
     }
 
     /**
      * Handle the new turn.
      *
+     * The date is stored before returning. {@code setCurrentPlayer}
+     * autosaves on this same thread, and the sound and messages are
+     * still queued for the event thread. Waiting for them left the
+     * autosave on the previous turn, with moves already renewed and
+     * production already applied.
+     *
      * @param turn The new turn number.
      */
     public void newTurnHandler(int turn) {
-        invokeLater(() -> newTurn(turn));
+        if (turn < 0) {
+            logger.warning("Bad turn in newTurn: " + turn);
+            return;
+        }
+        final Turn newTurn = new Turn(turn);
+        getGame().setTurn(newTurn);
+        logger.info("New turn: " + newTurn + "/" + turn);
+        invokeLater(this::announceNewTurn);
     }
     
     /**

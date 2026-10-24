@@ -67,6 +67,11 @@ engine changes support them. **Libertadores** is one of the included mods
   Attack animations use base FreeCol sprites for now.
 - Converts after Las Casas show the experience progress bar like colonists.
 - Combat: missing/failed attack animation no longer drops the result message.
+- Autosave at the start of a turn is written with that turn's date. Loading
+  it returns to the start of the new turn, moves renewed and production
+  applied, before answering the king. It used to keep the previous date, so
+  units sat where they had finished, with moves renewed, while the year had
+  not changed.
 
 ### What's new in v0.3.3
 
