@@ -38,6 +38,8 @@
 * Bugfix: the Royal Expeditionary Force no longer stays in Europe for ever when every rebel colony is surrounded by units. It lands and attacks the units guarding a colony. Its land units left in Europe after a failed launch are put back aboard the navy. Games already waiting for it are fixed on the next turn.
 
 ### User Interface ###
+* Bugfix: a mounted Indian convert is drawn as a native rider, and a mounted armed one as a native dragoon. They were using the European scout and dragoon sprites.
+* Bugfix: the native expert fisherman sprite keeps its black shading. Background removal had keyed those blacks transparent.
 * Bugfix: the autosave at the start of a turn is written with that turn's date. It was saved a moment earlier, so loading it put units where they had finished the previous turn, with moves renewed, while the date had not changed. Accepting a tax rise and then loading that file went back to before the turn.
 * Trade route editor: clarifies that listed goods are loaded at a stop, that other goods on the carrier are unloaded, and that a stop with no goods unloads everything ("Unload all" on empty stops).
 * The colony warehouse goods bar always follows the client option "Hide goods in warehouse when fewer than", including in debug mode (debug no longer forces hiding empty goods).
