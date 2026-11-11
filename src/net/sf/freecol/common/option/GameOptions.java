@@ -306,6 +306,18 @@ public class GameOptions {
     // public static final String HAMMER_PRICE = "hammerPrice";
 
 
+    /** AI behaviour game option group. */
+    public static final String GAMEOPTIONS_AI
+        = "gameOptions.ai";
+
+    /**
+     * Play style for European AI players.  See {@link AIPlayStyle}.
+     * Default {@link AIPlayStyle#CLASSIC} preserves historical behaviour.
+     */
+    public static final String AI_PLAY_STYLE
+        = "model.option.aiPlayStyle";
+
+
     /** Victory conditions game option group. */
     public static final String GAMEOPTIONS_VICTORY_CONDITIONS
         = "gameOptions.victoryConditions";

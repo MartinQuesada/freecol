@@ -154,8 +154,13 @@ public final class MilitaryCoordinator {
         counterattackEnemyValuableUnitsReachableInTurns(dragoonUnits, 1);
         counterattackAllEnemyUnitsReachableInTurns(dragoonUnits, 1);
         counterattackAllEnemyUnitsReachableInTurns(dragoonUnits, 2);
-        
-        attackEnemySettlements(artilleryUnits, dragoonUnits);
+
+        if (player.getAIPlayStyle().allowsSeekAndDestroy()) {
+            attackEnemySettlements(artilleryUnits, dragoonUnits);
+        } else if (player.getAIPlayStyle().allowsCompetitiveExpansion()) {
+            // Goal-driven only: clear settlements blocking chosen colony sites.
+            attackExpansionBlockers(artilleryUnits, dragoonUnits);
+        }
         
         keepUnitsInColonies(defensiveMap.getAttackedColonies(), dragoonUnits, always());
         keepUnitsInColonies(defensiveMap.getThreatenedColonies(), artilleryUnits, always());
@@ -172,7 +177,17 @@ public final class MilitaryCoordinator {
         if (!ourColonies.isEmpty()) {
             transportMilitaryUnitsFromEurope(ourColonies.get(0), unusedUnits);
         }
-        assignWanderHostile();
+        if (player.getAIPlayStyle().allowsWanderHostile()) {
+            assignWanderHostile();
+        } else {
+            // Prefer garrisoning leftovers instead of harassing neighbours.
+            assignDefendClosestColony(unusedUnits);
+            for (AIUnit unit : new HashSet<>(unusedUnits)) {
+                if (!ourColonies.isEmpty()) {
+                    placeDefender(unit, ourColonies.get(0));
+                }
+            }
+        }
     }
 
     private void attackEnemySettlements(Set<AIUnit> artilleryUnits, Set<AIUnit> dragoonUnits) {
@@ -189,43 +204,75 @@ public final class MilitaryCoordinator {
             if (possibleTarget == null) {
                 continue;
             }
-            
-            List<AIUnit> settlementAttackers = targetedEnemySettlements.get(possibleTarget);
-            if (settlementAttackers == null) {
-                settlementAttackers = new ArrayList<>();
-                targetedEnemySettlements.put(possibleTarget, settlementAttackers);
-            }
-            
-            if (settlementAttackers.size() > possibleTarget.getUnitCount()) {
-                // Too many attackers.
-                continue;
-            }
-            
-            // TODO: Perhaps support going directly to possibleTarget instead?
-            final Tile escortTargetTile = artillery.getUnit().getTile();
-            
-            final AIUnit escort = dragoonUnits.stream()
-                .sorted((a, b) -> Integer.compare(getTurnsToReach(a.getUnit(), escortTargetTile), getTurnsToReach(b.getUnit(), escortTargetTile)))
-                .findFirst()
-                .orElse(null);
-            
-            if (escort == null
-                    || getTurnsToReach(escort.getUnit(), escortTargetTile) > 8) {
-                continue;
-            }
-            
-            artillery.changeMission(new UnitSeekAndDestroyMission(artillery.getAIMain(), artillery, possibleTarget));
-            artilleryUnits.remove(artillery);
-            unusedUnits.remove(artillery);
-            
-            escort.changeMission(new EscortUnitMission(escort.getAIMain(), escort, artillery.getUnit()));
-            dragoonUnits.remove(escort);
-            unusedUnits.remove(escort);
-            
-            // TODO: Consider sending a second escort if dragoonUnits.size() / 2 > artilleryUnits.size()
-
-            settlementAttackers.add(artillery);
+            assignSettlementAssault(artillery, possibleTarget, artilleryUnits, dragoonUnits);
         }
+    }
+
+    /**
+     * Attack settlements that block tiles already chosen for new colonies.
+     */
+    private void attackExpansionBlockers(Set<AIUnit> artilleryUnits,
+                                         Set<AIUnit> dragoonUnits) {
+        final Set<Settlement> blockers = player.getExpansionBlockers();
+        if (blockers.isEmpty()) return;
+
+        for (AIUnit artillery : new HashSet<>(artilleryUnits)) {
+            if (dragoonUnits.isEmpty()) break;
+            if (artillery.getUnit().getTile() == null) continue;
+
+            Settlement best = null;
+            int bestTurns = Integer.MAX_VALUE;
+            for (Settlement blocker : blockers) {
+                if (!player.getPlayer().atWarWith(blocker.getOwner())) continue;
+                final int turns = getTurnsToReach(artillery.getUnit(), blocker);
+                if (turns < bestTurns) {
+                    bestTurns = turns;
+                    best = blocker;
+                }
+            }
+            if (best == null || bestTurns > 10) continue;
+            assignSettlementAssault(artillery, best, artilleryUnits, dragoonUnits);
+        }
+    }
+
+    private void assignSettlementAssault(AIUnit artillery, Settlement possibleTarget,
+                                         Set<AIUnit> artilleryUnits,
+                                         Set<AIUnit> dragoonUnits) {
+        List<AIUnit> settlementAttackers = targetedEnemySettlements.get(possibleTarget);
+        if (settlementAttackers == null) {
+            settlementAttackers = new ArrayList<>();
+            targetedEnemySettlements.put(possibleTarget, settlementAttackers);
+        }
+
+        if (settlementAttackers.size() > possibleTarget.getUnitCount()) {
+            // Too many attackers.
+            return;
+        }
+
+        // TODO: Perhaps support going directly to possibleTarget instead?
+        final Tile escortTargetTile = artillery.getUnit().getTile();
+
+        final AIUnit escort = dragoonUnits.stream()
+            .sorted((a, b) -> Integer.compare(getTurnsToReach(a.getUnit(), escortTargetTile), getTurnsToReach(b.getUnit(), escortTargetTile)))
+            .findFirst()
+            .orElse(null);
+
+        if (escort == null
+                || getTurnsToReach(escort.getUnit(), escortTargetTile) > 8) {
+            return;
+        }
+
+        artillery.changeMission(new UnitSeekAndDestroyMission(artillery.getAIMain(), artillery, possibleTarget));
+        artilleryUnits.remove(artillery);
+        unusedUnits.remove(artillery);
+
+        escort.changeMission(new EscortUnitMission(escort.getAIMain(), escort, artillery.getUnit()));
+        dragoonUnits.remove(escort);
+        unusedUnits.remove(escort);
+
+        // TODO: Consider sending a second escort if dragoonUnits.size() / 2 > artilleryUnits.size()
+
+        settlementAttackers.add(artillery);
     }
     
     private int getTurnsToReach(Unit unit, Location location) {

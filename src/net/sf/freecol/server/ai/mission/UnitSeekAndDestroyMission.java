@@ -215,7 +215,7 @@ public final class UnitSeekAndDestroyMission extends Mission {
             return Integer.MIN_VALUE;
         }
         if (loc instanceof Unit) {
-            scoreUnitPath(aiUnit, path, (Unit) loc);
+            return scoreUnitPath(aiUnit, path, (Unit) loc);
         }
         
         return Integer.MIN_VALUE;

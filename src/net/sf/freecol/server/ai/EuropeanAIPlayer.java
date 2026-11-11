@@ -94,6 +94,7 @@ import net.sf.freecol.common.model.Settlement;
 import net.sf.freecol.common.model.Specification;
 import net.sf.freecol.common.model.Stance;
 import net.sf.freecol.common.model.StanceTradeItem;
+import net.sf.freecol.common.model.StringTemplate;
 import net.sf.freecol.common.model.Tension;
 import net.sf.freecol.common.model.Tile;
 import net.sf.freecol.common.model.TradeItem;
@@ -103,6 +104,7 @@ import net.sf.freecol.common.model.Unit.UnitState;
 import net.sf.freecol.common.model.UnitType;
 import net.sf.freecol.common.model.pathfinding.CostDeciders;
 import net.sf.freecol.common.model.pathfinding.GoalDeciders;
+import net.sf.freecol.common.option.AIPlayStyle;
 import net.sf.freecol.common.option.GameOptions;
 import net.sf.freecol.common.util.CachingFunction;
 import net.sf.freecol.common.util.LogBuilder;
@@ -302,18 +304,38 @@ public class EuropeanAIPlayer extends MissionAIPlayer {
 
     
     /**
+     * The selected European AI play style from the game options.
+     *
+     * @return The {@code AIPlayStyle} in effect for this player.
+     */
+    public AIPlayStyle getAIPlayStyle() {
+        return AIPlayStyle.fromValue(getSpecification()
+                .getInteger(GameOptions.AI_PLAY_STYLE));
+    }
+
+    /**
      * Checks if this player should use military units more aggressively.
      * 
      * @return {@code true} if attacking other units and settlements are
      *      preferred above defending its own colonies.
      */
     public boolean isAggressive() {
-        /*
-         * TODO: We need to decide where to put AI behavior parameters so that mod
-         *       authors can customize the AI feel. Perhaps just in the specification?
-         */
-        return getPlayer().getNation().getType().getId().equals("model.nationType.conquest")
-                || getPlayer().getNation().getType().getId().equals("model.nationType.immigration");
+        switch (getAIPlayStyle()) {
+        case CONQUEROR:
+            return true;
+        case TRADER:
+        case BUILDER:
+            return false;
+        case INDEPENDENCE:
+            // Fight hard once rebel; stay cautious while preparing.
+            return getPlayer().getPlayerType() == PlayerType.REBEL;
+        case CLASSIC:
+        default:
+            return getPlayer().getNation().getType().getId()
+                    .equals("model.nationType.conquest")
+                || getPlayer().getNation().getType().getId()
+                    .equals("model.nationType.immigration");
+        }
     }
     
     /**
@@ -322,7 +344,18 @@ public class EuropeanAIPlayer extends MissionAIPlayer {
      * @return {@code true} if native settlements should be targeted by this player.
      */
     public boolean isLikesAttackingNatives() {
-        return getPlayer().getNation().getType().getId().equals("model.nationType.conquest");
+        switch (getAIPlayStyle()) {
+        case CONQUEROR:
+            return true;
+        case TRADER:
+        case BUILDER:
+        case INDEPENDENCE:
+            return false;
+        case CLASSIC:
+        default:
+            return getPlayer().getNation().getType().getId()
+                    .equals("model.nationType.conquest");
+        }
     }
 
     /**
@@ -1447,6 +1480,14 @@ public class EuropeanAIPlayer extends MissionAIPlayer {
                 nColonySize1++;
             }
         }
+
+        // Styles that prefer development stop founding once a viable base exists,
+        // but still expand while missing ports or under their style colony cap.
+        if (getAIPlayStyle().prefersFewerColonies()
+                && nPorts >= 2
+                && nColonies >= getAIPlayStyle().preferredColonyCap()) {
+            return 0;
+        }
         
         if (nPorts == 0) {
             return 2;
@@ -1983,20 +2024,32 @@ public class EuropeanAIPlayer extends MissionAIPlayer {
      */
     private Mission getSimpleMission(AIUnit aiUnit) {
         final Unit unit = aiUnit.getUnit();
+        final AIPlayStyle style = getAIPlayStyle();
+        final boolean allowPrivateer = style.allowsPrivateer();
+        // Peaceful styles skip aimless raids, but still fight when at war
+        // or when competing for needed expansion sites.
+        final boolean allowSeek = style.allowsSeekAndDestroy()
+            || (style.allowsCompetitiveExpansion() && getPlayer().isAtWar());
+        final boolean allowWander = style.allowsWanderHostile();
         Mission m, ret;
         final Mission old = ((m = aiUnit.getMission()) != null && m.isValid())
             ? m : null;
 
         if (unit.isNaval()) {
-            ret = (old instanceof PrivateerMission) ? old
-                : (!unit.isInEurope() && (m = getPrivateerMission(aiUnit, null)) != null) ? m
+            ret = (allowPrivateer && old instanceof PrivateerMission) ? old
+                : (allowPrivateer && !unit.isInEurope()
+                    && (m = getPrivateerMission(aiUnit, null)) != null) ? m
                 : (old instanceof TransportMission) ? old
                 : ((m = getTransportMission(aiUnit)) != null) ? m
-                : ((m = getPrivateerMission(aiUnit, null)) != null) ? m
-                : (old instanceof UnitSeekAndDestroyMission) ? old
-                : ((m = getSeekAndDestroyMission(aiUnit, 8)) != null) ? m
-                : (old instanceof UnitWanderHostileMission) ? old
-                : getWanderHostileMission(aiUnit);
+                : (allowPrivateer
+                    && (m = getPrivateerMission(aiUnit, null)) != null) ? m
+                : (allowSeek && old instanceof UnitSeekAndDestroyMission) ? old
+                : (allowSeek
+                    && (m = getSeekAndDestroyMission(aiUnit, 8)) != null) ? m
+                : (allowWander && old instanceof UnitWanderHostileMission) ? old
+                : (allowWander) ? getWanderHostileMission(aiUnit)
+                : ((m = getTransportMission(aiUnit)) != null) ? m
+                : null;
 
         } else if (unit.isCarrier()) {
             ret = getTransportMission(aiUnit);
@@ -2032,8 +2085,9 @@ public class EuropeanAIPlayer extends MissionAIPlayer {
                 : ((m = getDefendSettlementMission(aiUnit, false, false)) != null) ? m
 
                 // Try nearby offence
-                : (old instanceof UnitSeekAndDestroyMission) ? old
-                : ((m = getSeekAndDestroyMission(aiUnit, 8)) != null) ? m
+                : (allowSeek && old instanceof UnitSeekAndDestroyMission) ? old
+                : (allowSeek
+                    && (m = getSeekAndDestroyMission(aiUnit, 8)) != null) ? m
 
                 // Missionary missions are only available to some units
                 : (old instanceof MissionaryMission) ? old
@@ -2047,18 +2101,128 @@ public class EuropeanAIPlayer extends MissionAIPlayer {
                 : ((m = getDefendSettlementMission(aiUnit, true, false)) != null) ? m
 
                 // Another try to attack, at longer range
-                : ((m = getSeekAndDestroyMission(aiUnit, 16)) != null) ? m
+                : (allowSeek
+                    && (m = getSeekAndDestroyMission(aiUnit, 16)) != null) ? m
                         
                 // Try again, even for well defended colonies.
                 : ((m = getDefendSettlementMission(aiUnit, true, true)) != null) ? m
 
                 // Leftover offensive units should go out looking for trouble
-                : (old instanceof UnitWanderHostileMission) ? old
-                : ((m = getWanderHostileMission(aiUnit)) != null) ? m
+                : (allowWander && old instanceof UnitWanderHostileMission) ? old
+                : (allowWander
+                    && (m = getWanderHostileMission(aiUnit)) != null) ? m
 
                 : null;
         }
         return ret;
+    }
+
+    /**
+     * Settlements that block tiles chosen for new colonies.
+     *
+     * Used so military missions can clear land the AI actually needs,
+     * instead of wandering into random fights.
+     *
+     * @return A set of blocking {@code Settlement}s, possibly empty.
+     */
+    public Set<Settlement> getExpansionBlockers() {
+        final Player player = getPlayer();
+        final Set<Settlement> blockers = new HashSet<>();
+        for (AIUnit aiUnit : getAIUnits()) {
+            final Mission mission = aiUnit.getMission();
+            if (!(mission instanceof BuildColonyMission)) continue;
+            final Location target = mission.getTarget();
+            if (!(target instanceof Tile)) continue;
+            final Tile tile = (Tile)target;
+            final Settlement owning = tile.getOwningSettlement();
+            if (owning != null && !player.owns(owning)) {
+                blockers.add(owning);
+            }
+            for (Tile around : tile.getSurroundingTiles(1)) {
+                final Settlement nearby = around.getSettlement();
+                if (nearby != null && !player.owns(nearby)) {
+                    blockers.add(nearby);
+                }
+            }
+        }
+        return blockers;
+    }
+
+    /**
+     * Raise tension against owners of land we have already chosen to
+     * colonise, so {@link #determineStances} can turn that into war.
+     * European rivals are left alone unless the style is militaristic;
+     * peaceful styles still contest natives for needed sites.
+     *
+     * @param lb A {@code LogBuilder} to log to.
+     */
+    private void contestExpansionBlockers(LogBuilder lb) {
+        if (!getAIPlayStyle().allowsCompetitiveExpansion()) return;
+
+        final Player player = getPlayer();
+        lb.mark();
+        for (Settlement blocker : getExpansionBlockers()) {
+            final Player enemy = blocker.getOwner();
+            if (enemy == null || player.atWarWith(enemy)) continue;
+
+            final AIPlayStyle style = getAIPlayStyle();
+            if (enemy.isEuropean()) {
+                // Only militaristic styles pick a fight with Europeans
+                // just to free a colony site; others retarget elsewhere.
+                if (style != AIPlayStyle.CONQUEROR
+                        && !(style == AIPlayStyle.CLASSIC && isAggressive())) {
+                    continue;
+                }
+            } else if (!enemy.isIndian()) {
+                continue;
+            }
+
+            player.getTension(enemy).setValue(Tension.TENSION_MAX);
+            lb.add(" ", enemy.getDebugName(), ", ");
+        }
+        if (lb.grew("\n  Expansion contests:")) lb.shrink(", ");
+    }
+
+    /**
+     * Declare independence when the Independence play style is ready.
+     *
+     * @param lb A {@code LogBuilder} to log to.
+     */
+    private void considerDeclareIndependence(LogBuilder lb) {
+        if (getAIPlayStyle() != AIPlayStyle.INDEPENDENCE) return;
+
+        final Player player = getPlayer();
+        if (player.getPlayerType() != PlayerType.COLONIAL) return;
+        if (player.checkDeclareIndependence() != null) return;
+
+        // Require a credible fight against the REF before declaring.
+        final double landRatio = player.getRebelStrengthRatio(false);
+        final double navalRatio = player.getRebelStrengthRatio(true);
+        if (landRatio < 0.75 || navalRatio < 0.50) {
+            lb.add(" independence-wait land=", landRatio,
+                   " naval=", navalRatio);
+            return;
+        }
+
+        final StringTemplate country = StringTemplate
+            .template("confirmDeclarationDialog.defaultCountry")
+            .addStringTemplate("%nation%", player.getNationLabel());
+        final StringTemplate nation = StringTemplate
+            .template("confirmDeclarationDialog.defaultNation")
+            .addStringTemplate("%nation%", player.getNationLabel());
+        final String countryName = Messages.message(country);
+        final String nationName = Messages.message(nation);
+        if (nationName == null || nationName.isEmpty()
+                || countryName == null || countryName.isEmpty()) {
+            lb.add(" independence-name-fail");
+            return;
+        }
+
+        if (askServer().declareIndependence(nationName, countryName)) {
+            lb.add(" declared-independence");
+        } else {
+            lb.add(" independence-declare-fail");
+        }
     }
 
     // Mission creation convenience routines.
@@ -2326,6 +2490,9 @@ public class EuropeanAIPlayer extends MissionAIPlayer {
                 player.getTension(p).setValue(Tension.TENSION_MAX);
             }
         }
+
+        considerDeclareIndependence(lb);
+        contestExpansionBlockers(lb);
         
         determineStances(lb);
 

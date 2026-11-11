@@ -4889,6 +4889,23 @@
         <percentageOption id="model.option.naturalDisasters"
                           defaultValue="0"/>
       </optionGroup>
+      <optionGroup id="gameOptions.ai">
+        <!-- How European AI players pursue the game.  Classic keeps
+             the historical FreeCol AI behaviour. -->
+        <selectOption id="model.option.aiPlayStyle"
+                      defaultValue="0" localizedLabels="true">
+          <selectValue label="model.option.aiPlayStyle.classic"
+                       value="0"/>
+          <selectValue label="model.option.aiPlayStyle.trader"
+                       value="1"/>
+          <selectValue label="model.option.aiPlayStyle.conqueror"
+                       value="2"/>
+          <selectValue label="model.option.aiPlayStyle.independence"
+                       value="3"/>
+          <selectValue label="model.option.aiPlayStyle.builder"
+                       value="4"/>
+        </selectOption>
+      </optionGroup>
       <optionGroup id="gameOptions.victoryConditions">
         <!-- Victory condition: Should the player who first defeats
              the Royal Expeditionary Force win the game? -->

@@ -177,32 +177,169 @@ public final class NativeAIPlayer extends MissionAIPlayer {
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * Escalate to war when any settlement is at least ANGRY toward a
+     * European, even if player-level tension has not yet crossed the
+     * normal war threshold.
+     */
+    @Override
+    protected Stance determineStance(Player other) {
+        final Stance fromTension = super.determineStance(other);
+        if (fromTension == Stance.WAR || !other.isEuropean()) {
+            return fromTension;
+        }
+        for (IndianSettlement is : getPlayer().getIndianSettlementList()) {
+            final Tension alarm = is.getAlarm(other);
+            if (alarm != null
+                    && alarm.getLevel().compareTo(Tension.Level.ANGRY) >= 0) {
+                return Stance.WAR;
+            }
+        }
+        return fromTension;
+    }
+
+    /**
      * Takes the necessary actions to secure the settlements.
      * This is done by making new military units or to give existing
      * units new missions.
      *
-     * @param randoms An array of random settlement indexes.
      * @param lb A {@code LogBuilder} to log to.
      */
-    private void secureSettlements(int[] randoms, LogBuilder lb) {
-        int randomIdx = 0;
+    private void secureSettlements(LogBuilder lb) {
         List<IndianSettlement> settlements
             = getPlayer().getIndianSettlementList();
-        for (IndianSettlement is : settlements) {
-            // Spread arms and horses between camps
-            // FIXME: maybe make this dependent on difficulty level?
-            int n = randoms[randomIdx++];
-            IndianSettlement settlement = settlements.get(n);
-            if (settlement != is) {
-                is.tradeGoodsWithSettlement(settlement);
-            }
-        }
-        for (IndianSettlement is : settlements) {
+        redistributeMilitaryGoods(settlements, lb);
+        // Capital and most-threatened camps first so they keep units/arms.
+        for (IndianSettlement is : settlementsByPriority(settlements)) {
             lb.mark();
             equipBraves(is, lb);
             secureIndianSettlement(is, lb);
             if (lb.grew("\n  At ", is.getName())) lb.shrink(", ");
         }
+    }
+
+    /**
+     * Sort settlements so the capital and threatened camps are secured first.
+     *
+     * @param settlements The settlements to order.
+     * @return A new ordered list.
+     */
+    private List<IndianSettlement> settlementsByPriority(
+            List<IndianSettlement> settlements) {
+        return sort(settlements, Comparator
+            .comparing((IndianSettlement is) -> !is.isCapital())
+            .thenComparingDouble(is -> -estimateThreatStrength(is)));
+    }
+
+    /**
+     * Move surplus muskets/horses from quiet camps to threatened ones.
+     *
+     * @param settlements All settlements of this player.
+     * @param lb A {@code LogBuilder} to log to.
+     */
+    private void redistributeMilitaryGoods(List<IndianSettlement> settlements,
+                                           LogBuilder lb) {
+        if (settlements.size() < 2) return;
+
+        lb.mark();
+        List<IndianSettlement> byNeed = sort(settlements,
+            Comparator.comparingDouble(this::militaryGoodsNeed).reversed());
+        for (IndianSettlement needy : byNeed) {
+            if (militaryGoodsNeed(needy) <= 0) break;
+            IndianSettlement donor = maximize(settlements,
+                is -> is != needy && militaryGoodsSurplus(is) > 0,
+                Comparator.comparingInt(this::militaryGoodsSurplus));
+            if (donor == null) break;
+            donor.tradeGoodsWithSettlement(needy);
+            lb.add(donor.getName(), "->", needy.getName(), ", ");
+        }
+        if (lb.grew("\n  Arms redistribution: ")) lb.shrink(", ");
+    }
+
+    /**
+     * How badly a settlement needs more military goods.
+     *
+     * @param is The settlement to score.
+     * @return Higher means more need.
+     */
+    private double militaryGoodsNeed(IndianSettlement is) {
+        final Specification spec = getSpecification();
+        int stock = 0;
+        for (GoodsType gt : transform(spec.getGoodsTypeList(),
+                                      GoodsType::getMilitary)) {
+            stock += is.getGoodsCount(gt);
+        }
+        int needEquip = 0;
+        for (Unit u : is.getAllUnitsList()) {
+            if (is.canImproveUnitMilitaryRole(u) != null) needEquip++;
+        }
+        return estimateThreatStrength(is) * 10 + needEquip * 5 - stock;
+    }
+
+    /**
+     * How much military stock a settlement can spare.
+     *
+     * @param is The settlement to score.
+     * @return Higher means more surplus.
+     */
+    private int militaryGoodsSurplus(IndianSettlement is) {
+        final Specification spec = getSpecification();
+        final int keep = 50;
+        int surplus = 0;
+        for (GoodsType gt : transform(spec.getGoodsTypeList(),
+                                      GoodsType::getMilitary)) {
+            surplus += Math.max(0, is.getGoodsCount(gt) - keep);
+        }
+        // Threatened camps should not donate.
+        if (estimateThreatStrength(is) > 0) {
+            surplus = Math.max(0, surplus / 4);
+        }
+        return surplus;
+    }
+
+    /**
+     * Estimate local threat strength around a settlement.
+     *
+     * @param is The settlement to evaluate.
+     * @return Aggregated offence power of alarming neighbours.
+     */
+    private double estimateThreatStrength(IndianSettlement is) {
+        final Player player = getPlayer();
+        final CombatModel cm = getGame().getCombatModel();
+        double total = 0.0;
+        for (Tile t : is.getTile().getSurroundingTiles(is.getRadius() + 1)) {
+            if (t.getUnitCount() == 0) continue;
+            final Unit first = t.getFirstUnit();
+            if (first == null || first.getOwner() == player) continue;
+            final Player enemy = first.getOwner();
+            final Tension tension = is.getAlarm(enemy);
+            if (tension == null
+                    || tension.getLevel().compareTo(Tension.Level.CONTENT) <= 0) {
+                continue;
+            }
+            final double bonus = Math.max(0,
+                tension.getLevel().ordinal() - Tension.Level.CONTENT.ordinal());
+            if (t.isLand()) {
+                total += sumDouble(t.getUnits(),
+                    u -> cm.getOffencePower(u, is) > 0,
+                    u -> cm.getOffencePower(u, is) + bonus);
+            } else {
+                // Naval / embarked threats from adjacent water.
+                for (Unit u : t.getUnitList()) {
+                    if (u.getOwner() == player) continue;
+                    if (u.isOffensiveUnit()) {
+                        total += cm.getOffencePower(u, is) + bonus;
+                    }
+                    if (u.isNaval() && u.hasCargo()) {
+                        total += sumDouble(u.getUnitList(),
+                            Unit::isOffensiveUnit,
+                            land -> cm.getOffencePower(land, is) + bonus);
+                    }
+                }
+            }
+        }
+        return total;
     }
 
     /**
@@ -270,10 +407,11 @@ public final class NativeAIPlayer extends MissionAIPlayer {
         Player enemy;
         Tension tension;
         for (Tile t : is.getTile().getSurroundingTiles(is.getRadius() + 1)) {
-            if (!t.isLand() || t.getUnitCount() == 0) {
+            if (t.getUnitCount() == 0) {
                 ; // Do nothing
             } else if ((enemy = t.getFirstUnit().getOwner()) == player) {
                 // Its one of ours!
+                if (!t.isLand()) continue;
                 for (Unit u : t.getUnitList()) {
                     AIUnit aiu;
                     if (defenders.contains(u) || units.contains(u)
@@ -289,8 +427,8 @@ public final class NativeAIPlayer extends MissionAIPlayer {
             } else if ((tension = is.getAlarm(enemy)) == null
                 || tension.getLevel().compareTo(Tension.Level.CONTENT) <= 0) {
                 ; // Not regarded as a threat
-            } else {
-                // Evaluate the threat
+            } else if (t.isLand()) {
+                // Evaluate the land threat
                 double threshold, bonus, value = 0.0;
                 if (tension.getLevel().compareTo(Tension.Level.DISPLEASED) <= 0) {
                     threshold = 1.0;
@@ -303,6 +441,24 @@ public final class NativeAIPlayer extends MissionAIPlayer {
                 value += sumDouble(t.getUnits(),
                                    u -> cm.getOffencePower(u, is) > threshold,
                                    u -> cm.getOffencePower(u, is) + bonus);
+                if (value > 0.0) threats.put(t, value);
+            } else {
+                // Naval / embarked threats from water tiles.
+                double bonus = Math.max(0,
+                    (float)tension.getLevel().ordinal()
+                        - Tension.Level.CONTENT.ordinal());
+                double value = 0.0;
+                for (Unit u : t.getUnitList()) {
+                    if (u.getOwner() == player) continue;
+                    if (u.isOffensiveUnit()) {
+                        value += cm.getOffencePower(u, is) + bonus;
+                    }
+                    if (u.isNaval() && u.hasCargo()) {
+                        value += sumDouble(u.getUnitList(),
+                            Unit::isOffensiveUnit,
+                            land -> cm.getOffencePower(land, is) + bonus);
+                    }
+                }
                 if (value > 0.0) threats.put(t, value);
             }
         }
@@ -318,8 +474,23 @@ public final class NativeAIPlayer extends MissionAIPlayer {
                     - ((u.getHomeIndianSettlement() == is) ? homeBonus : 0);
             });
 
-        // Do we need more or less defenders?
+        // Defender demand starts from threatened-tile count (so counter-attack
+        // units remain free), then adds a little more for heavy stacks.
+        // When besieged, keep a skeleton garrison and break out with the rest.
+        final double totalThreat = sumDouble(threats.values(), v -> v);
+        final boolean besieged = isBesieged(is, threats);
         int needed = minimumDefence + threats.size();
+        if (totalThreat > threats.size() * 4.0) {
+            needed += Math.min(2, (int)(totalThreat / 15.0));
+        }
+        if (besieged) {
+            needed = Math.max(1, minimumDefence / 2);
+            lb.add(" besieged, ");
+        } else if (!threats.isEmpty()) {
+            // Always leave at least one unit free to counter-attack.
+            final int pool = defenders.size() + units.size();
+            needed = Math.min(needed, Math.max(minimumDefence, pool - 1));
+        }
         if (defenders.size() < needed) { // More needed, call some in.
             units.sort(isComparator);
             while (!units.isEmpty()) {
@@ -339,21 +510,22 @@ public final class NativeAIPlayer extends MissionAIPlayer {
             }
         }
 
-        // Sort threat tiles by threat value.
+        // Sort threat tiles by threat value (strongest first).
         final Comparator<Tile> threatComp
-            = Comparator.<Tile>comparingDouble(t -> threats.get(t));
+            = Comparator.<Tile>comparingDouble(t -> threats.get(t)).reversed();
         List<Tile> threatTiles = sort(threats.keySet(), threatComp);
 
         if (!defenders.isEmpty()) {
             lb.add(" defend with:");
             for (Unit u : defenders) lb.add(" ", u);
             lb.add(" minimum=", minimumDefence,
-                   " threats=", threats.size(), ", ");
+                   " threatStrength=", (int)totalThreat, ", ");
         }
 
-        // Assign units to attack the threats, greedily chosing closest unit.
+        // Assign units to attack the threats, greedily choosing closest unit.
         while (!threatTiles.isEmpty() && !units.isEmpty()) {
             Tile tile = threatTiles.remove(0);
+            if (!tile.isLand()) continue; // Seek land targets; naval handled elsewhere.
             final ToIntFunction<Unit> score = cacheInt(u ->
                 u.getTile().getDistanceTo(tile));
             final Predicate<Unit> validPred = u ->
@@ -368,6 +540,76 @@ public final class NativeAIPlayer extends MissionAIPlayer {
             Unit target = tile.getDefendingUnit(unit);
             Mission m = getSeekAndDestroyMission(aiUnit, target);
             if (m != null) lb.add(m, ", ");
+        }
+
+        // Siege breakout: remaining braves push the nearest enemy colony.
+        if (besieged && !units.isEmpty()) {
+            assignSiegeBreakout(is, units, lb);
+        }
+    }
+
+    /**
+     * Is a settlement effectively besieged by hostile neighbours?
+     *
+     * @param is The settlement to check.
+     * @param threats The evaluated threat tiles.
+     * @return True if most adjacent land tiles are threatened.
+     */
+    private boolean isBesieged(IndianSettlement is,
+                               java.util.Map<Tile, Double> threats) {
+        int land = 0;
+        int threatened = 0;
+        for (Tile t : is.getTile().getSurroundingTiles(1)) {
+            if (!t.isLand()) continue;
+            land++;
+            if (threats.containsKey(t)) threatened++;
+        }
+        return land > 0 && threatened * 2 >= land;
+    }
+
+    /**
+     * Send leftover units at a besieged settlement against the nearest
+     * enemy colony that can legally be attacked.
+     *
+     * @param is The besieged settlement.
+     * @param units Available units (mutated).
+     * @param lb A {@code LogBuilder} to log to.
+     */
+    private void assignSiegeBreakout(IndianSettlement is, List<Unit> units,
+                                     LogBuilder lb) {
+        final AIMain aiMain = getAIMain();
+        final Tile home = is.getTile();
+        while (!units.isEmpty()) {
+            Unit unit = units.remove(0);
+            AIUnit aiUnit = aiMain.getAIUnit(unit);
+            if (aiUnit == null) continue;
+            Location target = UnitSeekAndDestroyMission
+                .findMissionTarget(aiUnit, 8, true, false);
+            if (target == null) {
+                // Prefer any nearby colony of an angry European.
+                Colony best = null;
+                int bestDist = Integer.MAX_VALUE;
+                for (Tile t : home.getSurroundingTiles(8)) {
+                    Colony c = t.getColony();
+                    if (c == null) continue;
+                    if (UnitSeekAndDestroyMission
+                            .invalidMissionReason(aiUnit, c) != null) continue;
+                    int dist = home.getDistanceTo(c.getTile());
+                    if (dist >= 0 && dist < bestDist) {
+                        bestDist = dist;
+                        best = c;
+                    }
+                }
+                target = best;
+            }
+            Mission m = (target == null) ? null
+                : getSeekAndDestroyMission(aiUnit, target);
+            if (m != null) {
+                lb.add("breakout ", m, ", ");
+            } else {
+                m = getWanderHostileMission(aiUnit);
+                if (m != null) lb.add(m, ", ");
+            }
         }
     }
 
@@ -430,13 +672,20 @@ public final class NativeAIPlayer extends MissionAIPlayer {
                 reasons.put(unit, "Equip-" + is.getName());
 
             } else {
-                // Go out looking for trouble
-                if (!(m instanceof UnitWanderHostileMission)) {
+                // Prefer hunting a nearby valid target over aimless wandering.
+                Mission hunt = getSeekAndDestroyMission(aiUnit, 8);
+                if (hunt != null) {
+                    m = hunt;
+                    lb.add(m, ", ");
+                    reasons.put(unit, "Hunt");
+                } else if (!(m instanceof UnitWanderHostileMission)) {
                     m = getWanderHostileMission(aiUnit);
                     if (m == null) continue;
                     lb.add(m, ", ");
+                    reasons.put(unit, "Patrol");
+                } else {
+                    reasons.put(unit, "Patrol");
                 }
-                reasons.put(unit, "Patrol");
             }
             done.add(aiUnit);
         }
@@ -459,11 +708,17 @@ public final class NativeAIPlayer extends MissionAIPlayer {
      * @param randoms An array of random percentages.
      * @param lb A {@code LogBuilder} to log to.
      */
-    private void bringGifts(int[] randoms, LogBuilder lb) {
+    private void bringGifts(int[] randoms, LogBuilder lb,
+                            Set<Player> giftNations) {
         final Player player = getPlayer();
         final CostDecider cd = CostDeciders.numberOfLegalTiles();
-        final int giftPercent = getSpecification()
-            .getPercentage(GameOptions.GIFT_PROBABILITY);
+        final int settlements = Math.max(1, player.getSettlementCount());
+        // Larger tribes send gifts more often and can run more missions.
+        final int giftPercent = Math.min(100,
+            getSpecification().getPercentage(GameOptions.GIFT_PROBABILITY)
+                + settlements * 2);
+        final int maxGifts = Math.max(MAX_NUMBER_OF_GIFTS_BEING_DELIVERED,
+                                      settlements / 2);
         int randomIdx = 0;
         lb.mark();
 
@@ -489,7 +744,7 @@ public final class NativeAIPlayer extends MissionAIPlayer {
                     availableUnits.add(ou);
                 }
             }
-            if (alreadyAssignedUnits > MAX_NUMBER_OF_GIFTS_BEING_DELIVERED) {
+            if (alreadyAssignedUnits > maxGifts) {
                 lb.add(is.getName(), " has ", alreadyAssignedUnits, 
                        " already, ");
                 continue;
@@ -547,6 +802,7 @@ public final class NativeAIPlayer extends MissionAIPlayer {
 
             // Send the unit.
             Mission m = new IndianBringGiftMission(getAIMain(), aiUnit, target);
+            giftNations.add(target.getOwner());
             lb.add(m, " gift from ", is.getName(),
                    " to ", target.getName(), ", ");
         }
@@ -558,12 +814,18 @@ public final class NativeAIPlayer extends MissionAIPlayer {
      *
      * @param randoms An array of random percentages.
      * @param lb A {@code LogBuilder} to log to.
+     * @param giftNations Nations already receiving gifts this turn.
      */
-    private void demandTribute(int[] randoms, LogBuilder lb) {
+    private void demandTribute(int[] randoms, LogBuilder lb,
+                               Set<Player> giftNations) {
         final Player player = getPlayer();
         final CostDecider cd = CostDeciders.numberOfLegalTiles();
-        final int demandPercent = getSpecification()
-            .getPercentage(GameOptions.DEMAND_PROBABILITY);
+        final int settlements = Math.max(1, player.getSettlementCount());
+        final int demandPercent = Math.min(100,
+            getSpecification().getPercentage(GameOptions.DEMAND_PROBABILITY)
+                + settlements * 2);
+        final int maxDemands = Math.max(MAX_NUMBER_OF_DEMANDS,
+                                        settlements / 2);
         int randomIdx = 0;
         lb.mark();
 
@@ -585,7 +847,7 @@ public final class NativeAIPlayer extends MissionAIPlayer {
                     }
                 }
             }
-            if (alreadyAssignedUnits > MAX_NUMBER_OF_DEMANDS) {
+            if (alreadyAssignedUnits > maxDemands) {
                 lb.add(is.getName(), " has ", alreadyAssignedUnits,
                        " already, ");
                 continue;
@@ -612,14 +874,15 @@ public final class NativeAIPlayer extends MissionAIPlayer {
                 continue;
             }
 
-            // Collect nearby colonies.  Filter out ones which are unreachable
-            // or with which the settlement is on adequate terms.
+            // Collect nearby colonies.  Filter out ones which are unreachable,
+            // already receiving gifts this turn, or on adequate terms.
             List<RandomChoice<Colony>> nearbyColonies = new ArrayList<>();
             for (Tile t : home.getSurroundingTiles(MAX_DISTANCE_TO_MAKE_DEMANDS)) {
                 Colony c = t.getColony();
                 PathNode path;
                 if (c == null
                     || !is.hasContacted(c.getOwner())
+                    || giftNations.contains(c.getOwner())
                     || IndianDemandMission.invalidMissionReason(aiUnit, c) != null
                     || (path = unit.findPath(home, c.getTile(),
                                              null, cd, null)) == null) continue;
@@ -733,13 +996,12 @@ public final class NativeAIPlayer extends MissionAIPlayer {
             int[] randoms;
             abortInvalidMissions();
             if (nSettlements > 0) {
-                randoms = randomInts(logger, "Trades", air,
-                                     nSettlements, nSettlements);
-                secureSettlements(randoms, lb);
+                secureSettlements(lb);
+                final Set<Player> giftNations = new HashSet<>();
                 randoms = randomInts(logger, "Gifts", air, 100, nSettlements);
-                bringGifts(randoms, lb);
+                bringGifts(randoms, lb, giftNations);
                 randoms = randomInts(logger, "Tribute", air, 100, nSettlements);
-                demandTribute(randoms, lb);
+                demandTribute(randoms, lb, giftNations);
             }
             giveNormalMissions(lb);
             more = doMissions(getAIUnits(), lb);
