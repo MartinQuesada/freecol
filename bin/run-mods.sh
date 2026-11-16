@@ -13,6 +13,7 @@
 # Tasajo, Livestock, Cacao, Vanilla and Conversos must come after it: they
 # append their own paths with preserve="true". Conversos stays after them:
 # it redefines the convert, and those native experts are defined first.
+# softCoast exists under data/mods/ but is off by default (too subtle / not worth it).
 # Config/saves for this launcher live in .freecol-dev/ (not your main FreeCol prefs).
 
 set -euo pipefail

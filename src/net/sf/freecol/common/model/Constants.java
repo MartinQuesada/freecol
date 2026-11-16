@@ -95,6 +95,7 @@ public interface Constants {
     public static enum ArmedUnitSettlementAction {
         SETTLEMENT_ATTACK,
         SETTLEMENT_TRIBUTE,
+        SETTLEMENT_PEACE,
     }
 
     /** Actions when dealing with a boycott. */

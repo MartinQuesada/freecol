@@ -1183,6 +1183,25 @@ public class ServerUnit extends Unit implements TurnTaker {
                     setWorkImprovement(null);
                     locDirty = true;
                     break;
+                case LEARNING:
+                    UnitType skill = getLearningType();
+                    if (skill != null) {
+                        StringTemplate oldName = getLabel();
+                        changeType(skill);//-vis(owner)
+                        owner.invalidateCanSeeTiles();//+vis(owner)
+                        cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.UNIT_IMPROVED,
+                                             "model.unit.learnSkillComplete",
+                                             this)
+                                .addStringTemplate("%oldName%", oldName)
+                                .addStringTemplate("%unit%", getLabel())
+                                .addNamed("%skill%", skill));
+                        lb.add(" learned ", skill);
+                    }
+                    setState(UnitState.ACTIVE);
+                    setWorkLeft(-1);
+                    unitDirty = true;
+                    break;
                 case FORTIFYING:
                     setState(UnitState.FORTIFIED);
                     unitDirty = true;

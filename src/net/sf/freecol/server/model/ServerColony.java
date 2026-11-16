@@ -801,6 +801,7 @@ public class ServerColony extends Colony implements TurnTaker {
                 }
             }
         }
+
         invalidateCache();
 
         // Now that the goods have been updated it is safe to remove the

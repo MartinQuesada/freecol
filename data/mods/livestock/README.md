@@ -4,28 +4,26 @@ Import **cows** and **sheep** cheaply from Europe, breed them in the colony, and
 
 | Chain | Steps |
 |-------|--------|
-| Dairy | Buy/breed **cows** → **Dairy** (1 cow → 3 milk) → **Cheese house** (milk → cheese export) |
-| Wool | Buy/breed **sheep** → **Wool shed** (1 sheep → 3 wool) → **Weaver** (wool → cloth, or cotton as usual) |
+| Dairy | Buy/breed **cows** → **Dairy** (milk the herd) → **Cheese house** (milk → cheese) |
+| Wool | Buy/breed **sheep** → **Wool shed** (shear the flock) → **Weaver** (wool → cloth) |
 | Feasts | Cheese → **Brotherhood hall** (2 cheese → 1 cross per turn, no workers) |
-| Experts | **Expert Dairy Worker**, **Expert Shepherd**, **Master Cheesemaker** (recruit in Europe, or learn in the colony: apprentice, then expert). Cloth still uses the base-game Master Weaver. |
+| Experts | **Expert Dairy Worker**, **Expert Shepherd**, **Master Cheesemaker** |
 
 Milk is perishable: it can not be traded in Europe or through the custom
 house. Make it into cheese to export it.
 
 Breeding buildings (**cattle pen**, **sheepfold**) cost **32 hammers** and then work like the horse pasture: you need **2** head, then surplus food grows the herd.
 
-## Herd size matters
+## Milking and shearing (no slaughter)
 
-Each dairy worker uses up 1 cow per turn and each shepherd 1 sheep. A pen
-breeds 2 head per turn while the herd is under 51, and 4 per turn from 51 to
-100 (if the colony has surplus food), so:
+Animals are **not consumed** by dairy or wool work. Each cow yields
+**3 milk** per turn and each sheep **3 wool** per turn. Workers produce
+up to that herd limit. With enough animals they rotate and experts can
+work at full rate; with too few animals, output is capped until the herd
+grows.
 
-- 1 worker: the herd keeps growing.
-- 2 workers: the herd stays the same while under 51.
-- 3 workers: the herd shrinks to 2 and the dairy only makes 6 milk, unless
-  the herd is over 50.
-- **Without a pen** (or without surplus food) nothing replaces the animals,
-  and the dairy eats the whole herd.
+Food works like **horses**: pens only use **surplus** food to breed.
+There is no per-animal upkeep.
 
 ## Brotherhood hall
 

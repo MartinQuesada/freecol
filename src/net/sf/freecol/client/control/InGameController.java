@@ -1615,11 +1615,47 @@ public final class InGameController extends FreeColClientHolder {
                 : -1;
             if (amount > 0) return moveTribute(unit, amount, direction);
             break;
+
+        case SETTLEMENT_PEACE:
+            if (settlement instanceof IndianSettlement) {
+                return moveOfferNativePeace(unit, direction,
+                    (IndianSettlement)settlement);
+            }
+            break;
             
         default:
             logger.warning("showArmedUnitSettlementDialog fail: " + act);
             break;
         }
+        return false;
+    }
+
+    /**
+     * Offer peace goods to a native settlement while at war.
+     *
+     * @param unit The {@code Unit} offering.
+     * @param direction The direction of the settlement.
+     * @param is The {@code IndianSettlement}.
+     * @return True if automatic movement of the unit can proceed (never).
+     */
+    private boolean moveOfferNativePeace(Unit unit, Direction direction,
+                                         IndianSettlement is) {
+        AbstractGoods demand = is.getPeaceDemand(unit.getOwner());
+        final int have = unit.getGoodsCount(demand.getType());
+        if (have <= 0) {
+            showInformationPanel(is, StringTemplate
+                .template("indianSettlement.peaceDemand")
+                .addStringTemplate("%nation%", is.getOwner().getNationLabel())
+                .addNamed("%goods%", demand.getType())
+                .addAmount("%amount%", demand.getAmount())
+                .addAmount("%times%", is.getPeaceOffersNeeded(unit.getOwner())));
+            return false;
+        }
+        // Deliver what the unit carries now; remaining can follow later.
+        AbstractGoods offer = (have >= demand.getAmount()) ? demand
+            : new AbstractGoods(demand.getType(), have);
+        if (!getGUI().confirmNativePeace(unit, is, offer)) return false;
+        askServer().offerNativePeace(unit, direction);
         return false;
     }
 
@@ -1869,6 +1905,12 @@ public final class InGameController extends FreeColClientHolder {
                 if (askServer().learnSkill(unit, direction)) {
                     if (unit.isDisposed()) {
                         showInformationPanel(is, "learnSkill.die");
+                    } else if (unit.getState() == Unit.UnitState.LEARNING) {
+                        showInformationPanel(is, StringTemplate
+                            .template("learnSkill.started")
+                            .addNamed("%skill%", skill)
+                            .addAmount("%turns%",
+                                Math.max(unit.getWorkLeft(), 1)));
                     } else if (unit.getType() != skill) {
                         showInformationPanel(is, "learnSkill.leave");
                     }

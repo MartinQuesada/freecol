@@ -162,6 +162,21 @@ public class IndianSettlement extends Settlement implements TradeLocation {
      */
     protected final java.util.Map<Player, Tension> alarm = new HashMap<>();
 
+    /**
+     * Goods already delivered toward the current wartime peace tribute
+     * installment, keyed by European player.
+     */
+    protected final java.util.Map<Player, Integer> peaceTributePaid
+        = new HashMap<>();
+
+    /**
+     * Goods type frozen for the current wartime peace tribute, keyed by
+     * European player.  Prevents {@link #updateWantedGoods} from changing
+     * the demand mid-delivery.
+     */
+    protected final java.util.Map<Player, GoodsType> peaceDemandGoods
+        = new HashMap<>();
+
     /** Cache of goods offered for sale.  Do not serialize. */
     private final List<Goods> forSale = new ArrayList<>();
 
@@ -410,6 +425,181 @@ public class IndianSettlement extends Settlement implements TradeLocation {
      */
     public List<GoodsType> getWantedGoods() {
         return this.wantedGoods;
+    }
+
+    /**
+     * Goods demanded to make peace while at war with a European player.
+     * Uses a frozen demand type for the current installment (top wanted
+     * good when first asked, or trade goods as fallback).  Amount is the
+     * remaining goods still needed for this installment.
+     *
+     * @param player The European {@code Player} offering peace.
+     * @return The demanded {@code AbstractGoods}, never null.
+     */
+    public AbstractGoods getPeaceDemand(Player player) {
+        GoodsType type = getOrFreezePeaceDemandType(player);
+        int remaining = getPeaceTributeRemaining(player);
+        return new AbstractGoods(type, remaining);
+    }
+
+    /**
+     * Size of one full peace tribute installment at the current alarm.
+     *
+     * @param player The European {@code Player}.
+     * @return Positive cargo amount for one tribute.
+     */
+    public int getPeaceInstallmentAmount(Player player) {
+        switch (getPeaceAlarmLevel(player)) {
+        case HAPPY: case CONTENT:
+            return 25;
+        case DISPLEASED:
+            return 50;
+        case ANGRY:
+            return 75;
+        case HATEFUL: default:
+            return 100;
+        }
+    }
+
+    /**
+     * How many goods of the frozen demand type are still needed to
+     * complete the current peace tribute installment.
+     *
+     * @param player The European {@code Player}.
+     * @return Remaining amount, at least 1 until the installment completes.
+     */
+    public int getPeaceTributeRemaining(Player player) {
+        int paid = getPeaceTributePaid(player);
+        return Math.max(1, getPeaceInstallmentAmount(player) - paid);
+    }
+
+    /**
+     * Goods already paid toward the current peace tribute installment.
+     *
+     * @param player The European {@code Player}.
+     * @return Non-negative amount already delivered.
+     */
+    public int getPeaceTributePaid(Player player) {
+        Integer paid = this.peaceTributePaid.get(player);
+        return (paid == null) ? 0 : Math.max(0, paid);
+    }
+
+    /**
+     * Goods type currently demanded for peace from a player.
+     *
+     * @param player The European {@code Player}.
+     * @return The frozen or newly chosen {@code GoodsType}.
+     */
+    public GoodsType getOrFreezePeaceDemandType(Player player) {
+        GoodsType frozen = this.peaceDemandGoods.get(player);
+        if (frozen != null) return frozen;
+        GoodsType type = getWantedGoods(0);
+        if (type == null) {
+            type = getSpecification().getGoodsType("model.goods.tradeGoods");
+        }
+        this.peaceDemandGoods.put(player, type);
+        return type;
+    }
+
+    /**
+     * Apply a wartime delivery toward the current peace tribute.
+     *
+     * @param player The European {@code Player}.
+     * @param type The {@code GoodsType} delivered.
+     * @param amount The amount delivered.
+     * @return True if this delivery completed the current installment.
+     */
+    public boolean addPeaceTribute(Player player, GoodsType type, int amount) {
+        if (player == null || type == null || amount <= 0) return false;
+        GoodsType demand = getOrFreezePeaceDemandType(player);
+        if (type != demand) return false;
+        int paid = getPeaceTributePaid(player) + amount;
+        int installment = getPeaceInstallmentAmount(player);
+        if (paid >= installment) {
+            this.peaceTributePaid.remove(player);
+            this.peaceDemandGoods.remove(player);
+            return true;
+        }
+        this.peaceTributePaid.put(player, paid);
+        return false;
+    }
+
+    /**
+     * Clear wartime peace-tribute tracking for a player (e.g. after peace).
+     *
+     * @param player The European {@code Player}.
+     */
+    public void clearPeaceTribute(Player player) {
+        if (player == null) return;
+        this.peaceTributePaid.remove(player);
+        this.peaceDemandGoods.remove(player);
+    }
+
+    /**
+     * How many successful peace tributes are typically needed at the
+     * current alarm level.  Used for UI hints; actual peace still
+     * depends on tension after each tribute.
+     *
+     * @param player The European {@code Player}.
+     * @return A positive attempt count.
+     */
+    public int getPeaceOffersNeeded(Player player) {
+        switch (getPeaceAlarmLevel(player)) {
+        case HAPPY: case CONTENT: case DISPLEASED:
+            return 1;
+        case ANGRY:
+            return 2;
+        case HATEFUL: default:
+            return 3;
+        }
+    }
+
+    /**
+     * Alarm level used for peace demands (settlement, else tribe).
+     *
+     * @param player The European {@code Player}.
+     * @return The effective {@code Tension.Level}.
+     */
+    public Tension.Level getPeaceAlarmLevel(Player player) {
+        Tension alarm = getAlarm(player);
+        if (alarm != null) return alarm.getLevel();
+        Tension tribe = getOwner().getTension(player);
+        return (tribe == null) ? Tension.Level.ANGRY : tribe.getLevel();
+    }
+
+    /**
+     * Does this settlement accept the given goods type as a wartime
+     * peace / gift offering?
+     *
+     * @param type The {@code GoodsType} offered.
+     * @return True if the type is wanted, frozen as a peace demand, or
+     *     is standard trade/military goods.
+     */
+    public boolean acceptsPeaceGoods(GoodsType type) {
+        if (type == null) return false;
+        if (any(this.peaceDemandGoods.values(), type::equals)) return true;
+        if (any(getWantedGoods(), type::equals)) return true;
+        String id = type.getId();
+        return "model.goods.tradeGoods".equals(id)
+            || "model.goods.tools".equals(id)
+            || "model.goods.muskets".equals(id)
+            || "model.goods.horses".equals(id);
+    }
+
+    /**
+     * Is this the goods type currently demanded for peace from a player?
+     *
+     * @param player The European {@code Player}.
+     * @param type The {@code GoodsType} offered.
+     * @return True if it matches the (frozen) peace demand.
+     */
+    public boolean isPeaceDemandGoods(Player player, GoodsType type) {
+        if (player == null || type == null) return false;
+        GoodsType frozen = this.peaceDemandGoods.get(player);
+        if (frozen != null) return type == frozen;
+        return type == getWantedGoods(0)
+            || (getWantedGoods(0) == null
+                && "model.goods.tradeGoods".equals(type.getId()));
     }
 
     /**
@@ -1571,6 +1761,18 @@ public class IndianSettlement extends Settlement implements TradeLocation {
         this.lastTribute = o.getLastTribute();
         this.mostHated = o.getMostHated();
         this.setAlarm(o.getAlarm());
+        synchronized (this.peaceTributePaid) {
+            this.peaceTributePaid.clear();
+            this.peaceDemandGoods.clear();
+            for (Entry<Player, Integer> e : o.peaceTributePaid.entrySet()) {
+                this.peaceTributePaid.put(game.updateRef(e.getKey()),
+                                          e.getValue());
+            }
+            for (Entry<Player, GoodsType> e : o.peaceDemandGoods.entrySet()) {
+                this.peaceDemandGoods.put(game.updateRef(e.getKey()),
+                                          e.getValue());
+            }
+        }
         this.setGoodsForSale(o.getGoodsForSale());
         return true;
     }
@@ -1588,6 +1790,9 @@ public class IndianSettlement extends Settlement implements TradeLocation {
     private static final String NAME_TAG = "name";
     private static final String OWNED_UNITS_TAG = "ownedUnits";
     private static final String PLAYER_TAG = "player";
+    private static final String PEACE_TRIBUTE_TAG = "peaceTribute";
+    private static final String PAID_TAG = "paid";
+    private static final String GOODS_TYPE_TAG = "goodsType";
     // Public for now while 0.10.7 backward compatibility code in Tile
     // for PlayerExploredTile needs to check these.
     public static final String LEARNABLE_SKILL_TAG = "learnableSkill";
@@ -1669,6 +1874,8 @@ public class IndianSettlement extends Settlement implements TradeLocation {
                 xw.writeEndElement();
             }
 
+            writePeaceTributes(xw, null);
+
             for (Unit unit : sort(this.ownedUnits)) {
                 xw.writeStartElement(OWNED_UNITS_TAG);
 
@@ -1701,6 +1908,29 @@ public class IndianSettlement extends Settlement implements TradeLocation {
 
                 xw.writeEndElement();
             }
+
+            writePeaceTributes(xw, client);
+        }
+    }
+
+    /**
+     * Write peace-tribute progress for all players, or one client player.
+     *
+     * @param xw The {@code FreeColXMLWriter} to write to.
+     * @param only If non-null, only write that player's entry.
+     * @exception XMLStreamException if there is a problem writing.
+     */
+    private void writePeaceTributes(FreeColXMLWriter xw, Player only)
+        throws XMLStreamException {
+        for (Player p : sort(this.peaceDemandGoods.keySet())) {
+            if (only != null && p != only) continue;
+            GoodsType type = this.peaceDemandGoods.get(p);
+            if (type == null) continue;
+            xw.writeStartElement(PEACE_TRIBUTE_TAG);
+            xw.writeAttribute(PLAYER_TAG, p);
+            xw.writeAttribute(GOODS_TYPE_TAG, type);
+            xw.writeAttribute(PAID_TAG, getPeaceTributePaid(p));
+            xw.writeEndElement();
         }
     }
 
@@ -1737,6 +1967,8 @@ public class IndianSettlement extends Settlement implements TradeLocation {
         // Clear containers.
         clearContactLevels();
         clearAlarm();
+        this.peaceTributePaid.clear();
+        this.peaceDemandGoods.clear();
         missionary = null;
         clearOwnedUnits();
 
@@ -1776,6 +2008,19 @@ public class IndianSettlement extends Settlement implements TradeLocation {
                                              Unit.class, true);
             addOwnedUnit(unit);
             xr.closeTag(OWNED_UNITS_TAG);
+
+        } else if (PEACE_TRIBUTE_TAG.equals(tag)) {
+            final Specification spec = getSpecification();
+            Player player = xr.findFreeColGameObject(game, PLAYER_TAG,
+                Player.class, (Player)null, true);
+            GoodsType type = xr.getType(spec, GOODS_TYPE_TAG,
+                                        GoodsType.class, (GoodsType)null);
+            int paid = xr.getAttribute(PAID_TAG, 0);
+            if (player != null && type != null) {
+                this.peaceDemandGoods.put(player, type);
+                if (paid > 0) this.peaceTributePaid.put(player, paid);
+            }
+            xr.closeTag(PEACE_TRIBUTE_TAG);
 
         } else {
             super.readChild(xr);

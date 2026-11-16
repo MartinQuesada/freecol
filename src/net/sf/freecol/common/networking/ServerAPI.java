@@ -450,6 +450,17 @@ public abstract class ServerAPI {
     }
 
     /**
+     * Server query-response for offering peace goods to a native settlement.
+     *
+     * @param unit The {@code Unit} that offers.
+     * @param direction The direction of the settlement.
+     * @return True if the server interaction succeeded.
+     */
+    public boolean offerNativePeace(Unit unit, Direction direction) {
+        return ask(new OfferNativePeaceMessage(unit, direction));
+    }
+
+    /**
      * Handler server query-response for diplomatic messages.
      *
      * @param our Our object ({@code Unit} or {@code Colony})

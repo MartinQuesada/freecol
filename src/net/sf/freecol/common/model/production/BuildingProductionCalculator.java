@@ -184,6 +184,39 @@ public class BuildingProductionCalculator {
             }
         }
 
+        // Herd harvest: animals stay in the warehouse (not consumed),
+        // but each head can only yield once per turn.  Cap output by
+        // herd size * base yield of the building's production type.
+        if (buildingType.hasAbility(Ability.HERD_HARVEST)
+                && minimumRatio < Double.MAX_VALUE) {
+            for (AbstractGoods output : buildingOutputs) {
+                if (output.getAmount() <= 0) continue;
+                final GoodsType product = output.getType();
+                final GoodsType herdType = product.getInputType();
+                if (herdType == null) continue;
+                final int herd = Math.max(0, getAvailable(herdType, inputs));
+                final ProductionType pt = getBestProductionType(buildingType);
+                final int yieldPerAnimal = buildingType.getBaseProduction(pt,
+                    product, null);
+                if (yieldPerAnimal <= 0) {
+                    minimumRatio = 0.0;
+                    maximumRatio = 0.0;
+                    continue;
+                }
+                final int maxFromHerd = herd * yieldPerAnimal;
+                final double production = output.getAmount() * minimumRatio;
+                if (production > maxFromHerd) {
+                    minimumRatio = Math.min(minimumRatio,
+                        (double)maxFromHerd / output.getAmount());
+                }
+                final double maxProduction = output.getAmount() * maximumRatio;
+                if (maxProduction > maxFromHerd) {
+                    maximumRatio = Math.min(maximumRatio,
+                        (double)maxFromHerd / output.getAmount());
+                }
+            }
+        }
+
         // Check whether there is space enough to store the goods
         // produced in order to avoid excess production.
         if (avoidOverflow) {

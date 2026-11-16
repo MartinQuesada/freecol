@@ -99,7 +99,9 @@
       </modifier>
     </founding-father>
 
-    <!-- Francisco de Orellana: Amazon explorer — sight and land movement -->
+    <!-- Francisco de Orellana: Amazon explorer — sight for all land units;
+         +1 movement only for unmounted land units (mounted roles already
+         have a large movement bonus). -->
     <founding-father id="model.foundingFather.franciscoDeOrellana" type="exploration"
                      weight1="8" weight2="3" weight3="1">
       <modifier id="model.modifier.lineOfSightBonus"
@@ -128,18 +130,47 @@
       </modifier>
     </founding-father>
 
-    <!-- Vasco da Gama: India trade route — faster high-seas travel (lighter than Magellan) -->
+    <!-- Vasco da Gama: India trade route — naval +1 movement and better
+         European market prices (tradeBonus like the Dutch nation type,
+         weaker). Boycotts still block trade in the boycotted goods. -->
     <founding-father id="model.foundingFather.vascoDaGama" type="trade"
                      weight1="8" weight2="3" weight3="1">
-      <modifier id="model.modifier.sailHighSeas"
-                type="additive" value="-1">
-        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
-      </modifier>
       <modifier id="model.modifier.movementBonus"
                 type="additive" value="1">
         <scope ability-id="model.ability.navalUnit" ability-value="true"/>
       </modifier>
+      <modifier id="model.modifier.tradeBonus"
+                type="percentage" value="-25"/>
       <event id="model.event.movementChange"/>
+    </founding-father>
+
+    <!-- Retune a few base-game fathers so early explorers stay early and
+         map-reveal / late trade powers shift later. Ages remain 3 buckets;
+         cut years are overridden below. -->
+    <founding-father id="model.foundingFather.franciscoDeCoronado"
+                     type="exploration"
+                     weight1="1" weight2="4" weight3="10">
+      <event id="model.event.seeAllColonies"/>
+      <modifier id="model.modifier.exposedTilesRadius"
+                type="additive" value="3"/>
+    </founding-father>
+    <founding-father id="model.foundingFather.ferdinandMagellan"
+                     type="exploration"
+                     weight1="1" weight2="10" weight3="6">
+      <modifier id="model.modifier.movementBonus"
+                type="additive" value="3">
+        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
+      </modifier>
+      <modifier id="model.modifier.sailHighSeas"
+                type="additive" value="-1">
+        <scope ability-id="model.ability.navalUnit" ability-value="true"/>
+      </modifier>
+      <event id="model.event.movementChange"/>
+    </founding-father>
+    <founding-father id="model.foundingFather.peterMinuit" type="trade"
+                     weight1="12" weight2="2" weight3="0">
+      <modifier id="model.modifier.landPaymentModifier"
+                type="percentage" value="-100"/>
     </founding-father>
 
     <!-- Eli Whitney: cotton gin + muskets — late industrial boost -->
@@ -359,4 +390,12 @@
       </modifier>
     </founding-father>
   </founding-fathers>
+
+  <!-- Longer early age, mid age from 1550, late from 1650. Still 3 weight
+       buckets (weight1/2/3); a 4th age would need code changes. -->
+  <optionGroup id="gameOptions">
+    <optionGroup id="gameOptions.years">
+      <textOption id="model.option.ages" defaultValue="1550,1650"/>
+    </optionGroup>
+  </optionGroup>
 </freecol-specification>

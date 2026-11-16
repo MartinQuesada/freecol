@@ -195,6 +195,8 @@ public class Unit extends GoodsLocation
         SENTRY,
         IN_COLONY,
         IMPROVING,
+        /** Learning a skill from a native settlement. */
+        LEARNING,
         FORTIFYING,
         SKIPPED;
 
@@ -267,6 +269,11 @@ public class Unit extends GoodsLocation
      * they are working.
      */
     protected TileImprovement workImprovement;
+
+    /**
+     * Skill being learned from natives while {@link UnitState#LEARNING}.
+     */
+    protected UnitType learningType;
 
     /** The student of this Unit, if it has one. */
     protected Unit student;
@@ -745,6 +752,8 @@ public class Unit extends GoodsLocation
         case IMPROVING:
             return getMovesLeft() > 0 && isOnTile()
                 && getOwner().canAcquireForImprovement(getLocation().getTile());
+        case LEARNING:
+            return getLearningType() != null && isOnTile();
         case IN_COLONY:
             return !isNaval();
         case SENTRY:
@@ -809,6 +818,9 @@ public class Unit extends GoodsLocation
                 setWorkImprovement(null);
             }
             break;
+        case LEARNING:
+            setLearningType(null);
+            break;
         default:
             // do nothing
             break;
@@ -830,6 +842,10 @@ public class Unit extends GoodsLocation
                 setWorkLeft(workImprovement.getTurnsToComplete()
                     + ((getMovesLeft() > 0) ? 0 : 1));
             }
+            movesLeft = 0;
+            break;
+        case LEARNING:
+            // workLeft and learningType are set by the caller
             movesLeft = 0;
             break;
         case SKIPPED: // do nothing
@@ -1337,6 +1353,24 @@ public class Unit extends GoodsLocation
                 && this.type.hasAbility(Ability.EXPERT_PIONEER))
             ? (getWorkLeft() + 1) / 2
             : getWorkLeft();
+    }
+
+    /**
+     * Get the skill this unit is learning from natives.
+     *
+     * @return The {@code UnitType} being learned, or null.
+     */
+    public final UnitType getLearningType() {
+        return this.learningType;
+    }
+
+    /**
+     * Set the skill this unit is learning from natives.
+     *
+     * @param learningType The {@code UnitType} to learn, or null.
+     */
+    public final void setLearningType(UnitType learningType) {
+        this.learningType = learningType;
     }
 
     /**
@@ -2783,7 +2817,30 @@ public class Unit extends GoodsLocation
     @Override
     public int getInitialMovesLeft() {
         Turn turn = getGame().getTurn();
+        // Mounted roles already carry a large movement bonus.  Do not stack
+        // player/nation land-only movement bonuses (e.g. Orellana) on top.
+        if (isMounted()) {
+            return (int)applyModifiers(this.type.getMovement(), turn,
+                transform(getModifiers(Modifier.MOVEMENT_BONUS, this.type, turn),
+                          m -> !isLandOnlyMovementBonus(m)));
+        }
         return (int)apply(this.type.getMovement(), turn, Modifier.MOVEMENT_BONUS, this.type);
+    }
+
+    /**
+     * Is a movement modifier scoped to non-naval (land) units only?
+     *
+     * @param m The {@code Modifier} to check.
+     * @return True if the modifier is a land-only movement bonus.
+     */
+    private static boolean isLandOnlyMovementBonus(Modifier m) {
+        boolean landOnly = false;
+        for (Scope scope : m.getScopeList()) {
+            if (!Ability.NAVAL_UNIT.equals(scope.getAbilityId())) continue;
+            if (scope.getAbilityValue()) return false;
+            landOnly = true;
+        }
+        return landOnly;
     }
 
     /**
@@ -3897,6 +3954,15 @@ public class Unit extends GoodsLocation
                 } else {
                     ret = StringTemplate.key(getWorkImprovement().getType() + ".occupationString");
                 }
+            } else if (getState() == UnitState.LEARNING
+                && getLearningType() != null) {
+                if (full) {
+                    ret = StringTemplate.template("model.unit.occupation.learning")
+                        .addNamed("%skill%", getLearningType())
+                        .addAmount("%turns%", Math.max(getWorkLeft(), 0));
+                } else {
+                    ret = StringTemplate.key("model.unit.unitState.learning");
+                }
             } else if (getDestination() != null) {
                 ret = StringTemplate.key("model.unit.occupation.goingSomewhere");
             } else {
@@ -4736,6 +4802,19 @@ public class Unit extends GoodsLocation
                 result = result.fail();
             }
         }
+        if (this.state == UnitState.LEARNING
+            && this.learningType == null) {
+            if (fix) {
+                this.state = UnitState.ACTIVE;
+                this.workLeft = -1;
+                lb.add("\n  Learning unit without skill made active: ",
+                    getId());
+                result = result.fix();
+            } else {
+                lb.add("\n  Learning unit without skill: ", getId());
+                result = result.fail();
+            }
+        }
         return result;
     }
 
@@ -4844,6 +4923,7 @@ public class Unit extends GoodsLocation
         this.workLeft = o.getWorkLeft();
         // Allow creation, might be first sight
         this.workImprovement = game.update(o.getWorkImprovement(), true);
+        this.learningType = o.getLearningType();
         this.student = game.updateRef(o.getStudent());
         this.teacher = game.updateRef(o.getTeacher());
         this.turnsOfTraining = o.getTurnsOfTraining();
@@ -4901,6 +4981,7 @@ public class Unit extends GoodsLocation
     private static final String VISIBLE_GOODS_COUNT_TAG = "visibleGoodsCount";
     private static final String WORK_LEFT_TAG = "workLeft";
     private static final String WORK_TYPE_TAG = "workType";
+    private static final String LEARNING_TYPE_TAG = "learningType";
     // @compat 0.11.0
     private static final String OLD_EQUIPMENT_TAG = "equipment";
     // end @compat 0.11.0
@@ -4964,6 +5045,10 @@ public class Unit extends GoodsLocation
             }
 
             if (workType != null) xw.writeAttribute(WORK_TYPE_TAG, workType);
+
+            if (learningType != null) {
+                xw.writeAttribute(LEARNING_TYPE_TAG, learningType);
+            }
 
             if (experienceType != null) {
                 xw.writeAttribute(EXPERIENCE_TYPE_TAG, experienceType);
@@ -5088,6 +5173,9 @@ public class Unit extends GoodsLocation
         visibleGoodsCount = xr.getAttribute(VISIBLE_GOODS_COUNT_TAG, -1);
 
         setWorkType(xr.getType(spec, WORK_TYPE_TAG, GoodsType.class, null));
+
+        learningType = xr.getType(spec, LEARNING_TYPE_TAG,
+                                  UnitType.class, (UnitType)null);
 
         // Fix changes to production
         WorkLocation wl = getWorkLocation();

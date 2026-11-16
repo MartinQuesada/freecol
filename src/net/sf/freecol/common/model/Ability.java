@@ -271,6 +271,14 @@ public final class Ability extends Feature {
     public static final String HAS_PORT
         = "model.ability.hasPort";
 
+    /**
+     * Building harvests products from a herd kept in the warehouse
+     * (e.g. milk from cows, wool from sheep).  Animals are not
+     * consumed; each head can yield once per turn.
+     */
+    public static final String HERD_HARVEST
+        = "model.ability.herdHarvest";
+
     /** The ability to ignore the monarchs wars. */
     public static final String IGNORE_EUROPEAN_WARS
         = "model.ability.ignoreEuropeanWars";

@@ -468,19 +468,189 @@ public final class InGameController extends Controller {
                         ServerIndianSettlement sis, ChangeSet cs) {
         final Specification spec = getGame().getSpecification();
         final Player owner = unit.getOwner();
-        final int alarmBonus = -Math.round(price * 0.001f
+        final Player indian = sis.getOwner();
+        final boolean atWar = owner.atWarWith(indian);
+        final boolean peaceType = atWar
+            && sis.isPeaceDemandGoods(owner, goods.getType());
+        // Freeze the demand type before updateWantedGoods can drop it.
+        if (peaceType) sis.getOrFreezePeaceDemandType(owner);
+        final boolean completedInstallment = peaceType
+            && sis.addPeaceTribute(owner, goods.getType(), goods.getAmount());
+        int alarmBonus = -Math.round(price * 0.001f
             * spec.getPercentage(GameOptions.ALARM_BONUS_GIFT));
+        if (completedInstallment) {
+            // One completed peace tribute: large calm, but not always peace.
+            alarmBonus = -Tension.TENSION_ADD_MAJOR;
+        } else if (peaceType) {
+            // Partial delivery toward the frozen demand.
+            alarmBonus = Math.min(alarmBonus, -Tension.TENSION_ADD_MINOR);
+        } else if (atWar && sis.acceptsPeaceGoods(goods.getType())) {
+            alarmBonus = Math.min(alarmBonus, -Tension.TENSION_ADD_NORMAL);
+        }
 
         unit.csVisit((ServerPlayer)owner, sis, 0, cs);
         GoodsLocation.moveGoods(unit, goods.getType(), goods.getAmount(), sis);
         cs.add(See.perhaps(), unit);
         sis.csModifyAlarm(owner, alarmBonus, true, cs);
+        if (completedInstallment) {
+            // Soften the rest of the tribe so one camp cannot keep war forever.
+            csCalmOtherSettlements(sis, owner, -Tension.TENSION_ADD_NORMAL / 2, cs);
+        }
         sis.updateWantedGoods();
         final Tile tile = sis.getTile();
         tile.updateIndianSettlement(owner);
         cs.add(See.only(owner), tile);
         logger.finest(owner.getSuffix() + " " + unit + " gives " + goods
                       + " at " + sis.getName() + " worth " + price);
+
+        if (!peaceType) return;
+
+        if (completedInstallment) {
+            if (isReadyForNativePeace(indian, owner)) {
+                csNativePeace((ServerPlayer)owner, indian, cs);
+                cs.addMessage(owner,
+                    new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                     "indianSettlement.peaceAccepted",
+                                     unit, sis)
+                        .addStringTemplate("%nation%", indian.getNationLabel())
+                        .addNamed("%goods%", goods.getType())
+                        .addAmount("%amount%", goods.getAmount()));
+            } else {
+                AbstractGoods next = sis.getPeaceDemand(owner);
+                cs.addMessage(owner,
+                    new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                     "indianSettlement.peaceProgress",
+                                     unit, sis)
+                        .addStringTemplate("%nation%", indian.getNationLabel())
+                        .addNamed("%goods%", next.getType())
+                        .addAmount("%amount%", next.getAmount()));
+            }
+        } else {
+            AbstractGoods rem = sis.getPeaceDemand(owner);
+            cs.addMessage(owner,
+                new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                 "indianSettlement.peacePartial",
+                                 unit, sis)
+                    .addStringTemplate("%nation%", indian.getNationLabel())
+                    .addNamed("%goods%", goods.getType())
+                    .addAmount("%amount%", goods.getAmount())
+                    .addAmount("%remaining%", rem.getAmount()));
+        }
+    }
+
+    /**
+     * Has wartime tension fallen enough to accept peace?
+     * High alarm needs several successful tributes before this is true.
+     *
+     * @param indian The native {@code Player}.
+     * @param european The European {@code Player}.
+     * @return True if peace can be concluded.
+     */
+    private static boolean isReadyForNativePeace(Player indian,
+                                                 Player european) {
+        Tension tribe = indian.getTension(european);
+        if (tribe != null
+                && tribe.getLevel().compareTo(Tension.Level.DISPLEASED) > 0) {
+            return false;
+        }
+        for (IndianSettlement settlement : indian.getIndianSettlementList()) {
+            Tension alarm = settlement.getAlarm(european);
+            if (alarm != null
+                    && alarm.getLevel().compareTo(Tension.Level.ANGRY) >= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Reduce alarm at other settlements of the same tribe.
+     *
+     * @param gifted The settlement that received the peace tribute.
+     * @param european The European {@code Player}.
+     * @param delta Negative alarm change.
+     * @param cs A {@code ChangeSet} to update.
+     */
+    private static void csCalmOtherSettlements(IndianSettlement gifted,
+                                               Player european, int delta,
+                                               ChangeSet cs) {
+        if (delta >= 0) return;
+        for (IndianSettlement settlement
+                 : gifted.getOwner().getIndianSettlementList()) {
+            if (settlement == gifted) continue;
+            Tension alarm = settlement.getAlarm(european);
+            if (alarm == null) continue;
+            ((ServerIndianSettlement)settlement)
+                .csModifyAlarm(european, delta, false, cs);
+        }
+    }
+
+    /**
+     * Make peace between a European and a native nation, calming
+     * settlement alarms so war is not redeclared next turn.
+     *
+     * @param european The European {@code ServerPlayer}.
+     * @param indian The native {@code Player}.
+     * @param cs A {@code ChangeSet} to update.
+     */
+    private void csNativePeace(ServerPlayer european, Player indian,
+                               ChangeSet cs) {
+        ((ServerPlayer)indian).csChangeStance(Stance.PEACE, european, true, cs);
+        final int calm = Tension.Level.CONTENT.getLimit() / 2;
+        for (IndianSettlement settlement : indian.getIndianSettlementList()) {
+            settlement.clearPeaceTribute(european);
+            Tension alarm = settlement.getAlarm(european);
+            if (alarm == null) continue;
+            int delta = calm - alarm.getValue();
+            if (delta != 0) {
+                ((ServerIndianSettlement)settlement)
+                    .csModifyAlarm(european, delta, false, cs);
+            }
+        }
+    }
+
+    /**
+     * Offer peace goods to a native settlement while at war.
+     *
+     * @param serverPlayer The European {@code ServerPlayer}.
+     * @param unit The {@code ServerUnit} offering.
+     * @param is The {@code IndianSettlement}.
+     * @return A {@code ChangeSet} encapsulating this action.
+     */
+    public ChangeSet offerNativePeace(ServerPlayer serverPlayer,
+                                      ServerUnit unit, IndianSettlement is) {
+        final Player indian = is.getOwner();
+        if (!serverPlayer.atWarWith(indian)) {
+            return serverPlayer.clientError("Not at war with "
+                + indian.getSuffix());
+        }
+        AbstractGoods demand = is.getPeaceDemand(serverPlayer);
+        final int have = unit.getGoodsCount(demand.getType());
+        if (have <= 0) {
+            ChangeSet cs = new ChangeSet();
+            cs.addMessage(serverPlayer,
+                new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                 "indianSettlement.peaceDemand",
+                                 unit, is)
+                    .addStringTemplate("%nation%", indian.getNationLabel())
+                    .addNamed("%goods%", demand.getType())
+                    .addAmount("%amount%", demand.getAmount())
+                    .addAmount("%times%", is.getPeaceOffersNeeded(serverPlayer)));
+            return cs;
+        }
+
+        ChangeSet cs = new ChangeSet();
+        final int give = Math.min(have, demand.getAmount());
+        Goods gift = new Goods(getGame(), unit, demand.getType(), give);
+        // Price may be 0 once they already hold a lot of that good; still
+        // accept wartime peace deliveries.
+        int price = Math.max(1, is.getPriceToBuy(gift));
+        csGift(unit, gift, price, (ServerIndianSettlement)is, cs);
+        unit.setMovesLeft(0);
+        cs.addPartial(See.only(serverPlayer), unit,
+                      "movesLeft", String.valueOf(unit.getMovesLeft()));
+        getGame().sendToOthers(serverPlayer, cs);
+        return cs;
     }
 
     /**
@@ -2671,9 +2841,15 @@ public final class InGameController extends Controller {
                 "movesLeft", String.valueOf(sUnit.getMovesLeft()));
             break;
         default:
-            // Teach the unit, and expend the skill if necessary.
-            // Do a full information update as the unit is in the settlement.
-            sUnit.changeType(skill);//-vis(serverPlayer)
+            // Begin multi-turn learning; skill is applied in
+            // ServerUnit.csNewTurn when workLeft reaches 0.  Expend the
+            // skill now so another colonist can not claim the same
+            // teaching slot (capitals / enhanced missionaries keep it).
+            final int turns = Math.max(1,
+                spec.getInteger(GameOptions.NATIVE_LEARNING_TURNS));
+            sUnit.setLearningType(skill);
+            sUnit.setWorkLeft(turns);
+            sUnit.setState(Unit.UnitState.LEARNING);
             serverPlayer.invalidateCanSeeTiles();//+vis(serverPlayer)
             cs.add(See.perhaps(), sUnit);
             if (!is.isCapital()

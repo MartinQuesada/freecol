@@ -54,6 +54,7 @@ import net.sf.freecol.common.debug.FreeColDebugger;
 import net.sf.freecol.common.i18n.Messages;
 import net.sf.freecol.common.metaserver.ServerInfo;
 import net.sf.freecol.common.model.Ability;
+import net.sf.freecol.common.model.AbstractGoods;
 import net.sf.freecol.common.model.Building;
 import net.sf.freecol.common.model.Colony;
 // Imports all ENUMS.
@@ -449,6 +450,12 @@ public class GUI extends FreeColClientHolder {
         final Player player = getMyPlayer();
 
         List<ChoiceItem<ArmedUnitSettlementAction>> choices = new ArrayList<>();
+        if (settlement instanceof IndianSettlement
+                && player.atWarWith(settlement.getOwner())) {
+            String msg = Messages.message("armedUnitSettlement.peace");
+            choices.add(new ChoiceItem<>(msg,
+                    ArmedUnitSettlementAction.SETTLEMENT_PEACE));
+        }
         String msg = Messages.message("armedUnitSettlement.tribute");
         choices.add(new ChoiceItem<>(msg,
                 ArmedUnitSettlementAction.SETTLEMENT_TRIBUTE));
@@ -459,6 +466,26 @@ public class GUI extends FreeColClientHolder {
         return modalChoiceDialog(settlement.getTile(),
                          settlement.getAlarmLevelLabel(player),
                          settlement, "cancel", choices);
+    }
+
+    /**
+     * Confirm offering peace goods to a native settlement.
+     *
+     * @param unit The {@code Unit} offering.
+     * @param is The {@code IndianSettlement}.
+     * @param demand The demanded {@code AbstractGoods}.
+     * @return True if the player accepts the demand.
+     */
+    public boolean confirmNativePeace(Unit unit, IndianSettlement is,
+                                      AbstractGoods demand) {
+        Player other = is.getOwner();
+        StringTemplate t = StringTemplate.template("confirmNativePeace.text")
+            .addStringTemplate("%nation%", other.getNationLabel())
+            .addNamed("%goods%", demand.getType())
+            .addAmount("%amount%", demand.getAmount())
+            .addAmount("%times%", is.getPeaceOffersNeeded(unit.getOwner()));
+        return modalConfirmDialog(is.getTile(), t, unit,
+                "confirmNativePeace.yes", "confirmNativePeace.no", true);
     }
 
     /**

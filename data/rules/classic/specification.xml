@@ -4715,6 +4715,9 @@
         <!-- Missionaries grant visibility and enhance trade and training -->
         <booleanOption id="model.option.enhancedMissionaries"
                        defaultValue="false"/>
+        <!-- Turns spent learning a native settlement skill after accepting. -->
+        <integerOption id="model.option.nativeLearningTurns"
+                       defaultValue="2" minimumValue="1" maximumValue="10"/>
         <!-- The strength of the influence of a Mission to the alarm
              level of the natives in a settlement -->
         <integerOption id="model.option.missionInfluence"

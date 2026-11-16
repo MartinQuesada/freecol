@@ -186,9 +186,18 @@ public final class NativeAIPlayer extends MissionAIPlayer {
     @Override
     protected Stance determineStance(Player other) {
         final Stance fromTension = super.determineStance(other);
-        if (fromTension == Stance.WAR || !other.isEuropean()) {
+        if (!other.isEuropean()) {
             return fromTension;
         }
+        // Honour tension-based de-escalation out of WAR (gifts / peace tribute).
+        final Stance current = getPlayer().getStance(other);
+        if (current == Stance.WAR) {
+            return fromTension;
+        }
+        if (fromTension == Stance.WAR) {
+            return Stance.WAR;
+        }
+        // From peace/cease-fire, escalate if any settlement is angry.
         for (IndianSettlement is : getPlayer().getIndianSettlementList()) {
             final Tension alarm = is.getAlarm(other);
             if (alarm != null
@@ -1127,11 +1136,16 @@ public final class NativeAIPlayer extends MissionAIPlayer {
             case DISPLEASED:
                 anger = 2;
                 break;
-            case ANGRY: default:
-                anger = -1;
-                break;
+            case ANGRY: case HATEFUL: default:
+                // At war / hostile: allow gifts only so Europeans can
+                // offer peace goods.  Buy/sell stay blocked via atWar().
+                anger = 3;
+                nt.setBuy(false);
+                nt.setSell(false);
+                updateTrade(nt, anger);
+                return (nt.canGift()) ? NativeTradeAction.ACK_OPEN
+                    : NativeTradeAction.NAK_HOSTILE;
             }
-            if (anger < 0) return NativeTradeAction.NAK_HOSTILE;
             updateTrade(nt, anger);
             return (nt.getDone()) ? NativeTradeAction.NAK_NOSALE
                 : NativeTradeAction.ACK_OPEN;
@@ -1204,9 +1218,16 @@ public final class NativeAIPlayer extends MissionAIPlayer {
         case GIFT:
             ours = find(nt.getUnitToSettlement(), nt.getItem().goodsMatcher());
             if (ours == null) return NativeTradeAction.NAK_INVALID;
-            return (is.canAdd(nt.getItem().getGoods()))
-                ? NativeTradeAction.ACK_GIFT
-                : NativeTradeAction.NAK_GOODS;
+            if (!is.canAdd(nt.getItem().getGoods())) {
+                return NativeTradeAction.NAK_GOODS;
+            }
+            // During war only accept goods the tribe actually wants (or
+            // standard trade/military goods) as a path to peace.
+            if (getPlayer().atWarWith(other)
+                    && !is.acceptsPeaceGoods(ours.getGoods().getType())) {
+                return NativeTradeAction.NAK_GOODS;
+            }
+            return NativeTradeAction.ACK_GIFT;
 
         default: // Invalid
             return NativeTradeAction.NAK_INVALID;

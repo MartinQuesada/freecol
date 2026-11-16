@@ -14,9 +14,9 @@ monthly turns.
 | José de San Martín | Military | +10% Sons of Liberty; +25% offence for soldiers and dragoons |
 | Francisco de Miranda | Political | +20% liberty bell production |
 | Sor Juana Inés de la Cruz | Religious | +25% crosses; schools/colleges/universities cost 50% less hammers and tools |
-| Francisco de Orellana | Exploration | +1 line of sight and +1 movement for land units |
+| Francisco de Orellana | Exploration | +1 line of sight for land units; +1 movement for unmounted land units |
 | Toussaint Louverture | Military | +15% Sons of Liberty; +25% defence for soldiers and dragoons |
-| Vasco da Gama | Trade | Naval +1 movement; Europe voyages −1 turn (lighter than Magellan) |
+| Vasco da Gama | Trade | Naval +1 movement; better European market prices (lost under boycott) |
 | Eli Whitney | Trade | +50% cotton and musket production |
 | Blas de Lezo | Military | +50% defence for all land units |
 | Thomas Cochrane | Military | +50% offence for naval units |

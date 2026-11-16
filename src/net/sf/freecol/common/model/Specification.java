@@ -3064,6 +3064,9 @@ public final class Specification implements OptionContainer {
         ret |= checkOp(GameOptions.MISSION_INFLUENCE,
                        GameOptions.GAMEOPTIONS_MAP,
                        -10, IntegerOption.class);
+        ret |= checkOp(GameOptions.NATIVE_LEARNING_TURNS,
+                       GameOptions.GAMEOPTIONS_MAP,
+                       2, IntegerOption.class);
         ret |= checkOp(GameOptions.INDEPENDENCE_TURN,
                        GameOptions.GAMEOPTIONS_YEARS,
                        468, IntegerOption.class);

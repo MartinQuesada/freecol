@@ -66,6 +66,14 @@ public class GameOptions {
     public static final String ENHANCED_MISSIONARIES
         = "model.option.enhancedMissionaries";
 
+    /**
+     * Turns a colonist spends learning a skill at a native settlement
+     * after accepting the offer.  1 matches the classic near-instant
+     * “live there a turn” feel; higher values delay the unit type change.
+     */
+    public static final String NATIVE_LEARNING_TURNS
+        = "model.option.nativeLearningTurns";
+
     /** The strength of the influence of a Mission to the
         alarm level of the natives in a settlement. */
     public static final String MISSION_INFLUENCE
