@@ -168,6 +168,21 @@ public class ProductionCache {
                                                         alwaysTrue(), mapper);
                 goodsUsed.addAll(transform(outputs, alwaysTrue(),
                                            AbstractGoods::getType));
+                // Herd harvest does not consume animals, so they are not
+                // in getConsumedGoods(); still pass warehouse herd size so
+                // milk/wool can be capped by available cows/sheep.
+                if (building.getType().hasAbility(Ability.HERD_HARVEST)) {
+                    building.getOutputs().forEach(output -> {
+                        GoodsType herdType = output.getType().getInputType();
+                        if (herdType == null) return;
+                        if (any(goods, ag -> herdType.equals(ag.getType()))) {
+                            return;
+                        }
+                        goods.add(new AbstractGoods(herdType,
+                                                    getGoodsCount(herdType)));
+                        goodsUsed.add(herdType);
+                    });
+                }
                 info = building.getAdjustedProductionInfo(goods, outputs);
             } else if (consumer instanceof Unit) {
                 info = ((Unit)consumer).getProductionInfo(goods);
