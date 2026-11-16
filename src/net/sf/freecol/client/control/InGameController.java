@@ -170,6 +170,13 @@ public final class InGameController extends FreeColClientHolder {
     /** Current mode for moving units. */
     private MoveMode moveMode = MoveMode.NEXT_ACTIVE_UNIT;
 
+    /**
+     * True while {@link #doExecuteGotoOrders} is running.  Modal dialogs
+     * nest the EDT, so updateGUI/invokeLater can re-enter and move more
+     * units under an open dialog; block that reentrancy.
+     */
+    private boolean gotoOrdersInProgress = false;
+
     /** A map of messages to be ignored. */
     private final java.util.Map<String, Integer> messagesToIgnore
         = Collections.synchronizedMap(new HashMap<>());
@@ -1032,6 +1039,21 @@ public final class InGameController extends FreeColClientHolder {
      *     reached their destination and are free to move again.
      */
     private boolean doExecuteGotoOrders() {
+        // Modal dialogs nest the EDT; refuse a parallel goto pass that
+        // would stack scout/settlement dialogs on top of each other.
+        if (gotoOrdersInProgress
+            || getGUI().isPanelShowing()
+            || getGUI().isDialogShowing()) return false;
+
+        gotoOrdersInProgress = true;
+        try {
+            return doExecuteGotoOrdersBody();
+        } finally {
+            gotoOrdersInProgress = false;
+        }
+    }
+
+    private boolean doExecuteGotoOrdersBody() {
         final Player player = getMyPlayer();
         Unit active = getGUI().getActiveUnit();
         boolean ret = true;
@@ -1060,8 +1082,10 @@ public final class InGameController extends FreeColClientHolder {
         }
         if (!ret) return false;
 
-        // Wait for user to close outstanding panels.
-        if (getGUI().isPanelShowing()) return false;
+        // Wait for user to close outstanding panels/dialogs.
+        if (getGUI().isPanelShowing() || getGUI().isDialogShowing()) {
+            return false;
+        }
 
         // The active unit might also be a going-to unit.  Make sure it
         // gets processed first.  setNextGoingToUnit will fail harmlessly
@@ -1070,6 +1094,10 @@ public final class InGameController extends FreeColClientHolder {
 
         // Process all units.
         while (player.hasNextGoingToUnit()) {
+            if (getGUI().isPanelShowing() || getGUI().isDialogShowing()) {
+                ret = false;
+                break;
+            }
             Unit unit = player.getNextGoingToUnit();
             changeView(unit, false);
             // Move the unit as much as possible
@@ -1095,8 +1123,8 @@ public final class InGameController extends FreeColClientHolder {
      */
     private void doEndTurn(boolean showDialog) {
         final Player player = getMyPlayer();
-        // Clear any panels first
-        if (getGUI().isPanelShowing()) return;
+        // Clear any panels/dialogs first
+        if (getGUI().isPanelShowing() || getGUI().isDialogShowing()) return;
         
         if (showDialog) {
             List<Unit> units = transform(player.getUnits(), Unit::isCandidateForNextActiveUnit);
@@ -3570,7 +3598,8 @@ public final class InGameController extends FreeColClientHolder {
      */
     public boolean executeGotoOrders() {
         if (!requireOurTurn()
-            || getGUI().isPanelShowing()) return false;
+            || getGUI().isPanelShowing()
+            || getGUI().isDialogShowing()) return false;
 
         return doExecuteGotoOrders();
     }
